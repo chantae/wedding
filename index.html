@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>12월 06일 전찬태 ♥ 박은진 결혼합니다.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujTnHg4C/g+B44YvYQ3k4Y/F7X3/R5/D+V5F3/P7Q9kLgA/Tz5fG2H7+6uP+kRzP5F9pL6t+g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Stylish&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            color: #404040;
+            background-color: #ffffff;
+        }
+        .wedding-card {
+            background-color: #f9f9f9;
+        }
+        .stylish-font { font-family: 'Stylish', cursive; }
+
+        /* Modal / Popup */
+        .modal { transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; }
+        .modal.active { visibility: visible; opacity: 1; }
+        .modal-content { transform: scale(0.95); transition: transform 0.3s ease-in-out; }
+        .modal.active .modal-content { transform: scale(1); }
+
+        /* Account Copy Button */
+        .copy-button { transition: background-color 0.2s, transform 0.2s; }
+        .copy-button:active { transform: scale(0.95); }
+
+        /* Countdown */
+        .countdown > div > span { font-variant-numeric: tabular-nums; }
+
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .collapsible-content.active {
+            max-height: 500px;
+        }
+
+        /* Animation */
+        .animate-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .animate-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .fade-in {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        .fade-in.active {
+            opacity: 1;
+        }
+
+        /* Masonry Grid */
+        .masonry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-auto-rows: 150px;
+            gap: 8px;
+        }
+        .masonry-grid > div {
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .masonry-grid .span-2-row {
+            grid-row: span 2 / auto;
+        }
+        .masonry-grid img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, #f9f9f9, #a2d5c3, #f9f9f9);
+        }
+    </style>
+</head>
+<body class="bg-white flex flex-col items-center justify-center">
+
+    <!-- 메인 섹션 -->
+    <section class="w-full max-w-lg mb-8 relative">
+        <div class="h-[70vh] min-h-[500px] relative">
+            <div id="image-slider" class="w-full h-full relative overflow-hidden">
+                <img src="https://placehold.co/800x1200/a2d5c3/ffffff?text=Wedding+Photo+1" alt="Wedding Photo 1" class="absolute inset-0 w-full h-full object-cover fade-in active">
+                <img src="https://placehold.co/800x1200/c9e9cc/ffffff?text=Wedding+Photo+2" alt="Wedding Photo 2" class="absolute inset-0 w-full h-full object-cover fade-in">
+                <img src="https://placehold.co/800x1200/d4f0d6/ffffff?text=Wedding+Photo+3" alt="Wedding Photo 3" class="absolute inset-0 w-full h-full object-cover fade-in">
+            </div>
+        </div>
+        <div class="p-8 md:p-10 w-full text-center bg-white rounded-3xl -mt-16 relative z-20 shadow-xl">
+            <h1 class="text-4xl stylish-font font-bold text-gray-800 flex items-center justify-center">
+                전찬태
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-[#a2d5c3] mx-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+                </svg>
+                박은진
+            </h1>
+            <p class="text-base text-gray-500 mt-2">
+                2025년 12월 06일 토요일 낮 12시 30분<br>
+                팔레드오페라, 3층
+            </p>
+        </div>
+    </section>
+
+    <!-- 인사말 섹션 -->
+    <section class="w-full max-w-lg p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">INVITATION</h2>
+        <p class="text-sm text-gray-600 mb-6">소중한 분들을 초대합니다</p>
+        <p class="text-lg text-gray-600 leading-relaxed">
+            저희 두 사람의 작은 만남이<br>사랑의 결실을 이루어<br>소중한 결혼식을 올리게 되었습니다.<br><br>
+            평생 서로 귀하게 여기며<br>첫 마음 그대로 존중하고 배려하며 살겠습니다.<br><br>
+            오로지 믿음과 사랑을 약속하는 날<br>오셔서 축복해 주시면 더없는 기쁨으로<br>간직하겠습니다.
+        </p>
+        <div class="divider my-6"></div>
+        <div class="flex justify-center items-center space-x-8 text-gray-700">
+            <div class="flex flex-col">
+                <p class="font-semibold">故전관표 · 김옥주의 장남</p>
+                <p class="text-xl">전찬태</p>
+            </div>
+            <p class="text-xl font-bold stylish-font text-[#a2d5c3]">&</p>
+            <div class="flex flex-col">
+                <p class="font-semibold">박상문 · 김선희의 차녀</p>
+                <p class="text-xl">박은진</p>
+            </div>
+        </div>
+        <button onclick="openContactModal()" class="w-full mt-8 py-3 bg-[#a2d5c3] text-white rounded-full font-medium hover:bg-[#81c79c] transition-colors shadow-lg">
+            <i class="fa fa-phone-alt"></i>&nbsp;&nbsp;연락하기
+        </button>
+    </section>
+
+    <!-- 갤러리 섹션 -->
+    <section class="w-full max-w-lg p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">GALLERY</h2>
+        <p class="text-sm text-gray-600 mb-6">웨딩 갤러리</p>
+        <div class="masonry-grid" id="gallery-container">
+            <div class="span-2-row"><img src="https://placehold.co/500x600/a2d5c3/ffffff?text=Gallery+Photo+1" alt="Gallery Photo 1"></div>
+            <div><img src="https://placehold.co/500x300/b2d8b5/ffffff?text=Gallery+Photo+2" alt="Gallery Photo 2"></div>
+            <div class="span-2-row"><img src="https://placehold.co/500x600/a2d5c3/ffffff?text=Gallery+Photo+3" alt="Gallery Photo 3"></div>
+            <div><img src="https://placehold.co/500x300/b2d8b5/ffffff?text=Gallery+Photo+4" alt="Gallery Photo 4"></div>
+            <div><img src="https://placehold.co/500x300/c9e9cc/ffffff?text=Gallery+Photo+5" alt="Gallery Photo 5"></div>
+            <div class="span-2-row"><img src="https://placehold.co/500x600/d4f0d6/ffffff?text=Gallery+Photo+6" alt="Gallery Photo 6"></div>
+            <div><img src="https://placehold.co/500x300/a2d5c3/ffffff?text=Gallery+Photo+7" alt="Gallery Photo 7"></div>
+            <div class="span-2-row"><img src="https://placehold.co/500x600/b2d8b5/ffffff?text=Gallery+Photo+8" alt="Gallery Photo 8"></div>
+            <div><img src="https://placehold.co/500x300/a2d5c3/ffffff?text=Gallery+Photo+9" alt="Gallery Photo 9"></div>
+        </div>
+        <button id="show-more-gallery" class="w-full mt-6 py-3 bg-[#f9f9f9] text-gray-800 rounded-full font-medium hover:bg-[#eaeaea] transition-colors shadow-lg">
+            더보기 <i class="fa fa-chevron-down ml-2"></i>
+        </button>
+    </section>
+
+    <!-- 캘린더 섹션 -->
+    <section class="w-full max-w-lg p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">2025.12.06</h2>
+        <p class="text-sm text-gray-600 mb-6">토요일 낮 12시 30분</p>
+        <div id="calendar" class="w-full"></div>
+        <div class="flex justify-around items-center mt-6 text-gray-800 font-bold countdown">
+            <div class="flex flex-col items-center">
+                <span id="days" class="text-2xl md:text-3xl">00</span>
+                <span class="text-xs mt-1">Days</span>
+            </div>
+            <div class="text-2xl">:</div>
+            <div class="flex flex-col items-center">
+                <span id="hours" class="text-2xl md:text-3xl">00</span>
+                <span class="text-xs mt-1">Hour</span>
+            </div>
+            <div class="text-2xl">:</div>
+            <div class="flex flex-col items-center">
+                <span id="minutes" class="text-2xl md:text-3xl">00</span>
+                <span class="text-xs mt-1">Min</span>
+            </div>
+            <div class="text-2xl">:</div>
+            <div class="flex flex-col items-center">
+                <span id="seconds" class="text-2xl md:text-3xl">00</span>
+                <span class="text-xs mt-1">Sec</span>
+            </div>
+        </div>
+        <p class="text-sm text-gray-500 mt-4"><span class="font-bold text-[#a2d5c3]">찬태, 은진의 결혼식</span>이 <span id="dday-count">0</span>일 남았습니다.</p>
+    </section>
+
+    <!-- 오시는 길 섹션 -->
+    <section class="w-full max-w-lg p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">LOCATION</h2>
+        <p class="text-sm text-gray-600 mb-6">오시는 길</p>
+        <div class="bg-gray-100 rounded-lg p-4 mb-4">
+            <p class="font-semibold text-gray-800">팔레드오페라, 3층</p>
+            <p class="text-sm text-gray-600">대전 서구 둔산남로 50 팔레드오페라</p>
+        </div>
+        <div class="w-full h-64 bg-gray-200 rounded-lg overflow-hidden flex items-center justify-center mb-6">
+            <a href="https://maps.google.com/?q=대전 서구 둔산남로 50 팔레드오페라" target="_blank" class="text-gray-500 text-lg font-semibold">지도 보러가기</a>
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+            <a href="#" class="py-2 px-3 bg-[#a2d5c3] text-white rounded-full text-sm font-medium hover:bg-[#81c79c] transition-colors">네이버지도</a>
+            <a href="#" class="py-2 px-3 bg-[#a2d5c3] text-white rounded-full text-sm font-medium hover:bg-[#81c79c] transition-colors">티맵</a>
+            <a href="#" class="py-2 px-3 bg-[#a2d5c3] text-white rounded-full text-sm font-medium hover:bg-[#81c79c] transition-colors">카카오내비</a>
+        </div>
+    </section>
+
+    <!-- 마음 전하실 곳 섹션 -->
+    <section class="w-full max-w-lg p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
+        <button id="toggle-account-btn" class="w-full text-center text-2xl font-bold text-gray-800 mb-2 focus:outline-none">
+            마음 전하실 곳
+        </button>
+        <div class="text-sm text-gray-600 mb-6">참석이 어려우신 분들을 위해<br>계좌번호를 기재하였습니다.</div>
+        <div id="account-details" class="collapsible-content">
+            <div class="text-gray-600 space-y-4 text-left px-4 mt-4">
+                <div class="bg-gray-50 p-4 rounded-xl shadow-inner border border-gray-200">
+                    <p class="font-semibold text-gray-800 mb-2">신랑측</p>
+                    <div class="flex items-center justify-between">
+                        <p class="font-medium text-gray-700">전찬태</p>
+                        <button class="copy-button bg-stone-200 text-gray-600 rounded-full px-3 py-1 text-sm font-medium hover:bg-stone-300" onclick="copyToClipboard('groom-account-1')">복사</button>
+                        <span id="groom-account-1" class="hidden">신한은행 110-364-860952</span>
+                    </div>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-xl shadow-inner border border-gray-200">
+                    <p class="font-semibold text-gray-800 mb-2">신부측</p>
+                    <div class="flex items-center justify-between">
+                        <p class="font-medium text-gray-700">박은진</p>
+                        <button class="copy-button bg-stone-200 text-gray-600 rounded-full px-3 py-1 text-sm font-medium hover:bg-stone-300" onclick="copyToClipboard('bride-account-1')">복사</button>
+                        <span id="bride-account-1" class="hidden">하나은행 110-000-00000</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="copy-message" class="text-sm mt-4 text-green-600 hidden">복사되었습니다!</div>
+    </section>
+
+    <!-- 엔딩 섹션 -->
+    <section class="w-full max-w-lg p-6 md:p-10 mt-8 mb-12 text-center animate-up">
+        <p class="text-xl stylish-font font-bold text-gray-800 mb-4">감사합니다.</p>
+        <button id="kakao-link-btn" class="w-full py-3 bg-[#a2d5c3] text-white rounded-full font-bold shadow-lg hover:bg-[#81c79c] transition-colors">
+            카카오톡으로 초대장 보내기
+        </button>
+    </section>
+
+    <!-- 연락처 팝업 (모달) -->
+    <div id="contact-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible">
+        <div class="modal-content w-full max-w-sm bg-white rounded-xl p-8 text-center shadow-2xl">
+            <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600" onclick="closeContactModal()">
+                <i class="fa fa-times text-xl"></i>
+            </button>
+            <h3 class="text-xl font-bold mb-6">연락하기</h3>
+            <div class="space-y-4">
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="font-bold text-gray-800">신랑측</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <p>전찬태</p>
+                        <div class="flex space-x-2">
+                            <a href="tel:010-0000-0000" class="w-10 h-10 flex items-center justify-center bg-gray-200 rounded-full text-gray-700 hover:bg-gray-300 transition-colors">
+                                <i class="fa fa-phone-alt"></i>
+                            </a>
+                            <a href="sms:010-0000-0000" class="w-10 h-10 flex items-center justify-center bg-gray-200 rounded-full text-gray-700 hover:bg-gray-300 transition-colors">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-4 bg-gray-50 rounded-lg">
+                    <p class="font-bold text-gray-800">신부측</p>
+                    <div class="flex justify-between items-center mt-2">
+                        <p>박은진</p>
+                        <div class="flex space-x-2">
+                            <a href="tel:010-0000-0000" class="w-10 h-10 flex items-center justify-center bg-gray-200 rounded-full text-gray-700 hover:bg-gray-300 transition-colors">
+                                <i class="fa fa-phone-alt"></i>
+                            </a>
+                            <a href="sms:010-0000-0000" class="w-10 h-10 flex items-center justify-center bg-gray-200 rounded-full text-gray-700 hover:bg-gray-300 transition-colors">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.0.1/kakao.min.js" xintegrity="sha384-eKjgHJ9+vwU/FCSUG3nV1RKFolUXLsc6nLQ2R1tD0t4YFPCvRmkcF8saIfOZNWf/" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Animation on scroll logic ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            document.querySelectorAll('.animate-up').forEach(section => {
+                observer.observe(section);
+            });
+
+            // --- Image Slider Logic ---
+            const sliderImages = document.querySelectorAll('#image-slider img');
+            let currentSlide = 0;
+
+            function nextSlide() {
+                sliderImages[currentSlide].classList.remove('active');
+                currentSlide = (currentSlide + 1) % sliderImages.length;
+                sliderImages[currentSlide].classList.add('active');
+            }
+            setInterval(nextSlide, 3000);
+
+            // --- Collapsible Account Section ---
+            const toggleButton = document.getElementById('toggle-account-btn');
+            const accountDetails = document.getElementById('account-details');
+            if (toggleButton) {
+                toggleButton.addEventListener('click', () => {
+                    accountDetails.classList.toggle('active');
+                });
+            }
+
+            // --- Account Copy Functionality ---
+            window.copyToClipboard = function(elementId) {
+                const copyText = document.getElementById(elementId).innerText;
+                const tempInput = document.createElement('textarea');
+                document.body.appendChild(tempInput);
+                tempInput.value = copyText;
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+
+                const message = document.getElementById('copy-message');
+                message.classList.remove('hidden');
+                setTimeout(() => { message.classList.add('hidden'); }, 2000);
+            };
+
+            // --- Contact Modal ---
+            window.openContactModal = function() {
+                const modal = document.getElementById('contact-modal');
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            };
+            window.closeContactModal = function() {
+                const modal = document.getElementById('contact-modal');
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            };
+
+            // --- Gallery Section ---
+            const galleryContainer = document.getElementById('gallery-container');
+            const galleryImages = [
+                'https://placehold.co/500x600/a2d5c3/ffffff?text=Gallery+Photo+1',
+                'https://placehold.co/500x600/b2d8b5/ffffff?text=Gallery+Photo+2',
+                'https://placehold.co/500x600/c9e9cc/ffffff?text=Gallery+Photo+3',
+                'https://placehold.co/500x300/a2d5c3/ffffff?text=Gallery+Photo+4',
+                'https://placehold.co/500x600/b2d8b5/ffffff?text=Gallery+Photo+5',
+                'https://placehold.co/500x600/c9e9cc/ffffff?text=Gallery+Photo+6',
+                'https://placehold.co/500x300/a2d5c3/ffffff?text=Gallery+Photo+7',
+                'https://placehold.co/500x600/b2d8b5/ffffff?text=Gallery+Photo+8',
+                'https://placehold.co/500x600/a2d5c3/ffffff?text=Gallery+Photo+9',
+                'https://placehold.co/500x300/b2d8b5/ffffff?text=Gallery+Photo+10',
+                'https://placehold.co/500x600/c9e9cc/ffffff?text=Gallery+Photo+11',
+                'https://placehold.co/500x600/a2d5c3/ffffff?text=Gallery+Photo+12'
+            ];
+            const itemsToShow = 6;
+            let currentImages = 0;
+
+            function loadGalleryImages(count) {
+                const newItems = galleryImages.slice(currentImages, currentImages + count);
+                newItems.forEach((imgUrl, index) => {
+                    const div = document.createElement('div');
+                    const imageIndex = currentImages + index;
+                    div.className = `w-full rounded-xl overflow-hidden shadow-md`;
+                    if (imageIndex === 0 || imageIndex === 2 || imageIndex === 5 || imageIndex === 7) {
+                        div.classList.add('span-2-row');
+                    }
+                    div.innerHTML = `<img src="${imgUrl}" alt="Gallery Photo ${imageIndex + 1}" class="w-full h-auto object-cover">`;
+                    galleryContainer.appendChild(div);
+                });
+                currentImages += count;
+                if (currentImages >= galleryImages.length) {
+                    document.getElementById('show-more-gallery').style.display = 'none';
+                }
+            }
+
+            loadGalleryImages(itemsToShow);
+            document.getElementById('show-more-gallery').addEventListener('click', () => {
+                loadGalleryImages(itemsToShow);
+            });
+
+            // --- Countdown Timer ---
+            const weddingDate = new Date('2025-12-06T12:30:00+09:00').getTime();
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+            const ddayCountEl = document.getElementById('dday-count');
+
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = weddingDate - now;
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    daysEl.innerText = "00";
+                    hoursEl.innerText = "00";
+                    minutesEl.innerText = "00";
+                    secondsEl.innerText = "00";
+                    ddayCountEl.innerText = "0";
+                } else {
+                    daysEl.innerText = String(days).padStart(2, '0');
+                    hoursEl.innerText = String(hours).padStart(2, '0');
+                    minutesEl.innerText = String(minutes).padStart(2, '0');
+                    secondsEl.innerText = String(seconds).padStart(2, '0');
+                    ddayCountEl.innerText = days;
+                }
+            }
+            const countdownInterval = setInterval(updateCountdown, 1000);
+            updateCountdown();
+
+            // --- Calendar Generation (simplified) ---
+            const calendarEl = document.getElementById('calendar');
+            if (calendarEl) {
+                const date = new Date(2025, 11, 6); // December is month 11
+                const year = date.getFullYear();
+                const month = date.getMonth();
+                const day = date.getDate();
+
+                let firstDay = new Date(year, month, 1).getDay(); // 0 for Sunday, 1 for Monday...
+                let lastDate = new Date(year, month + 1, 0).getDate();
+
+                let calendarHTML = `
+                    <div class="flex justify-between items-center text-xl font-bold text-gray-800 mb-4">
+                        <p>${year}년 ${month + 1}월</p>
+                    </div>
+                    <table class="w-full text-center text-sm">
+                        <thead>
+                            <tr class="text-gray-500">
+                                <th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th>
+                            </tr>
+                        </thead>
+                        <tbody><tr>
+                `;
+                
+                for (let i = 0; i < firstDay; i++) {
+                    calendarHTML += `<td></td>`;
+                }
+
+                for (let i = 1; i <= lastDate; i++) {
+                    if ((firstDay + i - 1) % 7 === 0 && i !== 1) {
+                        calendarHTML += `</tr><tr>`;
+                    }
+
+                    const isDDay = (i === day);
+                    const cellClass = isDDay ? 'bg-[#a2d5c3] text-white rounded-full font-bold' : '';
+                    calendarHTML += `<td class="py-2"><span class="w-8 h-8 flex items-center justify-center mx-auto ${cellClass}">${i}</span></td>`;
+                }
+
+                while ((firstDay + lastDate) % 7 !== 0) {
+                    calendarHTML += `<td></td>`;
+                    firstDay++;
+                }
+
+                calendarHTML += `</tr></tbody></table>`;
+                calendarEl.innerHTML = calendarHTML;
+            }
+
+            // --- KakaoTalk Share ---
+            Kakao.init('YOUR_APP_KEY'); // Replace with your actual Kakao App Key
+            const kakaoBtn = document.getElementById('kakao-link-btn');
+            if(kakaoBtn) {
+                 kakaoBtn.addEventListener('click', function() {
+                     Kakao.Share.sendDefault({
+                         objectType: 'feed',
+                         content: {
+                             title: '12월 06일 전찬태 ♥ 박은진 결혼합니다.',
+                             description: '저희 두 사람의 소중한 시작에 함께해 주세요.',
+                             imageUrl: 'https://images.theirmood.com/resources/46097/card/9Vr0MZLBrt/JBFqgzAJJK.png?w=1280',
+                             link: {
+                                 mobileWebUrl: window.location.href,
+                                 webUrl: window.location.href,
+                             },
+                         },
+                         buttons: [{
+                             title: '모바일 청첩장 보기',
+                             link: {
+                                 mobileWebUrl: window.location.href,
+                                 webUrl: window.location.href,
+                             },
+                         }]
+                     });
+                 });
+            }
+        });
+    </script>
+</body>
+</html>
