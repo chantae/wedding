@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>12월 06일 전찬태 ♥ 박은진 결혼합니다.</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujTnHg4C/g+B44YvYQ3k4Y/F7X3/R5/D+V5F3/P7Q9kLgA/Tz5fG2H7+6uP+kRzP5F9pL6t+g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujTnHg4C/g+B44YvYQ3k4Y/F7X3/R5/D+V5F3/P7Q9kLgA/Tz5fG2H7+6uP+kRzP5F6t+g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&family=Stylish&display=swap" rel="stylesheet">
     <style>
         body {
@@ -70,6 +70,7 @@
             border-radius: 0.75rem;
             overflow: hidden;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            cursor: pointer; /* Add pointer cursor for clickable items */
         }
         .masonry-grid .span-2-row {
             grid-row: span 2 / auto;
@@ -84,6 +85,32 @@
             height: 1px;
             background: linear-gradient(to right, #f9f9f9, #a2d5c3, #f9f9f9);
         }
+
+        /* Fullscreen Image Modal */
+        #fullscreen-image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #fullscreen-image-modal.visible {
+            visibility: visible;
+            opacity: 1;
+        }
+        #fullscreen-image-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
     </style>
 </head>
 <body class="bg-white flex flex-col items-center justify-center">
@@ -91,11 +118,11 @@
     <!-- Splash Screen -->
     <div id="splash-screen" class="fixed inset-0 z-[1000] bg-white cursor-pointer transition-opacity duration-500 opacity-100">
         <div id="splash-images" class="relative w-full h-full overflow-hidden">
-            <img src="image/main_1.jpg" alt="Wedding Splash Image 1" class="absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-1000">
-            <img src="image/main_2.jpg" alt="Wedding Splash Image 2" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000">
+            <img src="image/photo_1.jpg" alt="Wedding Splash Image 1" class="absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-1000">
+            <img src="image/photo_2.jpg" alt="Wedding Splash Image 2" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000">
         </div>
         <div class="absolute inset-x-0 bottom-0 w-full flex items-center justify-center text-white text-3xl md:text-5xl font-bold stylish-font" style="padding-bottom: 20vh;">
-            We are getting Married!
+            We are Marry!
         </div>
     </div>
     
@@ -207,7 +234,9 @@
                 <p class="text-sm text-gray-600">대전 서구 둔산남로 50 팔레드오페라</p>
             </div>
             <div class="w-full h-64 bg-gray-200 rounded-lg overflow-hidden flex items-center justify-center mb-6">
-                <a href="https://maps.google.com/?q=대전 서구 둔산남로 50 팔레드오페라" target="_blank" class="text-gray-500 text-lg font-semibold">지도 보러가기</a>
+                <a href="https://maps.google.com/?q=대전 서구 둔산남로 50 팔레드오페라" target="_blank">
+                    <img src="https://placehold.co/800x600/b2d8b5/ffffff?text=대전+서구+둔산남로+50+팔레드오페라" alt="Map of the wedding venue" class="w-full h-full object-cover">
+                </a>
             </div>
             <div class="grid grid-cols-3 gap-2">
                 <a href="#" class="py-2 px-3 bg-[#a2d5c3] text-white rounded-full text-sm font-medium hover:bg-[#81c79c] transition-colors">네이버지도</a>
@@ -292,6 +321,11 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Fullscreen Image Modal -->
+    <div id="fullscreen-image-modal">
+        <img id="fullscreen-image" src="" alt="Full-screen gallery image">
     </div>
 
 
@@ -488,6 +522,7 @@
                             div.classList.add('span-2-row');
                         }
                         div.innerHTML = `<img src="${imgUrl}" alt="Gallery Photo ${imageIndex + 1}" class="w-full h-auto object-cover">`;
+                        div.addEventListener('click', () => openFullscreenImage(imgUrl));
                         galleryContainer.appendChild(div);
                     });
                     currentImagesLoaded += count;
@@ -499,6 +534,24 @@
                 loadGalleryImages(itemsToShowInitially);
                 document.getElementById('show-more-gallery').addEventListener('click', () => {
                     loadGalleryImages(itemsToLoad);
+                });
+
+                // --- Fullscreen Image Modal ---
+                const fullscreenModal = document.getElementById('fullscreen-image-modal');
+                const fullscreenImage = document.getElementById('fullscreen-image');
+
+                window.openFullscreenImage = function(src) {
+                    fullscreenImage.src = src;
+                    fullscreenModal.classList.add('visible');
+                };
+
+                fullscreenModal.addEventListener('click', () => {
+                    fullscreenModal.classList.remove('visible');
+                });
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && fullscreenModal.classList.contains('visible')) {
+                        fullscreenModal.classList.remove('visible');
+                    }
                 });
 
                 // --- Countdown Timer ---
