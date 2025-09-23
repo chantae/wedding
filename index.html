@@ -10,7 +10,7 @@
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
-            color: #FFCCFF;
+            color: #404040;
             background-color: #ffffff;
         }
         .wedding-card {
@@ -83,7 +83,7 @@
 
         .divider {
             height: 1px;
-            background: linear-gradient(to right, #f9f9f9, #a2d5c3, #f9f9f9);
+            background: linear-gradient(to right, #f9f9f9, #FFCCFF, #f9f9f9);
         }
 
         /* Fullscreen Image Modal */
@@ -130,8 +130,8 @@
             <img src="image/main_1.jpg" alt="Wedding Splash Image 1" class="absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-1000">
             <img src="image/main_2.jpg" alt="Wedding Splash Image 2" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000">
         </div>
-        <div class="absolute inset-x-0 bottom-0 w-full flex items-center justify-center text-white text-3xl md:text-15xl font-bold stylish-font" style="padding-bottom: 20vh;">
-            찬태, 은진 결혼합니다!
+        <div class="absolute inset-x-0 bottom-0 w-full flex items-center justify-center text-white text-3xl md:text-5xl font-bold stylish-font" style="padding-bottom: 20vh;">
+            We are Marry!
         </div>
     </div>
     
@@ -155,7 +155,7 @@
             <div class="p-8 md:p-10 w-full text-center bg-white rounded-3xl -mt-16 relative z-20 shadow-xl">
                 <h1 class="text-4xl stylish-font font-bold text-gray-800 flex items-center justify-center">
                     전찬태
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-[#a2d5c3] mx-4" viewBox="0 0 20 20" fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-[#FFCCFF] mx-4" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
                     </svg>
                     박은진
@@ -182,13 +182,13 @@
                     <p class="font-semibold">故전관표 · 김옥주의 아들</p>
                     <p class="text-xl">전찬태</p>
                 </div>
-                <p class="text-xl font-bold stylish-font text-[#a2d5c3]">&</p>
+                <p class="text-xl font-bold stylish-font text-[#FFCCFF]">&</p>
                 <div class="flex flex-col">
                     <p class="font-semibold">박상문 · 김선희의 딸</p>
                     <p class="text-xl">박은진</p>
                 </div>
             </div>
-            <button onclick="openContactModal()" class="w-full mt-8 py-3 bg-[#a2d5c3] text-white rounded-full font-medium hover:bg-[#81c79c] transition-colors shadow-lg">
+            <button onclick="openContactModal()" class="w-full mt-8 py-3 bg-[#FFCCFF] text-white rounded-full font-medium hover:bg-[#ffb3ff] transition-colors shadow-lg">
                 <i class="fa fa-phone-alt"></i>&nbsp;&nbsp;연락하기
             </button>
         </section>
@@ -231,7 +231,7 @@
                     <span class="text-xs mt-1">Sec</span>
                 </div>
             </div>
-            <p class="text-sm text-gray-500 mt-4"><span class="font-bold text-[#a2d5c3]">찬태, 은진의 결혼식</span>이 <span id="dday-count">0</span>일 남았습니다.</p>
+            <p class="text-sm text-gray-500 mt-4"><span class="font-bold text-[#FFCCFF]">찬태, 은진의 결혼식</span>이 <span id="dday-count">0</span>일 남았습니다.</p>
         </section>
     
         <!-- 오시는 길 섹션 -->
@@ -248,9 +248,9 @@
                 </a>
             </div>
             <div class="grid grid-cols-3 gap-2">
-                <a id="naver-map-btn" href="#" class="py-2 px-3 bg-[#a2d5c3] text-white rounded-full text-sm font-medium hover:bg-[#81c79c] transition-colors">네이버지도</a>
-                <a id="tmap-btn" href="#" class="py-2 px-3 bg-[#a2d5c3] text-white rounded-full text-sm font-medium hover:bg-[#81c79c] transition-colors">티맵</a>
-                <a id="kakaonavi-btn" href="#" class="py-2 px-3 bg-[#a2d5c3] text-white rounded-full text-sm font-medium hover:bg-[#81c79c] transition-colors">카카오내비</a>
+                <a id="naver-map-btn" href="#" class="py-2 px-3 bg-[#FFCCFF] text-white rounded-full text-sm font-medium hover:bg-[#ffb3ff] transition-colors">네이버지도</a>
+                <a id="tmap-btn" href="#" class="py-2 px-3 bg-[#FFCCFF] text-white rounded-full text-sm font-medium hover:bg-[#ffb3ff] transition-colors">티맵</a>
+                <a id="kakaonavi-btn" href="#" class="py-2 px-3 bg-[#FFCCFF] text-white rounded-full text-sm font-medium hover:bg-[#ffb3ff] transition-colors">카카오내비</a>
             </div>
         </section>
 
@@ -302,7 +302,7 @@
         <!-- 엔딩 섹션 -->
         <section class="w-full p-6 md:p-10 mt-8 mb-12 text-center animate-up">
             <p class="text-xl stylish-font font-bold text-gray-800 mb-4">감사합니다.</p>
-            <button id="kakao-link-btn" class="w-full py-3 bg-[#a2d5c3] text-white rounded-full font-bold shadow-lg hover:bg-[#81c79c] transition-colors">
+            <button id="kakao-link-btn" class="w-full py-3 bg-[#FFCCFF] text-white rounded-full font-bold shadow-lg hover:bg-[#ffb3ff] transition-colors">
                 카카오톡으로 초대장 보내기
             </button>
         </section>
@@ -673,7 +673,7 @@
                         }
 
                         const isDDay = (i === day);
-                        const cellClass = isDDay ? 'bg-[#a2d5c3] text-white rounded-full font-bold' : '';
+                        const cellClass = isDDay ? 'bg-[#FFCCFF] text-white rounded-full font-bold' : '';
                         calendarHTML += `<td class="py-2"><span class="w-8 h-8 flex items-center justify-center mx-auto ${cellClass}">${i}</span></td>`;
                     }
 
