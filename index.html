@@ -131,7 +131,7 @@
             <img src="image/main_2.jpg" alt="Wedding Splash Image 2" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000">
         </div>
         <div class="absolute inset-x-0 bottom-0 w-full flex items-center justify-center text-white text-3xl md:text-5xl font-bold stylish-font" style="padding-bottom: 20vh;">
-            We are Marry!
+            찬태 은진 결혼합니다!
         </div>
     </div>
     
@@ -567,7 +567,22 @@
                 const busModal = document.getElementById('bus-modal');
                 const busListModal = document.getElementById('bus-list-modal');
 
+                const MAX_CAPACITY = 28;
+                const PASSWORD = '1331';
+                const busReservationsKey = 'busReservations';
+
+                // 현재 예약된 총 인원 계산
+                function getCurrentBusCount() {
+                    const reservations = JSON.parse(localStorage.getItem(busReservationsKey) || '[]');
+                    return reservations.reduce((total, res) => total + parseInt(res.count), 0);
+                }
+
                 window.openBusModal = function() {
+                    const currentCount = getCurrentBusCount();
+                    if (currentCount >= MAX_CAPACITY) {
+                        alert('죄송합니다. 버스 좌석이 모두 마감되었습니다.');
+                        return;
+                    }
                     busModal.classList.add('active');
                     document.body.style.overflow = 'hidden';
                 };
@@ -576,9 +591,14 @@
                     document.body.style.overflow = 'auto';
                 };
                 window.openBusListModal = function() {
-                    loadBusList();
-                    busListModal.classList.add('active');
-                    document.body.style.overflow = 'hidden';
+                    const inputPassword = prompt('명단 확인을 위해 비밀번호를 입력하세요.');
+                    if (inputPassword === PASSWORD) {
+                        loadBusList();
+                        busListModal.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    } else if (inputPassword !== null) {
+                        alert('비밀번호가 올바르지 않습니다.');
+                    }
                 };
                 window.closeBusListModal = function() {
                     busListModal.classList.remove('active');
@@ -586,26 +606,37 @@
                 };
 
                 // --- Bus Reservation Logic ---
-                const busReservationsKey = 'busReservations';
                 window.submitBusReservation = function() {
                     const name = document.getElementById('bus-name').value.trim();
                     const phone = document.getElementById('bus-phone').value.trim();
-                    const count = document.getElementById('bus-count').value;
+                    const count = parseInt(document.getElementById('bus-count').value);
                     const busMessage = document.getElementById('bus-message');
+                    
+                    const currentCount = getCurrentBusCount();
+                    if (currentCount + count > MAX_CAPACITY) {
+                         alert(`죄송합니다. 버스 좌석이 부족합니다. 현재 ${currentCount}명 신청되었고, 최대 ${MAX_CAPACITY}명까지 가능합니다. (${MAX_CAPACITY - currentCount}석 남음)`);
+                         return;
+                    }
 
                     if (!name || !phone || !count) {
                         alert('모든 정보를 입력해주세요.');
                         return;
                     }
 
-                    const newReservation = { name, phone, count };
+                    const newReservation = { name, phone, count, timestamp: new Date().toISOString() };
                     const reservations = JSON.parse(localStorage.getItem(busReservationsKey) || '[]');
                     reservations.push(newReservation);
                     localStorage.setItem(busReservationsKey, JSON.stringify(reservations));
 
                     busMessage.innerText = `${name}님, ${count}명 예약이 완료되었습니다. 감사합니다!`;
                     busMessage.classList.remove('hidden');
-                    setTimeout(() => { busMessage.classList.add('hidden'); closeBusModal(); }, 2000);
+                    setTimeout(() => { 
+                        busMessage.classList.add('hidden'); 
+                        closeBusModal(); 
+                        document.getElementById('bus-name').value = '';
+                        document.getElementById('bus-phone').value = '';
+                        document.getElementById('bus-count').value = 1;
+                    }, 2000);
                 };
 
                 function loadBusList() {
@@ -626,8 +657,17 @@
                         emptyMessage.classList.remove('hidden');
                     }
                 }
-
+                
+                // CSV 다운로드 함수
                 window.downloadBusList = function() {
+                    const inputPassword = prompt('CSV 파일 다운로드를 위해 비밀번호를 입력하세요.');
+                    if (inputPassword !== PASSWORD) {
+                        if (inputPassword !== null) {
+                            alert('비밀번호가 올바르지 않습니다.');
+                        }
+                        return;
+                    }
+
                     const reservations = JSON.parse(localStorage.getItem(busReservationsKey) || '[]');
                     if (reservations.length === 0) {
                         alert('다운로드할 신청 명단이 없습니다.');
@@ -649,15 +689,6 @@
                     document.body.removeChild(link);
                 };
 
-                // --- Collapsible Account Section ---
-                const toggleButton = document.getElementById('toggle-account-btn');
-                const accountDetails = document.getElementById('account-details');
-                if (toggleButton) {
-                    toggleButton.addEventListener('click', () => {
-                        accountDetails.classList.toggle('active');
-                    });
-                }
-                
                 // --- Account Copy Functionality ---
                 window.copyToClipboard = function(elementId) {
                     const copyText = document.getElementById(elementId).innerText;
