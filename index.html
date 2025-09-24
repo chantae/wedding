@@ -627,7 +627,7 @@
                          alert(`죄송합니다. 버스 좌석이 부족합니다. 현재 ${currentCount}명 신청되었고, 최대 ${MAX_CAPACITY}명까지 가능합니다. (${MAX_CAPACITY - currentCount}석 남음)`);
                          return;
                     }
-
+                    
                     const newReservation = { name, phone, count, password, timestamp: new Date().toISOString() };
                     const reservations = JSON.parse(localStorage.getItem(busReservationsKey) || '[]');
                     reservations.push(newReservation);
@@ -661,7 +661,7 @@
                                     <p class="font-bold">${res.name} <span class="font-normal text-sm text-gray-500">(${res.count}명)</span></p>
                                     <p class="text-xs text-gray-400 mt-1">${res.phone}</p>
                                 </div>
-                                <button onclick="cancelBusReservation(${index})" class="bg-red-400 text-white rounded-full px-3 py-1 text-xs font-medium hover:bg-red-500 transition-colors">
+                                <button onclick="cancelBusReservation(${index}, '${res.password}')" class="bg-red-400 text-white rounded-full px-3 py-1 text-xs font-medium hover:bg-red-500 transition-colors">
                                     취소
                                 </button>
                             `;
@@ -673,13 +673,11 @@
                 }
                 
                 // 버스 예약 취소 함수
-                window.cancelBusReservation = function(index) {
-                    const reservations = JSON.parse(localStorage.getItem(busReservationsKey) || '[]');
-                    const reservationToCancel = reservations[index];
-
+                window.cancelBusReservation = function(index, savedPassword) {
                     const inputPassword = prompt('신청 시 입력했던 비밀번호를 입력하세요.');
-                    if (inputPassword === reservationToCancel.password) {
+                    if (inputPassword === savedPassword) {
                         if (confirm('정말로 신청을 취소하시겠습니까?')) {
+                            const reservations = JSON.parse(localStorage.getItem(busReservationsKey) || '[]');
                             reservations.splice(index, 1);
                             localStorage.setItem(busReservationsKey, JSON.stringify(reservations));
                             loadBusList();
