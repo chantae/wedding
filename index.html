@@ -83,7 +83,7 @@
 
         .divider {
             height: 1px;
-            background: linear-gradient(to right, #f9f9f9, #77DD77, #f9f9f9);
+            background: linear-gradient(to right, #f9f9f9, #FFCCFF, #f9f9f9);
         }
 
         /* Fullscreen Image Modal */
@@ -155,7 +155,7 @@
             <div class="p-8 md:p-10 w-full text-center bg-white rounded-3xl -mt-16 relative z-20 shadow-xl">
                 <h1 class="text-4xl stylish-font font-bold text-gray-800 flex items-center justify-center">
                     전찬태
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-[#77DD77] mx-4" viewBox="0 0 20 20" fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-[#FFCCFF] mx-4" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
                     </svg>
                     박은진
@@ -176,19 +176,19 @@
                 평생 서로 귀하게 여기며<br>첫 마음 그대로 존중하고 배려하며 살겠습니다.<br><br>
                 오로지 믿음과 사랑을 약속하는 날<br>오셔서 축복해 주시면 더없는 기쁨으로<br>간직하겠습니다.
             </p>
-            <div class="divider my-6"></div>
+            <div class="divider my-6" style="background: linear-gradient(to right, #f9f9f9, #FFCCFF, #f9f9f9);"></div>
             <div class="flex justify-center items-center space-x-8 text-gray-700">
                 <div class="flex flex-col">
                     <p class="font-semibold">故전관표 · 김옥주의 아들</p>
                     <p class="text-xl">전찬태</p>
                 </div>
-                <p class="text-xl font-bold stylish-font text-[#77DD77]">&</p>
+                <p class="text-xl font-bold stylish-font text-[#FFCCFF]">&</p>
                 <div class="flex flex-col">
                     <p class="font-semibold">박상문 · 김선희의 딸</p>
                     <p class="text-xl">박은진</p>
                 </div>
             </div>
-            <button onclick="openContactModal()" class="w-full mt-8 py-3 bg-[#77DD77] text-white rounded-full font-medium hover:bg-[#ffb3ff] transition-colors shadow-lg">
+            <button onclick="openContactModal()" class="w-full mt-8 py-3 bg-[#FFCCFF] text-gray-800 rounded-full font-medium hover:bg-[#ffb3ff] transition-colors shadow-lg">
                 <i class="fa fa-phone-alt"></i>&nbsp;&nbsp;연락하기
             </button>
         </section>
@@ -231,7 +231,7 @@
                     <span class="text-xs mt-1">Sec</span>
                 </div>
             </div>
-            <p class="text-sm text-gray-500 mt-4"><span class="font-bold text-[#77DD77]">찬태, 은진의 결혼식</span>이 <span id="dday-count">0</span>일 남았습니다.</p>
+            <p class="text-sm text-gray-500 mt-4"><span class="font-bold text-[#FFCCFF]">찬태, 은진의 결혼식</span>이 <span id="dday-count">0</span>일 남았습니다.</p>
         </section>
     
         <!-- 오시는 길 섹션 -->
@@ -248,19 +248,17 @@
                 </a>
             </div>
             <div class="grid grid-cols-3 gap-2">
-                <a id="naver-map-btn" href="#" class="py-2 px-3 bg-[#77DD77] text-white rounded-full text-sm font-medium hover:bg-[#ffb3ff] transition-colors">네이버지도</a>
-                <a id="tmap-btn" href="#" class="py-2 px-3 bg-[#77DD77] text-white rounded-full text-sm font-medium hover:bg-[#ffb3ff] transition-colors">티맵</a>
-                <a id="kakaonavi-btn" href="#" class="py-2 px-3 bg-[#77DD77] text-white rounded-full text-sm font-medium hover:bg-[#ffb3ff] transition-colors">카카오내비</a>
+                <a id="naver-map-btn" href="#" class="py-2 px-3 bg-[#FFCCFF] text-gray-800 rounded-full text-sm font-medium hover:bg-[#ffb3ff] transition-colors">네이버지도</a>
+                <a id="tmap-btn" href="#" class="py-2 px-3 bg-[#FFCCFF] text-gray-800 rounded-full text-sm font-medium hover:bg-[#ffb3ff] transition-colors">티맵</a>
+                <a id="kakaonavi-btn" href="#" class="py-2 px-3 bg-[#FFCCFF] text-gray-800 rounded-full text-sm font-medium hover:bg-[#ffb3ff] transition-colors">카카오내비</a>
             </div>
         </section>
 
         <!-- 주차 안내 섹션 -->
         <section class="w-full p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
-            <button id="toggle-parking-btn" class="w-full text-center text-2xl font-bold text-gray-800 mb-2 focus:outline-none">
-                주차 안내
-            </button>
-            <div class="text-sm text-gray-600 mb-6">편안한 방문을 위해 주차 정보를 안내드립니다.</div>
-            <div id="parking-details" class="collapsible-content active">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">주차 안내</h2>
+            <p class="text-sm text-gray-600 mb-6">편안한 방문을 위해 주차 정보를 안내드립니다.</p>
+            <div id="parking-details">
                 <div class="text-gray-600 space-y-4 text-left px-4 mt-4">
                     <div class="bg-gray-50 p-4 rounded-xl shadow-inner border border-gray-200">
                         <p class="font-semibold text-gray-800 mb-2">팔레드오페라 주차장</p>
@@ -275,10 +273,10 @@
             <h2 class="text-2xl font-bold text-gray-800 mb-2">BUS RESERVATION</h2>
             <p class="text-sm text-gray-600 mb-6">서울 - 대전 왕복 버스 탑승 신청</p>
             <div class="space-y-4">
-                <button onclick="openBusModal()" class="w-full py-3 bg-[#77DD77] text-white rounded-full font-medium hover:bg-[#ffb3ff] transition-colors shadow-lg">
+                <button onclick="openBusModal()" class="w-full py-3 bg-[#FFCCFF] text-gray-800 rounded-full font-medium hover:bg-[#ffb3ff] transition-colors shadow-lg">
                     버스 탑승 신청하기
                 </button>
-                <div class="divider my-4"></div>
+                <div class="divider my-4" style="background: linear-gradient(to right, #f9f9f9, #FFCCFF, #f9f9f9);"></div>
                 <button onclick="openBusListModal()" class="w-full py-3 bg-[#f9f9f9] text-gray-800 rounded-full font-medium hover:bg-[#eaeaea] transition-colors shadow-lg">
                     신청 명단 확인하기
                 </button>
@@ -287,9 +285,9 @@
     
         <!-- 마음 전하실 곳 섹션 -->
         <section class="w-full p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
-            <button id="toggle-account-btn" class="w-full text-center text-2xl font-bold text-gray-800 mb-2 focus:outline-none">
+            <h2 id="toggle-account-btn" class="w-full text-center text-2xl font-bold text-gray-800 mb-2 focus:outline-none cursor-pointer">
                 마음 전하실 곳
-            </button>
+            </h2>
             <div class="text-sm text-gray-600 mb-6">참석이 어려우신 분들을 위해<br>계좌번호를 기재하였습니다.</div>
             <div id="account-details" class="collapsible-content active">
                 <div class="text-gray-600 space-y-4 text-left px-4 mt-4">
@@ -317,7 +315,7 @@
         <!-- 엔딩 섹션 -->
         <section class="w-full p-6 md:p-10 mt-8 mb-12 text-center animate-up">
             <p class="text-xl stylish-font font-bold text-gray-800 mb-4">감사합니다.</p>
-            <button id="kakao-link-btn" class="w-full py-3 bg-[#77DD77] text-white rounded-full font-bold shadow-lg hover:bg-[#ffb3ff] transition-colors">
+            <button id="kakao-link-btn" class="w-full py-3 bg-[#FFCCFF] text-gray-800 rounded-full font-bold shadow-lg hover:bg-[#ffb3ff] transition-colors">
                 카카오톡으로 초대장 보내기
             </button>
         </section>
@@ -372,11 +370,11 @@
             <h3 class="text-xl font-bold mb-6">버스 탑승 신청</h3>
             <div class="space-y-4">
                 <p class="text-sm text-gray-600">서울 - 대전 왕복 버스를 운영합니다. 탑승을 원하시면 정보를 입력해주세요.</p>
-                <input id="bus-name" type="text" placeholder="성함을 입력해주세요" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#77DD77]">
-                <input id="bus-phone" type="tel" placeholder="연락처를 입력해주세요 (예: 010-1234-5678)" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#77DD77]">
+                <input id="bus-name" type="text" placeholder="성함을 입력해주세요" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFCCFF]">
+                <input id="bus-phone" type="tel" placeholder="연락처를 입력해주세요 (예: 010-1234-5678)" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFCCFF]">
                 <div class="flex items-center justify-between">
                     <label for="bus-count" class="text-gray-700">탑승 인원</label>
-                    <select id="bus-count" class="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#77DD77]">
+                    <select id="bus-count" class="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFCCFF]">
                         <option value="1">1명</option>
                         <option value="2">2명</option>
                         <option value="3">3명</option>
@@ -384,7 +382,8 @@
                         <option value="5">5명</option>
                     </select>
                 </div>
-                <button onclick="submitBusReservation()" class="w-full py-3 bg-[#77DD77] text-white rounded-full font-medium hover:bg-[#ffb3ff] transition-colors shadow-lg">
+                <input id="bus-password" type="password" placeholder="취소 시 사용할 비밀번호 4자리를 입력해주세요." class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFCCFF]" maxlength="4">
+                <button onclick="submitBusReservation()" class="w-full py-3 bg-[#FFCCFF] text-gray-800 rounded-full font-medium hover:bg-[#ffb3ff] transition-colors shadow-lg">
                     신청하기
                 </button>
             </div>
@@ -405,7 +404,7 @@
                 </ul>
                 <p id="bus-list-empty" class="text-gray-500 text-center text-sm">신청자가 없습니다.</p>
             </div>
-            <button onclick="downloadBusList()" class="w-full py-3 bg-[#77DD77] text-white rounded-full font-medium hover:bg-[#ffb3ff] transition-colors shadow-lg">
+            <button onclick="downloadBusList()" class="w-full py-3 bg-[#FFCCFF] text-gray-800 rounded-full font-medium hover:bg-[#ffb3ff] transition-colors shadow-lg">
                 CSV 파일 다운로드
             </button>
         </div>
@@ -610,20 +609,26 @@
                     const name = document.getElementById('bus-name').value.trim();
                     const phone = document.getElementById('bus-phone').value.trim();
                     const count = parseInt(document.getElementById('bus-count').value);
+                    const password = document.getElementById('bus-password').value.trim();
                     const busMessage = document.getElementById('bus-message');
                     
+                    if (!name || !phone || !count || !password) {
+                        alert('모든 정보를 입력해주세요.');
+                        return;
+                    }
+
+                    if (password.length !== 4) {
+                        alert('비밀번호는 4자리여야 합니다.');
+                        return;
+                    }
+
                     const currentCount = getCurrentBusCount();
                     if (currentCount + count > MAX_CAPACITY) {
                          alert(`죄송합니다. 버스 좌석이 부족합니다. 현재 ${currentCount}명 신청되었고, 최대 ${MAX_CAPACITY}명까지 가능합니다. (${MAX_CAPACITY - currentCount}석 남음)`);
                          return;
                     }
 
-                    if (!name || !phone || !count) {
-                        alert('모든 정보를 입력해주세요.');
-                        return;
-                    }
-
-                    const newReservation = { name, phone, count, timestamp: new Date().toISOString() };
+                    const newReservation = { name, phone, count, password, timestamp: new Date().toISOString() };
                     const reservations = JSON.parse(localStorage.getItem(busReservationsKey) || '[]');
                     reservations.push(newReservation);
                     localStorage.setItem(busReservationsKey, JSON.stringify(reservations));
@@ -636,6 +641,7 @@
                         document.getElementById('bus-name').value = '';
                         document.getElementById('bus-phone').value = '';
                         document.getElementById('bus-count').value = 1;
+                        document.getElementById('bus-password').value = '';
                     }, 2000);
                 };
 
@@ -649,8 +655,16 @@
                         emptyMessage.classList.add('hidden');
                         reservations.forEach((res, index) => {
                             const li = document.createElement('li');
-                            li.className = 'p-3 bg-gray-50 rounded-lg shadow-inner';
-                            li.innerHTML = `<p class="font-bold">${res.name} <span class="font-normal text-sm text-gray-500">(${res.count}명)</span></p><p class="text-xs text-gray-400 mt-1">${res.phone}</p>`;
+                            li.className = 'p-3 bg-gray-50 rounded-lg shadow-inner flex justify-between items-center';
+                            li.innerHTML = `
+                                <div>
+                                    <p class="font-bold">${res.name} <span class="font-normal text-sm text-gray-500">(${res.count}명)</span></p>
+                                    <p class="text-xs text-gray-400 mt-1">${res.phone}</p>
+                                </div>
+                                <button onclick="cancelBusReservation(${index})" class="bg-red-400 text-white rounded-full px-3 py-1 text-xs font-medium hover:bg-red-500 transition-colors">
+                                    취소
+                                </button>
+                            `;
                             listUl.appendChild(li);
                         });
                     } else {
@@ -658,9 +672,27 @@
                     }
                 }
                 
+                // 버스 예약 취소 함수
+                window.cancelBusReservation = function(index) {
+                    const reservations = JSON.parse(localStorage.getItem(busReservationsKey) || '[]');
+                    const reservationToCancel = reservations[index];
+
+                    const inputPassword = prompt('신청 시 입력했던 비밀번호를 입력하세요.');
+                    if (inputPassword === reservationToCancel.password) {
+                        if (confirm('정말로 신청을 취소하시겠습니까?')) {
+                            reservations.splice(index, 1);
+                            localStorage.setItem(busReservationsKey, JSON.stringify(reservations));
+                            loadBusList();
+                            alert('신청이 취소되었습니다.');
+                        }
+                    } else if (inputPassword !== null) {
+                        alert('비밀번호가 올바르지 않습니다.');
+                    }
+                };
+
                 // CSV 다운로드 함수
                 window.downloadBusList = function() {
-                    const inputPassword = prompt('CSV 파일 다운로드를 위해 비밀번호를 입력하세요.');
+                    const inputPassword = prompt('CSV 파일 다운로드를 위해 관리자 비밀번호를 입력하세요.');
                     if (inputPassword !== PASSWORD) {
                         if (inputPassword !== null) {
                             alert('비밀번호가 올바르지 않습니다.');
@@ -853,7 +885,7 @@
                         }
 
                         const isDDay = (i === day);
-                        const cellClass = isDDay ? 'bg-[#77DD77] text-white rounded-full font-bold' : '';
+                        const cellClass = isDDay ? 'bg-[#FFCCFF] text-gray-800 rounded-full font-bold' : '';
                         calendarHTML += `<td class="py-2"><span class="w-8 h-8 flex items-center justify-center mx-auto ${cellClass}">${i}</span></td>`;
                     }
 
