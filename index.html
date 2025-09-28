@@ -159,6 +159,30 @@
         .admin-button.active {
             color: #8B7D6C; /* Active admin color */
         }
+
+        /* Floating Admin Button at bottom right */
+        #global-admin-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1050;
+            width: 48px;
+            height: 48px;
+            background-color: #F0E8D7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            color: #8B7D6C;
+            font-size: 1.5rem;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        #global-admin-btn:hover {
+            transform: scale(1.1);
+            background-color: #D8C4A6;
+        }
     </style>
 </head>
 <body class="bg-white flex flex-col items-center justify-center">
@@ -525,6 +549,25 @@
     <!-- Fullscreen Image Modal -->
     <div id="fullscreen-image-modal">
         <img id="fullscreen-image" src="" alt="Full-screen gallery image">
+    </div>
+    
+    <!-- Global Admin Button -->
+    <button id="global-admin-btn" onclick="openGlobalAdminModal()">
+        <i class="fas fa-cog"></i>
+    </button>
+    
+    <!-- Global Admin Modal (전체 삭제 확인 팝업) -->
+    <div id="global-admin-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible">
+        <div class="modal-content w-full max-w-xs bg-white rounded-xl p-6 text-center shadow-2xl">
+            <h3 class="text-xl font-bold mb-4">관리자 도구</h3>
+            <p class="text-sm text-gray-600 mb-6">모든 로컬 저장소 데이터를 초기화합니다.</p>
+            <button onclick="deleteAllLocalStorage()" class="w-full py-3 bg-red-500 text-white rounded-full font-medium hover:bg-red-600 transition-colors shadow-lg">
+                전체 데이터 삭제 (복구 불가)
+            </button>
+            <button onclick="closeGlobalAdminModal()" class="w-full py-3 mt-2 bg-gray-200 text-gray-800 rounded-full font-medium hover:bg-gray-300 transition-colors shadow-lg">
+                취소
+            </button>
+        </div>
     </div>
 
 
@@ -1129,6 +1172,32 @@
                         listUl.appendChild(li);
                     });
                 }
+                
+                // --- Global Admin Functions ---
+                const globalAdminModal = document.getElementById('global-admin-modal');
+
+                window.openGlobalAdminModal = function() {
+                    const inputPassword = prompt('전체 데이터 삭제를 위해 관리자 비밀번호를 입력하세요.');
+                    if (inputPassword === ADMIN_PASSWORD) {
+                        globalAdminModal.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    } else if (inputPassword !== null) {
+                        alert('비밀번호가 올바르지 않습니다.');
+                    }
+                };
+
+                window.closeGlobalAdminModal = function() {
+                    globalAdminModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                };
+
+                window.deleteAllLocalStorage = function() {
+                    if (confirm('경고! 버스 명단과 방명록을 포함한 모든 저장된 데이터를 영구적으로 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+                        localStorage.clear();
+                        alert('모든 로컬 데이터가 삭제되었습니다. 페이지를 새로고침합니다.');
+                        window.location.reload();
+                    }
+                };
 
 
                 // --- Account Copy Functionality ---
@@ -1366,7 +1435,6 @@
                     const tempInput = document.createElement('textarea');
                     document.body.appendChild(tempInput);
                     tempInput.value = currentURL;
-                    tempInput.select();
                     document.execCommand('copy');
                     document.body.removeChild(tempInput);
                     alert('청첩장 링크가 클립보드에 복사되었습니다! 원하는 곳에 붙여넣어 공유하세요.');
