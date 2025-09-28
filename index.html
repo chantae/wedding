@@ -11,10 +11,10 @@
         body {
             font-family: 'Noto Sans KR', sans-serif;
             color: #404040;
-            background-color: #ffffff;
+            background-color: #ffffff; /* 흰색 배경 */
         }
         .wedding-card {
-            background-color: #f9f9f9;
+            background-color: #FBF8F3; /* 연한 베이지 톤 */
         }
         .stylish-font { font-family: 'Stylish', cursive; }
 
@@ -32,12 +32,13 @@
         .countdown > div > span { font-variant-numeric: tabular-nums; }
 
         .collapsible-content {
-            max-height: 0;
-            overflow: hidden;
+            max-height: 500px;
+            overflow: visible; 
             transition: max-height 0.5s ease-in-out;
         }
-        .collapsible-content.active {
-            max-height: 500px;
+        .collapsible-content:not(.active) {
+            max-height: 0;
+            overflow: hidden;
         }
 
         /* Animation */
@@ -51,6 +52,17 @@
             transform: translateY(0);
         }
         
+        /* Fade-in for Gallery items */
+        .gallery-item-animation {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .gallery-item-animation.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .fade-in {
             opacity: 0;
             transition: opacity 1s ease-in-out;
@@ -83,7 +95,7 @@
 
         .divider {
             height: 1px;
-            background: linear-gradient(to right, #f9f9f9, #FFCCFF, #f9f9f9);
+            background: linear-gradient(to right, #f9f9f9, #E5D5C1, #f9f9f9); /* 베이지 톤으로 변경 */
         }
 
         /* Fullscreen Image Modal */
@@ -120,6 +132,25 @@
                 object-fit: contain;
             }
         }
+        
+        /* Guestbook specific styles */
+        .guestbook-item {
+            padding: 1rem;
+            background: #ffffff; /* 흰색 배경 */
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 0.5rem;
+        }
+        .guestbook-item-list {
+            padding: 1rem;
+            background: #FBF8F3; /* 연한 베이지 톤 */
+            border-radius: 0.5rem;
+            border: 1px solid #E5D5C1;
+        }
+        .guestbook-list-item {
+            border-bottom: 1px dotted #E5D5C1;
+            padding: 0.5rem 0;
+        }
     </style>
 </head>
 <body class="bg-white flex flex-col items-center justify-center">
@@ -155,7 +186,7 @@
             <div class="p-8 md:p-10 w-full text-center bg-white rounded-3xl -mt-16 relative z-20 shadow-xl">
                 <h1 class="text-4xl stylish-font font-bold text-gray-800 flex items-center justify-center">
                     전찬태
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-[#FFCCFF] mx-4" viewBox="0 0 20 20" fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-[#E5D5C1] mx-4" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
                     </svg>
                     박은진
@@ -176,19 +207,19 @@
                 평생 서로 귀하게 여기며<br>첫 마음 그대로 존중하고 배려하며 살겠습니다.<br><br>
                 오로지 믿음과 사랑을 약속하는 날<br>오셔서 축복해 주시면 더없는 기쁨으로<br>간직하겠습니다.
             </p>
-            <div class="divider my-6" style="background: linear-gradient(to right, #f9f9f9, #FFCCFF, #f9f9f9);"></div>
+            <div class="divider my-6" style="background: linear-gradient(to right, #f9f9f9, #E5D5C1, #f9f9f9);"></div>
             <div class="flex justify-center items-center space-x-8 text-gray-700">
                 <div class="flex flex-col">
                     <p class="font-semibold">故전관표 · 김옥주의 아들</p>
                     <p class="text-xl">전찬태</p>
                 </div>
-                <p class="text-xl font-bold stylish-font text-[#FFCCFF]">&</p>
+                <p class="text-xl font-bold stylish-font text-[#E5D5C1]">&</p>
                 <div class="flex flex-col">
                     <p class="font-semibold">박상문 · 김선희의 딸</p>
                     <p class="text-xl">박은진</p>
                 </div>
             </div>
-            <button onclick="openContactModal()" class="w-full mt-8 py-3 bg-[#FFCCFF] text-gray-800 rounded-full font-medium hover:bg-[#ffb3ff] transition-colors shadow-lg">
+            <button onclick="openContactModal()" class="w-full mt-8 py-3 bg-[#E5D5C1] text-gray-800 rounded-full font-medium hover:bg-[#C0A080] transition-colors shadow-lg">
                 <i class="fa fa-phone-alt"></i>&nbsp;&nbsp;연락하기
             </button>
         </section>
@@ -231,7 +262,7 @@
                     <span class="text-xs mt-1">Sec</span>
                 </div>
             </div>
-            <p class="text-sm text-gray-500 mt-4"><span class="font-bold text-[#FFCCFF]">찬태, 은진의 결혼식</span>이 <span id="dday-count">0</span>일 남았습니다.</p>
+            <p class="text-sm text-gray-500 mt-4"><span class="font-bold text-[#8B7D6C]">찬태, 은진의 결혼식</span>이 <span id="dday-count">0</span>일 남았습니다.</p>
         </section>
     
         <!-- 오시는 길 섹션 -->
@@ -248,9 +279,9 @@
                 </a>
             </div>
             <div class="grid grid-cols-3 gap-2">
-                <a id="naver-map-btn" href="#" class="py-2 px-3 bg-[#FFCCFF] text-gray-800 rounded-full text-sm font-medium hover:bg-[#ffb3ff] transition-colors">네이버지도</a>
-                <a id="tmap-btn" href="#" class="py-2 px-3 bg-[#FFCCFF] text-gray-800 rounded-full text-sm font-medium hover:bg-[#ffb3ff] transition-colors">티맵</a>
-                <a id="kakaonavi-btn" href="#" class="py-2 px-3 bg-[#FFCCFF] text-gray-800 rounded-full text-sm font-medium hover:bg-[#ffb3ff] transition-colors">카카오내비</a>
+                <a id="naver-map-btn" href="#" class="py-2 px-3 bg-[#E5D5C1] text-gray-800 rounded-full text-sm font-medium hover:bg-[#C0A080] transition-colors">네이버지도</a>
+                <a id="tmap-btn" href="#" class="py-2 px-3 bg-[#E5D5C1] text-gray-800 rounded-full text-sm font-medium hover:bg-[#C0A080] transition-colors">티맵</a>
+                <a id="kakaonavi-btn" href="#" class="py-2 px-3 bg-[#E5D5C1] text-gray-800 rounded-full text-sm font-medium hover:bg-[#C0A080] transition-colors">카카오내비</a>
             </div>
         </section>
 
@@ -273,12 +304,31 @@
             <h2 class="text-2xl font-bold text-gray-800 mb-2">BUS RESERVATION</h2>
             <p class="text-sm text-gray-600 mb-6">서울 - 대전 왕복 버스 탑승 신청</p>
             <div class="space-y-4">
-                <button onclick="openBusModal()" class="w-full py-3 bg-[#FFCCFF] text-gray-800 rounded-full font-medium hover:bg-[#ffb3ff] transition-colors shadow-lg">
+                <button onclick="openBusModal()" class="w-full py-3 bg-[#E5D5C1] text-gray-800 rounded-full font-medium hover:bg-[#C0A080] transition-colors shadow-lg">
                     버스 탑승 신청하기
                 </button>
-                <div class="divider my-4" style="background: linear-gradient(to right, #f9f9f9, #FFCCFF, #f9f9f9);"></div>
+                <div class="divider my-4" style="background: linear-gradient(to right, #f9f9f9, #E5D5C1, #f9f9f9);"></div>
                 <button onclick="openBusListModal()" class="w-full py-3 bg-[#f9f9f9] text-gray-800 rounded-full font-medium hover:bg-[#eaeaea] transition-colors shadow-lg">
                     신청 명단 확인하기
+                </button>
+            </div>
+        </section>
+        
+        <!-- 방명록 섹션 (Guestbook) -->
+        <section class="w-full p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">GUESTBOOK</h2>
+            <p class="text-sm text-gray-600 mb-6">축하의 마음을 남겨주세요.</p>
+            
+            <div id="guestbook-preview" class="space-y-3 mb-6 text-left">
+                <!-- 방명록 미리보기 3개 (JavaScript로 로드됨) -->
+            </div>
+
+            <div class="space-y-4">
+                <button onclick="openGuestbookWriteModal()" class="w-full py-3 bg-[#E5D5C1] text-gray-800 rounded-full font-medium hover:bg-[#C0A080] transition-colors shadow-lg">
+                    방명록 작성하기
+                </button>
+                <button onclick="openGuestbookListModal()" class="w-full py-3 bg-[#f9f9f9] text-gray-800 rounded-full font-medium hover:bg-[#eaeaea] transition-colors shadow-lg">
+                    방명록 전체보기
                 </button>
             </div>
         </section>
@@ -309,13 +359,13 @@
                     </div>
                 </div>
             </div>
-            <div id="copy-message" class="text-sm mt-4 text-pink-500 hidden">복사되었습니다!</div>
+            <div id="copy-message" class="text-sm mt-4 text-[#8B7D6C] hidden">복사되었습니다!</div>
         </section>
     
         <!-- 엔딩 섹션 -->
         <section class="w-full p-6 md:p-10 mt-8 mb-12 text-center animate-up">
             <p class="text-xl stylish-font font-bold text-gray-800 mb-4">감사합니다.</p>
-            <button id="kakao-link-btn" class="w-full py-3 bg-[#FFCCFF] text-gray-800 rounded-full font-bold shadow-lg hover:bg-[#ffb3ff] transition-colors">
+            <button id="kakao-link-btn" class="w-full py-3 bg-[#E5D5C1] text-gray-800 rounded-full font-bold shadow-lg hover:bg-[#C0A080] transition-colors">
                 카카오톡으로 초대장 보내기
             </button>
         </section>
@@ -370,11 +420,11 @@
             <h3 class="text-xl font-bold mb-6">버스 탑승 신청</h3>
             <div class="space-y-4">
                 <p class="text-sm text-gray-600">서울 - 대전 왕복 버스를 운영합니다. 탑승을 원하시면 정보를 입력해주세요.</p>
-                <input id="bus-name" type="text" placeholder="성함을 입력해주세요" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFCCFF]">
-                <input id="bus-phone" type="tel" placeholder="연락처를 입력해주세요 (예: 010-1234-5678)" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFCCFF]">
+                <input id="bus-name" type="text" placeholder="성함을 입력해주세요" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5D5C1]">
+                <input id="bus-phone" type="tel" placeholder="연락처를 입력해주세요 (예: 010-1234-5678)" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5D5C1]">
                 <div class="flex items-center justify-between">
                     <label for="bus-count" class="text-gray-700">탑승 인원</label>
-                    <select id="bus-count" class="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFCCFF]">
+                    <select id="bus-count" class="p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5D5C1]">
                         <option value="1">1명</option>
                         <option value="2">2명</option>
                         <option value="3">3명</option>
@@ -382,12 +432,12 @@
                         <option value="5">5명</option>
                     </select>
                 </div>
-                <input id="bus-password" type="password" placeholder="취소 시 사용할 비밀번호 4자리를 입력해주세요." class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FFCCFF]" maxlength="4">
-                <button onclick="submitBusReservation()" class="w-full py-3 bg-[#FFCCFF] text-gray-800 rounded-full font-medium hover:bg-[#ffb3ff] transition-colors shadow-lg">
+                <input id="bus-password" type="password" placeholder="취소 시 사용할 비밀번호 4자리를 입력해주세요." class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5D5C1]" maxlength="4">
+                <button onclick="submitBusReservation()" class="w-full py-3 bg-[#E5D5C1] text-gray-800 rounded-full font-medium hover:bg-[#C0A080] transition-colors shadow-lg">
                     신청하기
                 </button>
             </div>
-            <div id="bus-message" class="text-sm mt-4 text-pink-500 hidden">신청이 완료되었습니다!</div>
+            <div id="bus-message" class="text-sm mt-4 text-[#8B7D6C] hidden">신청이 완료되었습니다!</div>
         </div>
     </div>
 
@@ -404,9 +454,45 @@
                 </ul>
                 <p id="bus-list-empty" class="text-gray-500 text-center text-sm">신청자가 없습니다.</p>
             </div>
-            <button onclick="downloadBusList()" class="w-full py-3 bg-[#FFCCFF] text-gray-800 rounded-full font-medium hover:bg-[#ffb3ff] transition-colors shadow-lg">
+            <button onclick="downloadBusList()" class="w-full py-3 bg-[#E5D5C1] text-gray-800 rounded-full font-medium hover:bg-[#C0A080] transition-colors shadow-lg">
                 CSV 파일 다운로드
             </button>
+        </div>
+    </div>
+    
+    <!-- 방명록 작성 팝업 (모달) -->
+    <div id="guestbook-write-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible">
+        <div class="modal-content w-full max-w-sm bg-white rounded-xl p-8 text-center shadow-2xl">
+            <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600" onclick="closeGuestbookWriteModal()">
+                <i class="fa fa-times text-xl"></i>
+            </button>
+            <h3 class="text-xl font-bold mb-6">축하의 마음 남기기</h3>
+            <div class="space-y-4">
+                <input id="gb-name" type="text" placeholder="성함을 입력해주세요" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5D5C1]">
+                <textarea id="gb-message" placeholder="축하 메시지를 입력해주세요 (500자 이내)" rows="4" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5D5C1]" maxlength="500"></textarea>
+                <input id="gb-password" type="password" placeholder="삭제 시 사용할 비밀번호 4자리를 입력해주세요." class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#E5D5C1]" maxlength="4">
+                <button onclick="submitGuestbook()" class="w-full py-3 bg-[#E5D5C1] text-gray-800 rounded-full font-medium hover:bg-[#C0A080] transition-colors shadow-lg">
+                    방명록 남기기
+                </button>
+            </div>
+            <div id="gb-message-status" class="text-sm mt-4 text-[#8B7D6C] hidden">방명록 작성이 완료되었습니다!</div>
+        </div>
+    </div>
+
+    <!-- 방명록 전체보기 팝업 (모달) -->
+    <div id="guestbook-list-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible">
+        <div class="modal-content w-full max-w-sm bg-white rounded-xl p-8 shadow-2xl">
+            <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600" onclick="closeGuestbookListModal()">
+                <i class="fa fa-times text-xl"></i>
+            </button>
+            <h3 class="text-xl font-bold mb-6 text-center">방명록 전체 목록</h3>
+            <div class="max-h-80 overflow-y-auto mb-4 p-2 guestbook-item-list border rounded-lg">
+                <ul id="guestbook-list-ul" class="text-left space-y-2">
+                    <!-- 방명록 리스트는 JavaScript로 동적으로 추가됩니다. -->
+                </ul>
+                <p id="guestbook-list-empty" class="text-gray-500 text-center text-sm hidden">아직 방명록이 없습니다.</p>
+            </div>
+            <p class="text-xs text-gray-500 text-left px-2">※ 취소는 작성 시 설정한 비밀번호로 가능합니다.</p>
         </div>
     </div>
 
@@ -420,6 +506,7 @@
     <script>
         // 카카오톡 SDK 초기화 코드를 한 번만 실행되도록 수정
         if (!Kakao.isInitialized()) {
+            // 'YOUR_APP_KEY'는 실제 카카오 앱 키로 변경해야 합니다.
             Kakao.init('YOUR_APP_KEY');
         }
 
@@ -429,6 +516,12 @@
             const splashImages = document.querySelectorAll('#splash-images img');
             let splashImageIndex = 0;
             let splashInterval;
+            
+            // --- Constants ---
+            const ADMIN_PASSWORD = '1331';
+            const busReservationsKey = 'busReservations';
+            const guestbookEntriesKey = 'guestbookEntries';
+            const MAX_CAPACITY = 28;
 
             // 스플래시 이미지 전환 로직
             function showNextSplashImage() {
@@ -480,6 +573,20 @@
                 document.querySelectorAll('.animate-up').forEach(section => {
                     observer.observe(section);
                 });
+                
+                // 갤러리 로딩 및 애니메이션을 위한 Intersection Observer 설정
+                const galleryObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('loaded');
+                            galleryObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                
+                // 방명록 미리보기 로드
+                renderGuestbookPreview();
+
 
                 // --- Image Slider Logic ---
                 const sliderImages = [
@@ -502,24 +609,46 @@
                         sliderContainer.appendChild(img);
                     });
 
-                    // Add prev/next buttons
-                    sliderContainer.innerHTML += `
-                        <button id="prev-btn" class="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 bg-black/30 text-white rounded-full hover:bg-black/50 transition-colors focus:outline-none">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button id="next-btn" class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 bg-black/30 text-white rounded-full hover:bg-black/50 transition-colors focus:outline-none">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    `;
+                    // Add prev/next buttons (Re-added because innerHTML cleared them)
+                    const prevBtnHTML = document.createElement('button');
+                    prevBtnHTML.id = 'prev-btn';
+                    prevBtnHTML.className = "absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 bg-black/30 text-white rounded-full hover:bg-black/50 transition-colors focus:outline-none";
+                    prevBtnHTML.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                    prevBtnHTML.addEventListener('click', () => { showSlide(currentSlide - 1); resetSlider(); });
+                    sliderContainer.appendChild(prevBtnHTML);
+
+                    const nextBtnHTML = document.createElement('button');
+                    nextBtnHTML.id = 'next-btn';
+                    nextBtnHTML.className = "absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 bg-black/30 text-white rounded-full hover:bg-black/50 transition-colors focus:outline-none";
+                    nextBtnHTML.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                    nextBtnHTML.addEventListener('click', () => { showSlide(currentSlide + 1); resetSlider(); });
+                    sliderContainer.appendChild(nextBtnHTML);
+
+                    // Ensure active class is set on the correct image
+                    document.querySelectorAll('#image-slider img').forEach((img, index) => {
+                         img.classList.remove('active');
+                         if (index === currentSlide) {
+                             img.classList.add('active');
+                         }
+                    });
                 }
 
                 function showSlide(index) {
                     const images = document.querySelectorAll('#image-slider img');
                     if (images.length === 0) return;
 
+                    // Deactivate old slide
                     images[currentSlide].classList.remove('active');
+                    images[currentSlide].classList.remove('opacity-100');
+                    images[currentSlide].classList.add('opacity-0');
+
+                    // Calculate new slide index
                     currentSlide = (index + images.length) % images.length;
-                    images[currentSlide].classList.add('active');
+
+                    // Activate new slide
+                    images[currentSlide].classList.remove('opacity-0');
+                    images[currentSlide].classList.add('opacity-100');
+                    images[currentSlide].classList.add('active'); // Keep active for fade-in style
                 }
 
                 function startSlider() {
@@ -535,22 +664,6 @@
 
                 // Attach event listeners after rendering
                 renderSliderImages();
-
-                const prevBtn = document.getElementById('prev-btn');
-                const nextBtn = document.getElementById('next-btn');
-
-                if (prevBtn && nextBtn) {
-                    prevBtn.addEventListener('click', () => {
-                        showSlide(currentSlide - 1);
-                        resetSlider();
-                    });
-
-                    nextBtn.addEventListener('click', () => {
-                        showSlide(currentSlide + 1);
-                        resetSlider();
-                    });
-                }
-
                 startSlider();
 
                 // --- Collapsible Parking Section ---
@@ -565,10 +678,6 @@
                 // --- Bus Reservation Modal ---
                 const busModal = document.getElementById('bus-modal');
                 const busListModal = document.getElementById('bus-list-modal');
-
-                const MAX_CAPACITY = 28;
-                const PASSWORD = '1331';
-                const busReservationsKey = 'busReservations';
 
                 // 현재 예약된 총 인원 계산
                 function getCurrentBusCount() {
@@ -591,7 +700,7 @@
                 };
                 window.openBusListModal = function() {
                     const inputPassword = prompt('명단 확인을 위해 비밀번호를 입력하세요.');
-                    if (inputPassword === PASSWORD) {
+                    if (inputPassword === ADMIN_PASSWORD) {
                         loadBusList();
                         busListModal.classList.add('active');
                         document.body.style.overflow = 'hidden';
@@ -617,8 +726,8 @@
                         return;
                     }
 
-                    if (password.length !== 4) {
-                        alert('비밀번호는 4자리여야 합니다.');
+                    if (password.length !== 4 || isNaN(parseInt(password))) {
+                        alert('비밀번호는 숫자 4자리여야 합니다.');
                         return;
                     }
 
@@ -653,6 +762,9 @@
                     
                     if (reservations.length > 0) {
                         emptyMessage.classList.add('hidden');
+                        // 최신 순으로 정렬
+                        reservations.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                        
                         reservations.forEach((res, index) => {
                             const li = document.createElement('li');
                             li.className = 'p-3 bg-gray-50 rounded-lg shadow-inner flex justify-between items-center';
@@ -661,7 +773,7 @@
                                     <p class="font-bold">${res.name} <span class="font-normal text-sm text-gray-500">(${res.count}명)</span></p>
                                     <p class="text-xs text-gray-400 mt-1">${res.phone}</p>
                                 </div>
-                                <button onclick="cancelBusReservation(${index}, '${res.password}')" class="bg-red-400 text-white rounded-full px-3 py-1 text-xs font-medium hover:bg-red-500 transition-colors">
+                                <button onclick="cancelBusReservation(${index})" class="bg-red-400 text-white rounded-full px-3 py-1 text-xs font-medium hover:bg-red-500 transition-colors">
                                     취소
                                 </button>
                             `;
@@ -672,26 +784,47 @@
                     }
                 }
                 
-                // 버스 예약 취소 함수
-                window.cancelBusReservation = function(index, savedPassword) {
-                    const inputPassword = prompt('신청 시 입력했던 비밀번호를 입력하세요.');
-                    if (inputPassword === savedPassword) {
-                        if (confirm('정말로 신청을 취소하시겠습니까?')) {
-                            const reservations = JSON.parse(localStorage.getItem(busReservationsKey) || '[]');
-                            reservations.splice(index, 1);
-                            localStorage.setItem(busReservationsKey, JSON.stringify(reservations));
-                            loadBusList();
-                            alert('신청이 취소되었습니다.');
+                // 버스 예약 취소 함수 (사용자 본인 비밀번호로 취소)
+                window.cancelBusReservation = function(index) {
+                    let reservations = JSON.parse(localStorage.getItem(busReservationsKey) || '[]');
+                    // 명단 로드 시 사용된 정렬 순서를 유지
+                    reservations.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    const reservationToCancel = reservations[index];
+
+                    const inputPassword = prompt(`'${reservationToCancel.name}'님의 신청을 취소하시려면, 신청 시 입력했던 4자리 비밀번호를 입력하세요.`);
+                    
+                    if (inputPassword === null) {
+                        return; 
+                    }
+
+                    if (inputPassword === reservationToCancel.password) {
+                        if (confirm(`정말로 ${reservationToCancel.name}님의 신청 (${reservationToCancel.count}명)을 취소하시겠습니까?`)) {
+                            // 원본 배열에서 timestamp를 이용해 해당 항목을 찾아 삭제
+                            let originalReservations = JSON.parse(localStorage.getItem(busReservationsKey) || '[]');
+                            const indexToDelete = originalReservations.findIndex(
+                                res => res.timestamp === reservationToCancel.timestamp && 
+                                       res.name === reservationToCancel.name &&
+                                       res.password === reservationToCancel.password
+                            );
+
+                            if (indexToDelete > -1) {
+                                originalReservations.splice(indexToDelete, 1);
+                                localStorage.setItem(busReservationsKey, JSON.stringify(originalReservations));
+                                loadBusList(); // 명단 새로고침
+                                alert('신청이 취소되었습니다.');
+                            } else {
+                                alert('오류: 취소할 항목을 찾을 수 없습니다.');
+                            }
                         }
-                    } else if (inputPassword !== null) {
+                    } else {
                         alert('비밀번호가 올바르지 않습니다.');
                     }
                 };
 
-                // CSV 다운로드 함수
+                // CSV 다운로드 함수 (관리자 비밀번호로 접근)
                 window.downloadBusList = function() {
                     const inputPassword = prompt('CSV 파일 다운로드를 위해 관리자 비밀번호를 입력하세요.');
-                    if (inputPassword !== PASSWORD) {
+                    if (inputPassword !== ADMIN_PASSWORD) {
                         if (inputPassword !== null) {
                             alert('비밀번호가 올바르지 않습니다.');
                         }
@@ -704,8 +837,8 @@
                         return;
                     }
 
-                    const header = '성함,연락처,인원\n';
-                    const rows = reservations.map(res => `${res.name},${res.phone},${res.count}`).join('\n');
+                    const header = '성함,연락처,인원,비밀번호\n';
+                    const rows = reservations.map(res => `${res.name},${res.phone},${res.count},${res.password}`).join('\n');
                     const csv = header + rows;
 
                     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -718,6 +851,148 @@
                     link.click();
                     document.body.removeChild(link);
                 };
+                
+                // --- Guestbook Logic ---
+                const guestbookWriteModal = document.getElementById('guestbook-write-modal');
+                const guestbookListModal = document.getElementById('guestbook-list-modal');
+
+                window.openGuestbookWriteModal = function() {
+                    guestbookWriteModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                };
+                window.closeGuestbookWriteModal = function() {
+                    guestbookWriteModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                };
+
+                window.openGuestbookListModal = function() {
+                    renderGuestbookList();
+                    guestbookListModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                };
+                window.closeGuestbookListModal = function() {
+                    guestbookListModal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                };
+
+                // 방명록 제출
+                window.submitGuestbook = function() {
+                    const name = document.getElementById('gb-name').value.trim();
+                    const message = document.getElementById('gb-message').value.trim();
+                    const password = document.getElementById('gb-password').value.trim();
+                    const statusMessage = document.getElementById('gb-message-status');
+
+                    if (!name || !message || !password) {
+                        alert('모든 항목을 입력해주세요.');
+                        return;
+                    }
+                    if (password.length !== 4 || isNaN(parseInt(password))) {
+                        alert('비밀번호는 숫자 4자리여야 합니다.');
+                        return;
+                    }
+                    
+                    const newEntry = { name, message, password, timestamp: new Date().toISOString() };
+                    const entries = JSON.parse(localStorage.getItem(guestbookEntriesKey) || '[]');
+                    entries.push(newEntry);
+                    localStorage.setItem(guestbookEntriesKey, JSON.stringify(entries));
+
+                    statusMessage.innerText = `${name}님의 축하 메시지가 등록되었습니다.`;
+                    statusMessage.classList.remove('hidden');
+                    
+                    // 입력 필드 초기화
+                    document.getElementById('gb-name').value = '';
+                    document.getElementById('gb-message').value = '';
+                    document.getElementById('gb-password').value = '';
+
+                    setTimeout(() => {
+                        statusMessage.classList.add('hidden');
+                        closeGuestbookWriteModal();
+                        renderGuestbookPreview(); // 메인 페이지 미리보기 업데이트
+                    }, 2000);
+                };
+
+                // 방명록 항목 삭제 (전체 목록 팝업에서 사용)
+                window.deleteGuestbookEntry = function(timestamp) {
+                    const inputPassword = prompt('방명록을 삭제하려면 설정한 4자리 비밀번호를 입력하세요.');
+                    
+                    if (inputPassword === null) return;
+                    
+                    let entries = JSON.parse(localStorage.getItem(guestbookEntriesKey) || '[]');
+                    const indexToDelete = entries.findIndex(entry => entry.timestamp === timestamp);
+                    
+                    if (indexToDelete > -1 && entries[indexToDelete].password === inputPassword) {
+                        entries.splice(indexToDelete, 1);
+                        localStorage.setItem(guestbookEntriesKey, JSON.stringify(entries));
+                        alert('방명록이 삭제되었습니다.');
+                        renderGuestbookList(); // 목록 새로고침
+                        renderGuestbookPreview(); // 미리보기 새로고침
+                    } else {
+                        alert('비밀번호가 올바르지 않거나 항목을 찾을 수 없습니다.');
+                    }
+                };
+
+                // 메인 페이지 방명록 3개 미리보기 렌더링
+                function renderGuestbookPreview() {
+                    const previewContainer = document.getElementById('guestbook-preview');
+                    const entries = JSON.parse(localStorage.getItem(guestbookEntriesKey) || '[]');
+                    
+                    // 최신순으로 정렬 후 3개만 선택
+                    const latestEntries = entries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).slice(0, 3);
+                    
+                    previewContainer.innerHTML = '';
+
+                    if (latestEntries.length === 0) {
+                        previewContainer.innerHTML = `<p class="text-center text-gray-500 text-sm">아직 축하 메시지가 없습니다. 첫 번째 메시지를 남겨주세요!</p>`;
+                        return;
+                    }
+
+                    latestEntries.forEach(entry => {
+                        const div = document.createElement('div');
+                        div.className = 'guestbook-item shadow-md';
+                        div.innerHTML = `
+                            <p class="font-bold text-sm mb-1 text-[#8B7D6C]">${entry.name}</p>
+                            <p class="text-gray-700 text-base whitespace-pre-wrap">${entry.message}</p>
+                        `;
+                        previewContainer.appendChild(div);
+                    });
+                }
+
+                // 전체 방명록 목록 팝업 렌더링
+                function renderGuestbookList() {
+                    const listUl = document.getElementById('guestbook-list-ul');
+                    const emptyMessage = document.getElementById('guestbook-list-empty');
+                    const entries = JSON.parse(localStorage.getItem(guestbookEntriesKey) || '[]');
+                    
+                    listUl.innerHTML = '';
+                    
+                    if (entries.length === 0) {
+                        emptyMessage.classList.remove('hidden');
+                        return;
+                    }
+                    emptyMessage.classList.add('hidden');
+                    
+                    // 최신순으로 정렬
+                    entries.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)).forEach(entry => {
+                        const li = document.createElement('li');
+                        li.className = 'guestbook-list-item flex justify-between items-start';
+                        
+                        // 날짜 포맷 (예: 2025.09.28)
+                        const date = new Date(entry.timestamp);
+                        const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+                        
+                        li.innerHTML = `
+                            <div class="flex-1 mr-4">
+                                <p class="font-bold text-sm text-[#8B7D6C]">${entry.name} <span class="text-xs font-normal text-gray-400">(${formattedDate})</span></p>
+                                <p class="text-gray-700 text-base whitespace-pre-wrap">${entry.message}</p>
+                            </div>
+                            <button onclick="deleteGuestbookEntry('${entry.timestamp}')" class="flex-shrink-0 mt-1 bg-red-400 text-white rounded-full px-2 py-0.5 text-xs font-medium hover:bg-red-500 transition-colors">
+                                삭제
+                            </button>
+                        `;
+                        listUl.appendChild(li);
+                    });
+                }
+
 
                 // --- Account Copy Functionality ---
                 window.copyToClipboard = function(elementId) {
@@ -730,6 +1005,7 @@
                     document.body.removeChild(tempInput);
 
                     const message = document.getElementById('copy-message');
+                    // 베이지톤에 어울리는 브라운 톤으로 변경
                     message.classList.remove('hidden');
                     setTimeout(() => { message.classList.add('hidden'); }, 2000);
                 };
@@ -768,24 +1044,35 @@
                     'image/gallery_17.jpg',
                     'image/gallery_18.jpg',
                 ];
-                const itemsToShowInitially = 4;
-                const itemsToLoad = 4;
+                const itemsToShowInitially = 6; // 초기 로딩 이미지 개수 6개로 증가
+                const itemsToLoad = 6; // 추가 로딩 이미지 개수 6개로 증가
                 let currentImagesLoaded = 0;
 
                 function loadGalleryImages(count) {
-                    const newItems = allGalleryImages.slice(currentImagesLoaded, currentImagesLoaded + count);
+                    const startIndex = currentImagesLoaded;
+                    const endIndex = Math.min(allGalleryImages.length, currentImagesLoaded + count);
+                    
+                    const newItems = allGalleryImages.slice(startIndex, endIndex);
+
                     newItems.forEach((imgUrl, index) => {
                         const div = document.createElement('div');
-                        const imageIndex = currentImagesLoaded + index;
-                        div.className = `w-full rounded-xl overflow-hidden shadow-md`;
+                        const imageIndex = startIndex + index;
+                        div.className = `w-full rounded-xl overflow-hidden shadow-md gallery-item-animation`;
+                        
+                        // 동적 그리드 레이아웃 (새로운 인덱스에 맞춰 조정)
+                        // 0, 3, 6, 9... 번째 아이템은 span-2-row (세로로 긴 영역)
                         if (imageIndex % 3 === 0) {
                              div.classList.add('span-2-row');
                         }
+                        
                         div.innerHTML = `<img src="${imgUrl}" alt="Gallery Photo ${imageIndex + 1}" class="w-full h-auto object-cover">`;
                         div.addEventListener('click', () => openFullscreenImage(imgUrl));
+                        
                         galleryContainer.appendChild(div);
+                        galleryObserver.observe(div); // 애니메이션 관찰자 등록
                     });
-                    currentImagesLoaded += count;
+                    currentImagesLoaded = endIndex; // 로드된 이미지 개수 업데이트
+                    
                     if (currentImagesLoaded >= allGalleryImages.length) {
                         document.getElementById('show-more-gallery').style.display = 'none';
                     }
@@ -883,7 +1170,7 @@
                         }
 
                         const isDDay = (i === day);
-                        const cellClass = isDDay ? 'bg-[#FFCCFF] text-gray-800 rounded-full font-bold' : '';
+                        const cellClass = isDDay ? 'bg-[#E5D5C1] text-gray-800 rounded-full font-bold' : '';
                         calendarHTML += `<td class="py-2"><span class="w-8 h-8 flex items-center justify-center mx-auto ${cellClass}">${i}</span></td>`;
                     }
 
