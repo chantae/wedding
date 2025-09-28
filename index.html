@@ -80,9 +80,9 @@
         }
         .masonry-grid > div {
             border-radius: 0.75rem;
-            overflow: hidden;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
             cursor: pointer; /* Add pointer cursor for clickable items */
+            position: relative; /* For animation purposes */
         }
         .masonry-grid .span-2-row {
             grid-row: span 2 / auto;
@@ -150,6 +150,14 @@
         .guestbook-list-item {
             border-bottom: 1px dotted #F0E8D7; /* Dotted line adjusted */
             padding: 0.5rem 0;
+        }
+        
+        /* Admin Button */
+        .admin-button {
+            transition: color 0.2s;
+        }
+        .admin-button.active {
+            color: #8B7D6C; /* Active admin color */
         }
     </style>
 </head>
@@ -365,8 +373,8 @@
         <!-- 엔딩 섹션 -->
         <section class="w-full p-6 md:p-10 mt-8 mb-12 text-center animate-up">
             <p class="text-xl stylish-font font-bold text-gray-800 mb-4">감사합니다.</p>
-            <button id="kakao-link-btn" class="w-full py-3 bg-[#F0E8D7] text-gray-800 rounded-full font-bold shadow-lg hover:bg-[#D8C4A6] transition-colors">
-                카카오톡으로 초대장 보내기
+            <button id="share-link-btn" class="w-full py-3 bg-[#F0E8D7] text-gray-800 rounded-full font-bold shadow-lg hover:bg-[#D8C4A6] transition-colors">
+                공유하기
             </button>
         </section>
     
@@ -444,17 +452,25 @@
     <!-- 버스 신청 명단 팝업 (모달) -->
     <div id="bus-list-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible">
         <div class="modal-content w-full max-w-sm bg-white rounded-xl p-8 shadow-2xl">
-            <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600" onclick="closeBusListModal()">
-                <i class="fa fa-times text-xl"></i>
-            </button>
-            <h3 class="text-xl font-bold mb-6 text-center">버스 탑승 신청 명단</h3>
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold">버스 탑승 신청 명단</h3>
+                <div class="space-x-2">
+                    <button id="bus-admin-btn" onclick="toggleBusAdminMode()" class="admin-button text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-gray-600" onclick="closeBusListModal()">
+                        <i class="fa fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
             <div class="max-h-64 overflow-y-auto mb-4 p-2 border rounded-lg">
                 <ul id="bus-list-ul" class="text-left space-y-2">
                     <!-- 리스트는 JavaScript로 동적으로 추가됩니다. -->
                 </ul>
                 <p id="bus-list-empty" class="text-gray-500 text-center text-sm">신청자가 없습니다.</p>
             </div>
-            <button onclick="downloadBusList()" class="w-full py-3 bg-[#F0E8D7] text-gray-800 rounded-full font-medium hover:bg-[#D8C4A6] transition-colors shadow-lg">
+            <button id="bus-csv-download-btn" onclick="downloadBusList()" class="w-full py-3 bg-[#F0E8D7] text-gray-800 rounded-full font-medium hover:bg-[#D8C4A6] transition-colors shadow-lg hidden">
                 CSV 파일 다운로드
             </button>
         </div>
@@ -482,10 +498,17 @@
     <!-- 방명록 전체보기 팝업 (모달) -->
     <div id="guestbook-list-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible">
         <div class="modal-content w-full max-w-sm bg-white rounded-xl p-8 shadow-2xl">
-            <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600" onclick="closeGuestbookListModal()">
-                <i class="fa fa-times text-xl"></i>
-            </button>
-            <h3 class="text-xl font-bold mb-6 text-center">방명록 전체 목록</h3>
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold">방명록 전체 목록</h3>
+                <div class="space-x-2">
+                    <button id="guestbook-admin-btn" onclick="toggleGuestbookAdminMode()" class="admin-button text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button class="text-gray-400 hover:text-gray-600" onclick="closeGuestbookListModal()">
+                        <i class="fa fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
             <div class="max-h-80 overflow-y-auto mb-4 p-2 guestbook-item-list border rounded-lg">
                 <ul id="guestbook-list-ul" class="text-left space-y-2">
                     <!-- 방명록 리스트는 JavaScript로 동적으로 추가됩니다. -->
@@ -522,6 +545,10 @@
             const busReservationsKey = 'busReservations';
             const guestbookEntriesKey = 'guestbookEntries';
             const MAX_CAPACITY = 28;
+            
+            // --- Admin Mode State ---
+            let isBusAdminMode = false;
+            let isGuestbookAdminMode = false;
 
             // 스플래시 이미지 전환 로직
             function showNextSplashImage() {
@@ -674,7 +701,45 @@
                         parkingDetails.classList.toggle('active');
                     });
                 }
+                
+                // --- Admin Mode Toggles ---
+                window.toggleBusAdminMode = function() {
+                    const inputPassword = prompt('버스 명단 관리자 모드를 활성화하려면 비밀번호를 입력하세요.');
+                    if (inputPassword === ADMIN_PASSWORD) {
+                        isBusAdminMode = !isBusAdminMode;
+                        const adminBtn = document.getElementById('bus-admin-btn');
+                        const csvBtn = document.getElementById('bus-csv-download-btn');
+                        
+                        if (isBusAdminMode) {
+                            adminBtn.classList.add('active');
+                            csvBtn.classList.remove('hidden');
+                        } else {
+                            adminBtn.classList.remove('active');
+                            csvBtn.classList.add('hidden');
+                        }
+                        loadBusList(); // 관리자 버튼 상태에 따라 리스트 새로고침
+                    } else if (inputPassword !== null) {
+                        alert('비밀번호가 올바르지 않습니다.');
+                    }
+                };
 
+                window.toggleGuestbookAdminMode = function() {
+                    const inputPassword = prompt('방명록 관리자 모드를 활성화하려면 비밀번호를 입력하세요.');
+                    if (inputPassword === ADMIN_PASSWORD) {
+                        isGuestbookAdminMode = !isGuestbookAdminMode;
+                        const adminBtn = document.getElementById('guestbook-admin-btn');
+                        
+                        if (isGuestbookAdminMode) {
+                            adminBtn.classList.add('active');
+                        } else {
+                            adminBtn.classList.remove('active');
+                        }
+                        renderGuestbookList(); // 관리자 버튼 상태에 따라 리스트 새로고침
+                    } else if (inputPassword !== null) {
+                        alert('비밀번호가 올바르지 않습니다.');
+                    }
+                };
+                
                 // --- Bus Reservation Modal ---
                 const busModal = document.getElementById('bus-modal');
                 const busListModal = document.getElementById('bus-list-modal');
@@ -699,14 +764,13 @@
                     document.body.style.overflow = 'auto';
                 };
                 window.openBusListModal = function() {
-                    const inputPassword = prompt('명단 확인을 위해 비밀번호를 입력하세요.');
-                    if (inputPassword === ADMIN_PASSWORD) {
-                        loadBusList();
-                        busListModal.classList.add('active');
-                        document.body.style.overflow = 'hidden';
-                    } else if (inputPassword !== null) {
-                        alert('비밀번호가 올바르지 않습니다.');
-                    }
+                    // 사용자 모드 (비밀번호 확인 없이 리스트 로드)
+                    isBusAdminMode = false;
+                    document.getElementById('bus-admin-btn').classList.remove('active');
+                    document.getElementById('bus-csv-download-btn').classList.add('hidden');
+                    loadBusList();
+                    busListModal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
                 };
                 window.closeBusListModal = function() {
                     busListModal.classList.remove('active');
@@ -768,14 +832,26 @@
                         reservations.forEach((res, index) => {
                             const li = document.createElement('li');
                             li.className = 'p-3 bg-gray-50 rounded-lg shadow-inner flex justify-between items-center';
+                            
+                            let cancelButton = '';
+                            // 관리자 모드일 경우에만 즉시 삭제 버튼 표시
+                            if (isBusAdminMode) {
+                                cancelButton = `<button onclick="adminDeleteBusReservation('${res.timestamp}')" class="bg-red-400 text-white rounded-full px-3 py-1 text-xs font-medium hover:bg-red-500 transition-colors">
+                                    삭제
+                                </button>`;
+                            } else {
+                                // 사용자 모드일 경우 비밀번호 입력 후 취소 버튼 표시
+                                cancelButton = `<button onclick="userCancelBusReservation(${index})" class="bg-red-400 text-white rounded-full px-3 py-1 text-xs font-medium hover:bg-red-500 transition-colors">
+                                    취소
+                                </button>`;
+                            }
+
                             li.innerHTML = `
                                 <div>
                                     <p class="font-bold">${res.name} <span class="font-normal text-sm text-gray-500">(${res.count}명)</span></p>
                                     <p class="text-xs text-gray-400 mt-1">${res.phone}</p>
                                 </div>
-                                <button onclick="cancelBusReservation(${index})" class="bg-red-400 text-white rounded-full px-3 py-1 text-xs font-medium hover:bg-red-500 transition-colors">
-                                    취소
-                                </button>
+                                ${cancelButton}
                             `;
                             listUl.appendChild(li);
                         });
@@ -784,10 +860,9 @@
                     }
                 }
                 
-                // 버스 예약 취소 함수 (사용자 본인 비밀번호로 취소)
-                window.cancelBusReservation = function(index) {
+                // 버스 예약 취소 함수 (사용자 모드 - 비밀번호로 취소)
+                window.userCancelBusReservation = function(index) {
                     let reservations = JSON.parse(localStorage.getItem(busReservationsKey) || '[]');
-                    // 명단 로드 시 사용된 정렬 순서를 유지
                     reservations.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
                     const reservationToCancel = reservations[index];
 
@@ -799,7 +874,7 @@
 
                     if (inputPassword === reservationToCancel.password) {
                         if (confirm(`정말로 ${reservationToCancel.name}님의 신청 (${reservationToCancel.count}명)을 취소하시겠습니까?`)) {
-                            // 원본 배열에서 timestamp를 이용해 해당 항목을 찾아 삭제
+                             // 원본 배열에서 timestamp를 이용해 해당 항목을 찾아 삭제
                             let originalReservations = JSON.parse(localStorage.getItem(busReservationsKey) || '[]');
                             const indexToDelete = originalReservations.findIndex(
                                 res => res.timestamp === reservationToCancel.timestamp && 
@@ -821,24 +896,34 @@
                     }
                 };
 
+                // 버스 예약 삭제 함수 (관리자 모드 - 즉시 삭제)
+                window.adminDeleteBusReservation = function(timestampToDelete) {
+                    if (confirm('관리자 권한으로 이 신청을 즉시 삭제하시겠습니까?')) {
+                         let originalReservations = JSON.parse(localStorage.getItem(busReservationsKey) || '[]');
+                         const indexToDelete = originalReservations.findIndex(res => res.timestamp === timestampToDelete);
+                        
+                         if (indexToDelete > -1) {
+                            originalReservations.splice(indexToDelete, 1);
+                            localStorage.setItem(busReservationsKey, JSON.stringify(originalReservations));
+                            loadBusList(); // 명단 새로고침
+                            alert('관리자 권한으로 신청이 삭제되었습니다.');
+                        } else {
+                            alert('오류: 삭제할 항목을 찾을 수 없습니다.');
+                        }
+                    }
+                };
+
+
                 // CSV 다운로드 함수 (관리자 비밀번호로 접근)
                 window.downloadBusList = function() {
-                    const inputPassword = prompt('CSV 파일 다운로드를 위해 관리자 비밀번호를 입력하세요.');
-                    if (inputPassword !== ADMIN_PASSWORD) {
-                        if (inputPassword !== null) {
-                            alert('비밀번호가 올바르지 않습니다.');
-                        }
-                        return;
-                    }
-
                     const reservations = JSON.parse(localStorage.getItem(busReservationsKey) || '[]');
                     if (reservations.length === 0) {
                         alert('다운로드할 신청 명단이 없습니다.');
                         return;
                     }
 
-                    const header = '성함,연락처,인원,비밀번호\n';
-                    const rows = reservations.map(res => `${res.name},${res.phone},${res.count},${res.password}`).join('\n');
+                    const header = '성함,연락처,인원,비밀번호,신청시각\n';
+                    const rows = reservations.map(res => `${res.name},${res.phone},${res.count},${res.password},${new Date(res.timestamp).toLocaleString('ko-KR')}`).join('\n');
                     const csv = header + rows;
 
                     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -866,6 +951,8 @@
                 };
 
                 window.openGuestbookListModal = function() {
+                    isGuestbookAdminMode = false;
+                    document.getElementById('guestbook-admin-btn').classList.remove('active');
                     renderGuestbookList();
                     guestbookListModal.classList.add('active');
                     document.body.style.overflow = 'hidden';
@@ -913,24 +1000,39 @@
 
                 // 방명록 항목 삭제 (전체 목록 팝업에서 사용)
                 window.deleteGuestbookEntry = function(timestamp) {
-                    const inputPassword = prompt('방명록을 삭제하려면 설정한 4자리 비밀번호를 입력하세요.');
-                    
-                    if (inputPassword === null) return;
-                    
                     let entries = JSON.parse(localStorage.getItem(guestbookEntriesKey) || '[]');
                     const indexToDelete = entries.findIndex(entry => entry.timestamp === timestamp);
                     
-                    if (indexToDelete > -1 && entries[indexToDelete].password === inputPassword) {
-                        entries.splice(indexToDelete, 1);
-                        localStorage.setItem(guestbookEntriesKey, JSON.stringify(entries));
-                        alert('방명록이 삭제되었습니다.');
-                        renderGuestbookList(); // 목록 새로고침
-                        renderGuestbookPreview(); // 미리보기 새로고침
+                    if (isGuestbookAdminMode) {
+                        // 관리자 모드: 비밀번호 확인 없이 즉시 삭제
+                        if (confirm('관리자 권한으로 이 방명록을 즉시 삭제하시겠습니까?')) {
+                             entries.splice(indexToDelete, 1);
+                             localStorage.setItem(guestbookEntriesKey, JSON.stringify(entries));
+                             alert('관리자 권한으로 방명록이 삭제되었습니다.');
+                             renderGuestbookList();
+                             renderGuestbookPreview();
+                        }
                     } else {
-                        alert('비밀번호가 올바르지 않거나 항목을 찾을 수 없습니다.');
+                        // 사용자 모드: 비밀번호 입력 후 삭제
+                        const entryToDelete = entries[indexToDelete];
+                        const inputPassword = prompt(`방명록을 삭제하려면 설정한 4자리 비밀번호를 입력하세요.`);
+                        
+                        if (inputPassword === null) return;
+                        
+                        if (inputPassword === entryToDelete.password) {
+                            if (confirm(`정말로 이 방명록을 삭제하시겠습니까?`)) {
+                                entries.splice(indexToDelete, 1);
+                                localStorage.setItem(guestbookEntriesKey, JSON.stringify(entries));
+                                alert('방명록이 삭제되었습니다.');
+                                renderGuestbookList(); // 목록 새로고침
+                                renderGuestbookPreview(); // 미리보기 새로고침
+                            }
+                        } else {
+                            alert('비밀번호가 올바르지 않습니다.');
+                        }
                     }
                 };
-
+                
                 // 메인 페이지 방명록 3개 미리보기 렌더링
                 function renderGuestbookPreview() {
                     const previewContainer = document.getElementById('guestbook-preview');
@@ -961,7 +1063,7 @@
                 function renderGuestbookList() {
                     const listUl = document.getElementById('guestbook-list-ul');
                     const emptyMessage = document.getElementById('guestbook-list-empty');
-                    const entries = JSON.parse(localStorage.getItem(guestbookEntriesKey) || '[]');
+                    let entries = JSON.parse(localStorage.getItem(guestbookEntriesKey) || '[]');
                     
                     listUl.innerHTML = '';
                     
@@ -980,14 +1082,23 @@
                         const date = new Date(entry.timestamp);
                         const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
                         
+                        let deleteButton = '';
+                        if (isGuestbookAdminMode) {
+                            deleteButton = `<button onclick="deleteGuestbookEntry('${entry.timestamp}')" class="flex-shrink-0 mt-1 bg-red-400 text-white rounded-full px-2 py-0.5 text-xs font-medium hover:bg-red-500 transition-colors">
+                                관리자 삭제
+                            </button>`;
+                        } else {
+                            deleteButton = `<button onclick="deleteGuestbookEntry('${entry.timestamp}')" class="flex-shrink-0 mt-1 bg-red-400 text-white rounded-full px-2 py-0.5 text-xs font-medium hover:bg-red-500 transition-colors">
+                                취소/삭제
+                            </button>`;
+                        }
+
                         li.innerHTML = `
                             <div class="flex-1 mr-4">
                                 <p class="font-bold text-sm text-[#8B7D6C]">${entry.name} <span class="text-xs font-normal text-gray-400">(${formattedDate})</span></p>
                                 <p class="text-gray-700 text-base whitespace-pre-wrap">${entry.message}</p>
                             </div>
-                            <button onclick="deleteGuestbookEntry('${entry.timestamp}')" class="flex-shrink-0 mt-1 bg-red-400 text-white rounded-full px-2 py-0.5 text-xs font-medium hover:bg-red-500 transition-colors">
-                                삭제
-                            </button>
+                            ${deleteButton}
                         `;
                         listUl.appendChild(li);
                     });
@@ -1187,35 +1298,54 @@
                 const destination = '팔레드오페라';
                 const address = '대전 서구 둔산남로 50';
 
+                // 카카오내비 딥링크 URL 생성 함수 (오류 수정)
+                function getKakaoNaviLink(name, address) {
+                    // 최신 KakaoNavi 스키마를 사용하여, 길찾기가 아닌 검색을 요청하며, 주소와 이름을 모두 활용
+                    // name: 목적지 이름, address: 목적지 주소
+                    return `kakaonavi://search?key=${encodeURIComponent(name)}&appname=wedding_invitation&address=${encodeURIComponent(address)}`;
+                }
+
                 document.getElementById('map-link').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
                 document.getElementById('naver-map-btn').href = `nmap://search?query=${encodeURIComponent(address)}&appname=wedding_invitation`;
                 document.getElementById('tmap-btn').href = `tmap://search?name=${encodeURIComponent(destination)}&appname=wedding_invitation`;
-                document.getElementById('kakaonavi-btn').href = `kakaonavi://search?key=${encodeURIComponent(destination)}&appname=wedding_invitation`;
+                
+                // 카카오내비 링크 수정 적용
+                document.getElementById('kakaonavi-btn').href = getKakaoNaviLink(destination, address);
 
-                // --- KakaoTalk Share ---
-                const kakaoBtn = document.getElementById('kakao-link-btn');
-                if(kakaoBtn) {
-                     kakaoBtn.addEventListener('click', function() {
-                         Kakao.Share.sendDefault({
-                             objectType: 'feed',
-                             content: {
-                                 title: '12월 06일 전찬태 ♥ 박은진 결혼합니다.',
-                                 description: '저희 두 사람의 소중한 시작에 함께해 주세요.',
-                                 imageUrl: 'https://images.theirmood.com/resources/46097/card/9Vr0MZLBrt/JBFqgzAJJK.png?w=1280',
-                                 link: {
-                                     mobileWebUrl: window.location.href,
-                                     webUrl: window.location.href,
-                                 },
-                             },
-                             buttons: [{
-                                 title: '모바일 청첩장 보기',
-                                 link: {
-                                     mobileWebUrl: window.location.href,
-                                     webUrl: window.location.href,
-                                 },
-                             }]
-                         });
-                     });
+
+                // --- 링크 공유하기 기능 (네이티브 공유 기능) ---
+                const shareButton = document.getElementById('share-link-btn');
+                if (shareButton) {
+                    shareButton.addEventListener('click', async function() {
+                        if (navigator.share) {
+                            try {
+                                await navigator.share({
+                                    title: '12월 06일 전찬태 ♥ 박은진 결혼합니다.',
+                                    text: '저희 두 사람의 결혼식에 소중한 발걸음 부탁드립니다.',
+                                    url: window.location.href,
+                                });
+                            } catch (error) {
+                                console.error('Sharing failed', error);
+                                // 네이티브 공유 실패 시 클립보드 복사 대체
+                                copyLinkFallback();
+                            }
+                        } else {
+                            // navigator.share를 지원하지 않는 환경 (PC 등)에서는 클립보드 복사 실행
+                            copyLinkFallback();
+                        }
+                    });
+                }
+                
+                // 네이티브 공유를 지원하지 않을 때 클립보드 복사 폴백 함수
+                function copyLinkFallback() {
+                    const currentURL = window.location.href;
+                    const tempInput = document.createElement('textarea');
+                    document.body.appendChild(tempInput);
+                    tempInput.value = currentURL;
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+                    alert('청첩장 링크가 클립보드에 복사되었습니다! 원하는 곳에 붙여넣어 공유하세요.');
                 }
             }
         });
