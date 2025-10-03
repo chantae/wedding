@@ -187,27 +187,24 @@
         }
 
         /* Splash Text Styling */
-        .splash-text {
-            /* 텍스트 크기 키우기 (md:text-5xl에서 6xl 이상으로) */
-            font-size: 3rem; /* mobile default */
-            line-height: 1;
-            /* 트렌디한 스타일: 얇은 외곽선과 그림자 */
-            text-shadow: 
-                -1px -1px 0 #000, 
-                1px -1px 0 #000, 
-                -1px 1px 0 #000, 
-                1px 1px 0 #000,
-                0 0 10px rgba(0,0,0,0.5); /* 은은한 그림자 */
+        .splash-text-reveal > div {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 1.2s ease-out, transform 1.2s ease-out;
         }
-        @media (min-width: 640px) {
-            .splash-text {
-                font-size: 6rem; /* tablet/desktop large size */
-            }
+        .splash-text-reveal > div.visible-reveal {
+            opacity: 1;
+            transform: translateY(0);
         }
-        @media (min-width: 1024px) {
-             .splash-text {
-                font-size: 8rem; /* desktop extra large size */
-            }
+        .splash-intro-text {
+            text-align: center;
+            color: white;
+            text-shadow: 0 0 5px rgba(0,0,0,0.6);
+        }
+        .splash-background-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.2); /* Soft overlay */
         }
     </style>
 </head>
@@ -216,12 +213,16 @@
     <!-- Splash Screen -->
     <div id="splash-screen" class="fixed inset-0 z-[1000] bg-white cursor-pointer transition-opacity duration-500 opacity-100">
         <div id="splash-images" class="relative w-full h-full overflow-hidden">
-            <img src="image/main_1.jpg" alt="Wedding Splash Image 1" class="absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-1000">
-            <img src="image/main_2.jpg" alt="Wedding Splash Image 2" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000">
+            <!-- 이미지 하나만 표시 (reference site style) -->
+            <img src="image/main_1.jpg" alt="Wedding Splash Image" class="absolute inset-0 w-full h-full object-cover">
+             <div class="splash-background-overlay"></div>
         </div>
-        <!-- 트렌디한 스타일 적용 -->
-        <div class="absolute inset-x-0 bottom-0 w-full flex items-center justify-center text-white font-bold stylish-font splash-text" style="padding-bottom: 20vh;">
-            찬태 은진 결혼합니다!
+        
+        <!-- 트렌디한 스타일 적용 및 순차 애니메이션을 위한 컨테이너 -->
+        <div id="splash-text-container" class="absolute inset-0 flex flex-col items-center justify-center stylish-font splash-intro-text splash-text-reveal">
+            <div id="splash-text-1" class="text-3xl sm:text-4xl">전찬태 & 박은진</div>
+            <div id="splash-text-2" class="text-lg sm:text-xl my-4 tracking-wider">WEDDING INVITATION</div>
+            <div id="splash-text-3" class="text-xl sm:text-2xl mt-2 font-bold">2025.12.06. Sat 12:30 PM</div>
         </div>
     </div>
     
@@ -607,6 +608,9 @@
 
             // 스플래시 이미지 전환 로직
             function showNextSplashImage() {
+                // 이 함수는 초기 로딩 시 이미지 전환을 위해 사용됩니다.
+                // 현재는 하나의 이미지를 사용하므로, 이 함수 내에서 전환 로직을 제거하거나 하나만 남깁니다.
+                // 다만, 현재 코드는 2개의 이미지를 opacity로 전환하는 방식이므로, 그 방식은 유지하겠습니다.
                 splashImages[splashImageIndex].classList.remove('opacity-100');
                 splashImages[splashImageIndex].classList.add('opacity-0');
                 splashImageIndex = (splashImageIndex + 1) % splashImages.length;
@@ -615,11 +619,26 @@
             }
 
             // 스플래시 화면 자동 전환 시작
-            splashInterval = setInterval(showNextSplashImage, 3000);
+            // 6초 타이머가 이미 자동 전환을 제어하고 있으므로, 별도의 interval은 제거합니다.
+            // 대신, 텍스트 애니메이션 시작 시간을 제어합니다.
+            
+            // 텍스트 애니메이션 트리거
+            function revealSplashText() {
+                const text1 = document.getElementById('splash-text-1');
+                const text2 = document.getElementById('splash-text-2');
+                const text3 = document.getElementById('splash-text-3');
+
+                // 순차적으로 클래스 추가하여 CSS transition 발동
+                setTimeout(() => { if(text1) text1.classList.add('visible-reveal'); }, 500);
+                setTimeout(() => { if(text2) text2.classList.add('visible-reveal'); }, 1500);
+                setTimeout(() => { if(text3) text3.classList.add('visible-reveal'); }, 2500);
+            }
+            
+            // 텍스트 애니메이션 시작
+            revealSplashText();
             
             // 6초 후에 메인 콘텐츠로 자동 전환
             setTimeout(() => {
-                clearInterval(splashInterval); // 자동 전환 정지
                 splashScreen.classList.add('opacity-0');
                 setTimeout(() => {
                     splashScreen.classList.add('hidden');
@@ -631,7 +650,6 @@
 
             // 스플래시 화면 클릭 시 바로 메인 콘텐츠로 이동
             splashScreen.addEventListener('click', () => {
-                clearInterval(splashInterval); // 자동 전환 정지
                 splashScreen.classList.add('opacity-0');
                 setTimeout(() => {
                     splashScreen.classList.add('hidden');
