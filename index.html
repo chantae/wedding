@@ -186,37 +186,28 @@
             color: #8B7D6C; /* Active admin color */
         }
 
-        /* Floating Admin Button at bottom right */
-        #global-admin-btn {
-            z-index: 1050;
-            width: 48px;
-            height: 48px;
-            background-color: #F0E8D7;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            color: #8B7D6C;
-            font-size: 1.5rem;
-            transition: transform 0.2s, background-color 0.2s;
+        /* Splash Text Styling */
+        .splash-text {
+            /* 텍스트 크기 키우기 (md:text-5xl에서 6xl 이상으로) */
+            font-size: 3rem; /* mobile default */
+            line-height: 1;
+            /* 트렌디한 스타일: 얇은 외곽선과 그림자 */
+            text-shadow: 
+                -1px -1px 0 #000, 
+                1px -1px 0 #000, 
+                -1px 1px 0 #000, 
+                1px 1px 0 #000,
+                0 0 10px rgba(0,0,0,0.5); /* 은은한 그림자 */
         }
-        #global-admin-btn:hover {
-            transform: scale(1.1);
-            background-color: #D8C4A6;
+        @media (min-width: 640px) {
+            .splash-text {
+                font-size: 6rem; /* tablet/desktop large size */
+            }
         }
-
-        /* Container for Share and Admin button in fixed position */
-        #share-admin-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1050;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: flex-end;
+        @media (min-width: 1024px) {
+             .splash-text {
+                font-size: 8rem; /* desktop extra large size */
+            }
         }
     </style>
 </head>
@@ -227,10 +218,10 @@
         <div id="splash-images" class="relative w-full h-full overflow-hidden">
             <img src="image/main_1.jpg" alt="Wedding Splash Image 1" class="absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-1000">
             <img src="image/main_2.jpg" alt="Wedding Splash Image 2" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000">
-            <img src="image/main_3.jpg" alt="Wedding Splash Image 3" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000">
         </div>
-        <div class="absolute inset-x-0 bottom-0 w-full flex items-center justify-center text-white text-3xl md:text-5xl font-bold stylish-font" style="padding-bottom: 20vh;">
-            찬태 은진<br>결혼합니다!
+        <!-- 트렌디한 스타일 적용 -->
+        <div class="absolute inset-x-0 bottom-0 w-full flex items-center justify-center text-white font-bold stylish-font splash-text" style="padding-bottom: 20vh;">
+            찬태 은진 결혼합니다!
         </div>
     </div>
     
@@ -1143,11 +1134,14 @@
                     latestEntries.forEach(entry => {
                         const div = document.createElement('div');
                         div.className = 'guestbook-item shadow-md';
+                        // 각 항목의 애니메이션 시간을 다르게 설정하여 자연스러운 흐름 연출
+                        const animationDuration = Math.max(15, entry.message.length * 0.2); 
                         div.innerHTML = `
                             <div class="guestbook-preview-line">
-                                <p class="guestbook-scrolling-content" style="animation-duration: ${Math.max(20, entry.message.length * 0.3)}s;">
+                                <p class="guestbook-scrolling-content" style="animation-duration: ${animationDuration}s;">
                                     <span class="font-bold text-[#8B7D6C]">${entry.name}</span> 
                                     <span class="text-gray-700"> | ${entry.message}</span>
+                                    <span style="display:inline-block; width: 100vw;"></span> <!-- 스크롤이 끝까지 넘어가도록 보조 공간 추가 -->
                                 </p>
                             </div>
                         `;
