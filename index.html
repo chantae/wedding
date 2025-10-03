@@ -135,11 +135,12 @@
         
         /* Guestbook specific styles */
         .guestbook-item {
-            padding: 1rem;
+            padding: 0.75rem 1rem; /* Adjusted padding for single line view */
             background: #ffffff; /* 흰색 배경 */
             border-radius: 0.5rem;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             margin-bottom: 0.5rem;
+            overflow: hidden; /* Hide overflow for scrolling text */
         }
         .guestbook-item-list {
             padding: 1rem;
@@ -152,6 +153,31 @@
             padding: 0.5rem 0;
         }
         
+        /* New CSS for single-line, scrolling preview */
+        .guestbook-preview-line {
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+            /* Fixed height for single line */
+            height: 1.5rem; 
+            line-height: 1.5rem;
+            font-size: 1rem;
+        }
+
+        /* Animation for LTR scroll */
+        .guestbook-scrolling-content {
+            display: inline-block;
+            white-space: nowrap; /* Essential for single line scrolling */
+            /* Start text off-screen left and move right */
+            transform: translateX(0);
+            animation: scroll-ltr 20s linear infinite; /* Longer duration for smooth scroll */
+        }
+
+        @keyframes scroll-ltr {
+            0% { transform: translateX(-100%); } /* Start completely off screen to the left */
+            100% { transform: translateX(100%); } /* Scroll across and off screen to the right */
+        }
+        
         /* Admin Button */
         .admin-button {
             transition: color 0.2s;
@@ -162,9 +188,6 @@
 
         /* Floating Admin Button at bottom right */
         #global-admin-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
             z-index: 1050;
             width: 48px;
             height: 48px;
@@ -183,6 +206,18 @@
             transform: scale(1.1);
             background-color: #D8C4A6;
         }
+
+        /* Container for Share and Admin button in fixed position */
+        #share-admin-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1050;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
+        }
     </style>
 </head>
 <body class="bg-white flex flex-col items-center justify-center">
@@ -192,9 +227,10 @@
         <div id="splash-images" class="relative w-full h-full overflow-hidden">
             <img src="image/main_1.jpg" alt="Wedding Splash Image 1" class="absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-1000">
             <img src="image/main_2.jpg" alt="Wedding Splash Image 2" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000">
+            <img src="image/main_3.jpg" alt="Wedding Splash Image 3" class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-1000">
         </div>
         <div class="absolute inset-x-0 bottom-0 w-full flex items-center justify-center text-white text-3xl md:text-5xl font-bold stylish-font" style="padding-bottom: 20vh;">
-            찬태 은진 결혼합니다!
+            찬태 은진<br>결혼합니다!
         </div>
     </div>
     
@@ -401,7 +437,7 @@
                 공유하기
             </button>
         </section>
-    
+        
         <!-- 연락처 팝업 (모달) -->
         <div id="contact-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible">
             <div class="modal-content w-full max-w-sm bg-white rounded-xl p-8 text-center shadow-2xl">
@@ -551,24 +587,6 @@
         <img id="fullscreen-image" src="" alt="Full-screen gallery image">
     </div>
     
-    <!-- Global Admin Button -->
-    <button id="global-admin-btn" onclick="openGlobalAdminModal()">
-        <i class="fas fa-cog"></i>
-    </button>
-    
-    <!-- Global Admin Modal (전체 삭제 확인 팝업) -->
-    <div id="global-admin-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible">
-        <div class="modal-content w-full max-w-xs bg-white rounded-xl p-6 text-center shadow-2xl">
-            <h3 class="text-xl font-bold mb-4">관리자 도구</h3>
-            <p class="text-sm text-gray-600 mb-6">모든 로컬 저장소 데이터를 초기화합니다.</p>
-            <button onclick="deleteAllLocalStorage()" class="w-full py-3 bg-red-500 text-white rounded-full font-medium hover:bg-red-600 transition-colors shadow-lg">
-                전체 데이터 삭제 (복구 불가)
-            </button>
-            <button onclick="closeGlobalAdminModal()" class="w-full py-3 mt-2 bg-gray-200 text-gray-800 rounded-full font-medium hover:bg-gray-300 transition-colors shadow-lg">
-                취소
-            </button>
-        </div>
-    </div>
 
 
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.0.1/kakao.min.js" xintegrity="sha384-eKjgHJ9+vwU/FCSUG3nV1RKFolUXLsc6nLQ2R1tD0t4YFPCvRmkcF8saIfOZNWf/" crossorigin="anonymous"></script>
@@ -1107,7 +1125,7 @@
                     }
                 };
                 
-                // 메인 페이지 방명록 3개 미리보기 렌더링
+                // 메인 페이지 방명록 3개 미리보기 렌더링 (애니메이션 적용)
                 function renderGuestbookPreview() {
                     const previewContainer = document.getElementById('guestbook-preview');
                     const entries = JSON.parse(localStorage.getItem(guestbookEntriesKey) || '[]');
@@ -1126,8 +1144,12 @@
                         const div = document.createElement('div');
                         div.className = 'guestbook-item shadow-md';
                         div.innerHTML = `
-                            <p class="font-bold text-sm mb-1 text-[#8B7D6C]">${entry.name}</p>
-                            <p class="text-gray-700 text-base whitespace-pre-wrap">${entry.message}</p>
+                            <div class="guestbook-preview-line">
+                                <p class="guestbook-scrolling-content" style="animation-duration: ${Math.max(20, entry.message.length * 0.3)}s;">
+                                    <span class="font-bold text-[#8B7D6C]">${entry.name}</span> 
+                                    <span class="text-gray-700"> | ${entry.message}</span>
+                                </p>
+                            </div>
                         `;
                         previewContainer.appendChild(div);
                     });
@@ -1419,25 +1441,27 @@
                                 });
                             } catch (error) {
                                 console.error('Sharing failed', error);
-                                // 네이티브 공유 실패 시 클립보드 복사 대체
-                                copyLinkFallback();
+                                // 네이티브 공유 실패 시 클립보드 복사 대체 (알림 없이)
+                                copyLinkFallback(false); 
                             }
                         } else {
-                            // navigator.share를 지원하지 않는 환경 (PC 등)에서는 클립보드 복사 실행
-                            copyLinkFallback();
+                            // navigator.share를 지원하지 않는 환경 (PC 등)에서는 클립보드 복사 실행 (알림 없이)
+                            copyLinkFallback(true);
                         }
                     });
                 }
                 
-                // 네이티브 공유를 지원하지 않을 때 클립보드 복사 폴백 함수
-                function copyLinkFallback() {
+                // 네이티브 공유를 지원하지 않을 때 클립보드 복사 폴백 함수 (알림 제거)
+                function copyLinkFallback(showAlert = false) {
                     const currentURL = window.location.href;
                     const tempInput = document.createElement('textarea');
                     document.body.appendChild(tempInput);
                     tempInput.value = currentURL;
                     document.execCommand('copy');
                     document.body.removeChild(tempInput);
-                    alert('청첩장 링크가 클립보드에 복사되었습니다! 원하는 곳에 붙여넣어 공유하세요.');
+                    if (showAlert) {
+                        alert('청첩장 링크가 클립보드에 복사되었습니다! 원하는 곳에 붙여넣어 공유하세요.');
+                    }
                 }
             }
         });
