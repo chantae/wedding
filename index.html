@@ -206,6 +206,42 @@
             inset: 0;
             background-color: rgba(0, 0, 0, 0.2); /* Soft overlay */
         }
+
+        /* --- New Splash Effects --- */
+        #splash-images img {
+            /* 초기 로딩 효과: Grayscale 및 Blur 적용 */
+            filter: grayscale(100%) blur(5px);
+            transition: filter 2s ease-out;
+        }
+        #splash-images img.loaded-effect {
+            /* 로딩 완료 후 효과 제거 */
+            filter: grayscale(0) blur(0);
+        }
+
+        /* Snowfall Styles */
+        .snowflake {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh); opacity: 0.8; }
+            100% { transform: translateY(100vh); opacity: 0.2; }
+        }
+        
+        /* Snow Container to hold the snowflakes */
+        #snow-container {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            z-index: 10;
+        }
     </style>
 </head>
 <body class="bg-white flex flex-col items-center justify-center">
@@ -214,8 +250,10 @@
     <div id="splash-screen" class="fixed inset-0 z-[1000] bg-white cursor-pointer transition-opacity duration-500 opacity-100">
         <div id="splash-images" class="relative w-full h-full overflow-hidden">
             <!-- 이미지 하나만 표시 (reference site style) -->
-            <img src="image/main_1.jpg" alt="Wedding Splash Image" class="absolute inset-0 w-full h-full object-cover">
+            <img id="splash-main-img" src="image/main_1.jpg" alt="Wedding Splash Image" class="absolute inset-0 w-full h-full object-cover">
              <div class="splash-background-overlay"></div>
+             <!-- Snow container -->
+             <div id="snow-container"></div>
         </div>
         
         <!-- 트렌디한 스타일 적용 및 순차 애니메이션을 위한 컨테이너 -->
@@ -592,9 +630,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             const splashScreen = document.getElementById('splash-screen');
             const mainContent = document.getElementById('main-content');
-            const splashImages = document.querySelectorAll('#splash-images img');
-            let splashImageIndex = 0;
-            let splashInterval;
+            const splashMainImg = document.getElementById('splash-main-img');
             
             // --- Constants ---
             const ADMIN_PASSWORD = '1331';
@@ -605,37 +641,46 @@
             // --- Admin Mode State ---
             let isBusAdminMode = false;
             let isGuestbookAdminMode = false;
-
-            // 스플래시 이미지 전환 로직
-            function showNextSplashImage() {
-                // 이 함수는 초기 로딩 시 이미지 전환을 위해 사용됩니다.
-                // 현재는 하나의 이미지를 사용하므로, 이 함수 내에서 전환 로직을 제거하거나 하나만 남깁니다.
-                // 다만, 현재 코드는 2개의 이미지를 opacity로 전환하는 방식이므로, 그 방식은 유지하겠습니다.
-                splashImages[splashImageIndex].classList.remove('opacity-100');
-                splashImages[splashImageIndex].classList.add('opacity-0');
-                splashImageIndex = (splashImageIndex + 1) % splashImages.length;
-                splashImages[splashImageIndex].classList.remove('opacity-0');
-                splashImages[splashImageIndex].classList.add('opacity-100');
+            
+            // --- Snowfall Initialization ---
+            function createSnowflake() {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.style.left = `${Math.random() * 100}vw`;
+                snowflake.style.width = `${Math.random() * 3 + 2}px`;
+                snowflake.style.height = snowflake.style.width;
+                snowflake.style.animationDuration = `${Math.random() * 10 + 5}s`;
+                snowflake.style.animationDelay = `${Math.random() * 5}s`;
+                document.getElementById('snow-container').appendChild(snowflake);
             }
 
-            // 스플래시 화면 자동 전환 시작
-            // 6초 타이머가 이미 자동 전환을 제어하고 있으므로, 별도의 interval은 제거합니다.
-            // 대신, 텍스트 애니메이션 시작 시간을 제어합니다.
-            
-            // 텍스트 애니메이션 트리거
-            function revealSplashText() {
+            function initializeSnowfall() {
+                for (let i = 0; i < 50; i++) {
+                    createSnowflake();
+                }
+            }
+            // --- Snowfall Initialization End ---
+
+            // 텍스트 애니메이션 트리거 및 이미지 로딩 효과
+            function revealSplashTextAndImageEffect() {
                 const text1 = document.getElementById('splash-text-1');
                 const text2 = document.getElementById('splash-text-2');
                 const text3 = document.getElementById('splash-text-3');
 
-                // 순차적으로 클래스 추가하여 CSS transition 발동
+                // 1. 이미지 로딩 효과 시작 (필터 제거)
+                if (splashMainImg) {
+                    splashMainImg.classList.add('loaded-effect');
+                }
+                
+                // 2. 텍스트 순차적으로 클래스 추가하여 CSS transition 발동
                 setTimeout(() => { if(text1) text1.classList.add('visible-reveal'); }, 500);
                 setTimeout(() => { if(text2) text2.classList.add('visible-reveal'); }, 1500);
                 setTimeout(() => { if(text3) text3.classList.add('visible-reveal'); }, 2500);
             }
-            
-            // 텍스트 애니메이션 시작
-            revealSplashText();
+
+            // 페이지 로드 시 눈꽃과 애니메이션 시작
+            initializeSnowfall();
+            revealSplashTextAndImageEffect();
             
             // 6초 후에 메인 콘텐츠로 자동 전환
             setTimeout(() => {
