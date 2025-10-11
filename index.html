@@ -940,7 +940,11 @@
                     }
                 } else {
                      if (statusClass === 'reserved') {
-                        seatDiv.title = showAllNames || currentReservation ? `${reservedSeats[i].name} (${reservedSeats[i].phone})` : `${maskName(reservedSeats[i].name)} 좌석`;
+                        // 관리자 모드일 경우 이름, 연락처, 비밀번호 모두 표시
+                        const tooltipText = showAllNames ? 
+                            `${reservedSeats[i].name} (${reservedSeats[i].phone}) [PW:${reservedSeats[i].password}]` : 
+                            `${maskName(reservedSeats[i].name)} 좌석`;
+                        seatDiv.title = tooltipText;
                     }
                     seatDiv.style.cursor = 'default';
                 }
@@ -1041,7 +1045,7 @@
                 document.getElementById('bus-result-title').textContent = '관리자 전체 좌석 현황 (마스킹 해제)';
                 document.getElementById('user-reservation-details').classList.add('hidden');
                 document.getElementById('admin-actions').classList.remove('hidden');
-                renderSeatMap('bus-seat-status', true);
+                renderSeatMap('bus-seat-status', true); // 마스킹 해제
             } else {
                 isBusAdminMode = false;
                 const userReservation = reservations.find(r => r.name === checkName && r.password === checkPassword);
@@ -1089,7 +1093,10 @@
         window.downloadBusList = function() {
             const reservations = getReservations();
             if (reservations.length === 0) return alert('다운로드할 명단이 없습니다.');
+            
+            // 관리자 모드에서만 다운로드 가능하도록 이미 체크함 (checkBusReservation 내부에서 호출되므로)
             const csvContent = "data:text/csv;charset=utf-8," + "신청시각,성함,연락처,비밀번호,좌석번호\n" + reservations.map(r => `${new Date(r.timestamp).toLocaleString('ko-KR')},${r.name},${r.phone},${r.password},"${r.seatNumbers.join(',')}"`).join("\n");
+            
             const link = document.createElement("a");
             link.setAttribute("href", encodeURI(csvContent));
             link.setAttribute("download", "bus_reservations.csv");
