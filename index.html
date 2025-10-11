@@ -694,6 +694,7 @@
         // 카카오톡 SDK 초기화 코드를 한 번만 실행되도록 수정
         if (!Kakao.isInitialized()) {
             // 'YOUR_APP_KEY'는 실제 카카오 앱 키로 변경해야 합니다.
+            // 데모 환경에서는 빈 값으로 두는 것이 일반적입니다.
             Kakao.init('YOUR_APP_KEY');
         }
         
