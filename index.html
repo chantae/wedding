@@ -760,6 +760,9 @@
         */
 
         function openGuestbookWriteModal() {
+            document.getElementById('gb-name').value = '';
+            document.getElementById('gb-message').value = '';
+            document.getElementById('gb-password').value = '';
             document.getElementById('guestbook-write-modal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
@@ -783,15 +786,15 @@
 
         // --- Account Modal Logic ---
         const ACCOUNT_DETAILS = {
-			groom: [
-			    { name: '신랑 전찬태', bank: '신한은행', account: '110-364-860952' },
-			    { name: '혼주 김옥주', bank: '농협은행', account: '315034-52-024177' },
-			],
-			bride: [
-			    { name: '신부 박은진', bank: '신한은행', account: '110-584-336719' },
-			    { name: '혼주 박상문', bank: '농협은행', account: '352-1523-2482-03' },
-			    { name: '혼주 김선희', bank: '농협은행', account: '815112-52-100209' },
-			]
+            groom: [
+                { name: '신랑 전찬태', bank: '신한은행', account: '110-364-860952' },
+                { name: '혼주 김옥주 (신랑 모)', bank: '국민은행', account: '110-000-000000' },
+            ],
+            bride: [
+                { name: '신부 박은진', bank: '하나은행', account: '110-000-00000' },
+                { name: '혼주 박상문 (신부 부)', bank: '농협은행', account: '200-0000-0000-00' },
+                { name: '혼주 김선희 (신부 모)', bank: '우리은행', account: '1002-000-000000' },
+            ]
         };
 
         function openAccountModal(side) {
