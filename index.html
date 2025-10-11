@@ -21,7 +21,8 @@
         /* Modal / Popup */
         .modal { transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; }
         .modal.active { visibility: visible; opacity: 1; }
-        .modal-content { transform: scale(0.95); transition: transform 0.3s ease-in-out; }
+        /* 팝업 콘텐츠의 z-index를 높여 닫기 버튼이 항상 위에 있도록 수정 */
+        .modal-content { transform: scale(0.95); transition: transform 0.3s ease-in-out; position: relative; z-index: 1100; }
         .modal.active .modal-content { transform: scale(1); }
 
         /* Account Copy Button */
@@ -1352,10 +1353,6 @@
                 }
                 loadGalleryImages(itemsToShowInitially);
                 document.getElementById('show-more-gallery').addEventListener('click', () => loadGalleryImages(itemsToLoad));
-
-                // --- MODAL & BUS LOGIC INITIALIZATION (Admin/User states are managed globally) ---
-                
-                // Existing logic for countdown, calendar, navigation, and modal/bus functions remains globally accessible.
             }
         });
     </script>
