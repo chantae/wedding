@@ -1250,6 +1250,28 @@
                 setTimeout(() => msg.classList.add('hidden'), 2000);
             });
         };
+        
+        // --- Navigation Links ---
+        window.openNaverMap = function() {
+            const destination = encodeURIComponent('팔레드오페라');
+            const address = encodeURIComponent('대전 서구 둔산남로 50');
+            const url = `https://m.map.naver.com/search/address/${address}`;
+            window.open(url, '_blank');
+        }
+        
+        window.openTMap = function() {
+            const address = encodeURIComponent('대전 서구 둔산남로 50');
+            // TMap은 웹에서 주소 기반 검색을 지원
+            const url = `https://www.tmap.co.kr/nsearch/site/search.do?menu=search&query=${address}`;
+            window.open(url, '_blank');
+        }
+
+        window.openKakaoMap = function() {
+            const address = encodeURIComponent('대전 서구 둔산남로 50');
+            const url = `https://map.kakao.com/link/search/${address}`;
+            window.open(url, '_blank');
+        }
+
 
         // --- DOMContentLoaded END ---
         
