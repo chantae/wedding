@@ -336,6 +336,28 @@
             justify-content: center;
             align-items: center;
         }
+        
+        /* 캘린더 디자인 개선 */
+        #calendar table th {
+            font-weight: 700; /* 굵게 */
+            padding-bottom: 8px;
+            color: #8B7D6C; /* 베이지 브라운 톤 */
+        }
+        #calendar table td {
+            padding: 4px 0;
+        }
+        #calendar table td span {
+            width: 32px;
+            height: 32px;
+            line-height: 32px;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+        /* D-day 강조 색상 (진한 베이지 브라운) */
+        #calendar table td .bg-\[\#8B7D6C\] {
+            background-color: #8B7D6C; 
+            color: white;
+        }
     </style>
 </head>
 <body class="bg-white flex flex-col items-center justify-center">
@@ -354,7 +376,7 @@
         <div id="splash-text-container" class="absolute inset-0 flex flex-col items-center justify-center stylish-font splash-intro-text splash-text-reveal">
             <div id="splash-text-1" class="text-3xl sm:text-4xl">전찬태 & 박은진</div>
             <div id="splash-text-2" class="text-lg sm:text-xl my-4 tracking-wider">WEDDING INVITATION</div>
-            <div id="splash-text-3" class="text-xl sm:text-2xl mt-2 font-bold">2025.12.06. Sat 12:30 PM</div>
+            <div id="splash-text-3" class="text-xl sm:text-2xl mt-2 font-bold">2025.12.06. Sat 12:20 PM</div>
         </div>
     </div>
     
@@ -410,9 +432,7 @@
                     <p class="text-xl">박은진</p>
                 </div>
             </div>
-            <button onclick="openContactModal()" class="w-full mt-8 py-3 bg-[#F0E8D7] text-gray-800 rounded-full font-medium hover:bg-[#D8C4A6] transition-colors shadow-lg">
-                <i class="fa fa-phone-alt"></i>&nbsp;&nbsp;연락하기
-            </button>
+            <!-- 연락하기 버튼 제거 -->
         </section>
     
         <section class="w-full p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
@@ -519,31 +539,19 @@
         </section>
     
         <section class="w-full p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
-            <h2 id="toggle-account-btn" class="w-full text-center text-2xl font-bold text-gray-800 mb-2 focus:outline-none cursor-pointer">
+            <h2 class="w-full text-center text-2xl font-bold text-gray-800 mb-2">
                 마음 전하실 곳
             </h2>
             <div class="text-sm text-gray-600 mb-6">참석이 어려우신 분들을 위해<br>계좌번호를 기재하였습니다.</div>
-            <div id="account-details" class="collapsible-content active">
-                <div class="text-gray-600 space-y-4 text-left px-4 mt-4">
-                    <div class="bg-gray-50 p-4 rounded-xl shadow-inner border border-gray-200">
-                        <p class="font-semibold text-gray-800 mb-2">신랑측</p>
-                        <div class="flex items-center justify-between">
-                            <p class="font-medium text-gray-700">전찬태</p>
-                            <button class="copy-button bg-stone-200 text-gray-600 rounded-full px-3 py-1 text-sm font-medium hover:bg-stone-300" onclick="copyToClipboard('groom-account-1')">복사</button>
-                            <span id="groom-account-1" class="hidden">신한은행 110-364-860952</span>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 p-4 rounded-xl shadow-inner border border-gray-200">
-                        <p class="font-semibold text-gray-800 mb-2">신부측</p>
-                        <div class="flex items-center justify-between">
-                            <p class="font-medium text-gray-700">박은진</p>
-                            <button class="copy-button bg-stone-200 text-gray-600 rounded-full px-3 py-1 text-sm font-medium hover:bg-stone-300" onclick="copyToClipboard('bride-account-1')">복사</button>
-                            <span id="bride-account-1" class="hidden">하나은행 110-000-00000</span>
-                        </div>
-                    </div>
-                </div>
+            
+            <div class="grid grid-cols-2 gap-4 px-4">
+                <button onclick="openAccountModal('groom')" class="py-3 bg-[#F0E8D7] text-gray-800 rounded-lg font-medium hover:bg-[#D8C4A6] transition-colors shadow-md">
+                    신랑측 계좌
+                </button>
+                <button onclick="openAccountModal('bride')" class="py-3 bg-[#F0E8D7] text-gray-800 rounded-lg font-medium hover:bg-[#D8C4A6] transition-colors shadow-md">
+                    신부측 계좌
+                </button>
             </div>
-            <div id="copy-message" class="text-sm mt-4 text-[#8B7D6C] hidden">복사되었습니다!</div>
         </section>
     
         <section class="w-full p-6 md:p-10 mt-8 mb-12 text-center animate-up">
@@ -553,45 +561,22 @@
             </button>
         </section>
         
-        <div id="contact-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible">
-            <div class="modal-content relative w-full max-w-sm bg-white rounded-xl p-8 text-center shadow-2xl">
-                <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10" onclick="closeContactModal()">
+        <!-- 연락처 모달 삭제 -->
+        
+        <!-- 계좌 정보 팝업 (통합) -->
+        <div id="account-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible">
+            <div class="modal-content relative w-full max-w-sm bg-white rounded-xl p-8 shadow-2xl">
+                <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10" onclick="closeAccountModal()">
                     <i class="fa fa-times text-xl"></i>
                 </button>
-                <h3 class="text-xl font-bold mb-6">연락하기</h3>
-                <div class="space-y-4">
-                    <div class="p-4 bg-gray-50 rounded-lg">
-                        <p class="font-bold text-gray-800">신랑측</p>
-                        <div class="flex justify-between items-center mt-2">
-                            <p>전찬태</p>
-                            <div class="flex space-x-2">
-                                <a href="tel:010-0000-0000" class="w-10 h-10 flex items-center justify-center bg-gray-200 rounded-full text-gray-700 hover:bg-gray-300 transition-colors">
-                                    <i class="fa fa-phone-alt"></i>
-                                </a>
-                                <a href="sms:010-0000-0000" class="w-10 h-10 flex items-center justify-center bg-gray-200 rounded-full text-gray-700 hover:bg-gray-300 transition-colors">
-                                    <i class="fa fa-envelope"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-4 bg-gray-50 rounded-lg">
-                        <p class="font-bold text-gray-800">신부측</p>
-                        <div class="flex justify-between items-center mt-2">
-                            <p>박은진</p>
-                            <div class="flex space-x-2">
-                                <a href="tel:010-0000-0000" class="w-10 h-10 flex items-center justify-center bg-gray-200 rounded-full text-gray-700 hover:bg-gray-300 transition-colors">
-                                    <i class="fa fa-phone-alt"></i>
-                                </a>
-                                <a href="sms:010-0000-0000" class="w-10 h-10 flex items-center justify-center bg-gray-200 rounded-full text-gray-700 hover:bg-gray-300 transition-colors">
-                                    <i class="fa fa-envelope"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                <h3 id="account-modal-title" class="text-xl font-bold mb-6 text-center"></h3>
+                <div id="account-list" class="space-y-4">
+                    <!-- 계좌 목록이 여기에 동적으로 로드됩니다. -->
                 </div>
+                <div id="account-copy-message" class="text-sm mt-4 text-[#8B7D6C] hidden">계좌번호가 복사되었습니다!</div>
             </div>
-        </div>
-
+        </div
+        >
         <div id="bus-seat-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible">
             <div class="modal-content relative w-full max-w-sm bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh]">
                 <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10" onclick="closeBusSeatModal()">
@@ -762,6 +747,8 @@
         // MODAL CONTROL FUNCTIONS (Global Access)
         // ************************************************************
         
+        // 연락하기 모달 삭제로 인한 주석 처리
+        /*
         function openContactModal() {
             document.getElementById('contact-modal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -770,6 +757,8 @@
             document.getElementById('contact-modal').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
+        */
+
         function openGuestbookWriteModal() {
             document.getElementById('guestbook-write-modal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -790,6 +779,56 @@
         function closeGuestbookListModal() {
             document.getElementById('guestbook-list-modal').classList.remove('active');
             document.body.style.overflow = 'auto';
+        }
+
+        // --- Account Modal Logic ---
+        const ACCOUNT_DETAILS = {
+            groom: [
+                { name: '신랑 전찬태', bank: '신한은행', account: '110-364-860952' },
+                { name: '혼주 김옥주', bank: '농협은행', account: '315034-52-024177' },
+            ],
+            bride: [
+                { name: '신부 박은진', bank: '신한은행', account: '110-584-336719' },
+                { name: '혼주 박상문', bank: '농협은행', account: '352-1523-2482-03' },
+                { name: '혼주 김선희', bank: '농협은행', account: '815112-52-100209' },
+            ]
+        };
+
+        function openAccountModal(side) {
+            const modalTitle = document.getElementById('account-modal-title');
+            const accountList = document.getElementById('account-list');
+
+            if (side === 'groom') {
+                modalTitle.textContent = '신랑측 계좌 정보';
+            } else if (side === 'bride') {
+                modalTitle.textContent = '신부측 계좌 정보';
+            }
+
+            accountList.innerHTML = ACCOUNT_DETAILS[side].map((detail, index) => `
+                <div class="bg-gray-50 p-4 rounded-xl shadow-inner border border-gray-200">
+                    <p class="font-semibold text-gray-800 mb-2">${detail.name}</p>
+                    <div class="flex items-center justify-between">
+                        <p class="font-medium text-gray-700">${detail.bank} ${detail.account}</p>
+                        <button class="copy-button bg-[#F0E8D7] text-gray-800 rounded-full px-3 py-1 text-sm font-medium hover:bg-[#D8C4A6]" onclick="copyAccountToClipboard('${detail.bank} ${detail.account}')">복사</button>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('account-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAccountModal() {
+            document.getElementById('account-modal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function copyAccountToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const msg = document.getElementById('account-copy-message');
+                msg.classList.remove('hidden');
+                setTimeout(() => msg.classList.add('hidden'), 2000);
+            });
         }
         
         // ************************************************************
@@ -1142,7 +1181,7 @@
         };
 
         // --- FULLSCREEN GALLERY LOGIC (Global Access) ---
-        let allGalleryImages = [];
+        let allGalleryImages = ['image/gallery_1.jpg', 'image/gallery_2.jpg', 'image/gallery_3.jpg', 'image/gallery_4.jpg', 'image/gallery_5.jpg', 'image/gallery_6.jpg', 'image/gallery_7.jpg', 'image/gallery_8.jpg', 'image/gallery_9.jpg', 'image/gallery_10.jpg', 'image/gallery_11.jpg', 'image/gallery_12.jpg', 'image/gallery_13.jpg', 'image/gallery_14.jpg', 'image/gallery_15.jpg', 'image/gallery_16.jpg', 'image/gallery_17.jpg', 'image/gallery_18.jpg'];
         let currentFullscreenIndex = 0;
         let touchStartX = 0;
 
@@ -1339,9 +1378,10 @@
                     const startIndex = currentImagesLoaded;
                     const endIndex = Math.min(allGalleryImages.length, currentImagesLoaded + count);
                     
-                    // 버그 수정: 초기 로딩 시 이전에 로드된 이미지를 clear하지 않음
-                    if (startIndex === 0 && galleryContainer.children.length > 0) {
-                        // 갤러리 컨테이너를 비우지 않음 (중복 로딩 방지 목적)
+                    // 갤러리 컨테이너 초기화 (중복 로딩 방지)
+                    if (startIndex === 0) {
+                        galleryContainer.innerHTML = '';
+                        currentImagesLoaded = 0;
                     }
 
                     for (let i = startIndex; i < endIndex; i++) {
@@ -1359,10 +1399,7 @@
                     }
                 }
                 
-                // 갤러리 컨테이너 초기화 (중복 로딩 방지)
-                galleryContainer.innerHTML = '';
-                currentImagesLoaded = 0; // 로딩 카운터 초기화
-
+                
                 loadGalleryImages(itemsToShowInitially);
                 document.getElementById('show-more-gallery').addEventListener('click', () => loadGalleryImages(itemsToLoad));
 
