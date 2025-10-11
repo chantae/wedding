@@ -1338,6 +1338,12 @@
                 function loadGalleryImages(count) {
                     const startIndex = currentImagesLoaded;
                     const endIndex = Math.min(allGalleryImages.length, currentImagesLoaded + count);
+                    
+                    // 버그 수정: 초기 로딩 시 이전에 로드된 이미지를 clear하지 않음
+                    if (startIndex === 0 && galleryContainer.children.length > 0) {
+                        // 갤러리 컨테이너를 비우지 않음 (중복 로딩 방지 목적)
+                    }
+
                     for (let i = startIndex; i < endIndex; i++) {
                         const div = document.createElement('div');
                         div.className = `w-full rounded-xl overflow-hidden shadow-md gallery-item-animation`;
@@ -1352,6 +1358,11 @@
                         document.getElementById('show-more-gallery').style.display = 'none';
                     }
                 }
+                
+                // 갤러리 컨테이너 초기화 (중복 로딩 방지)
+                galleryContainer.innerHTML = '';
+                currentImagesLoaded = 0; // 로딩 카운터 초기화
+
                 loadGalleryImages(itemsToShowInitially);
                 document.getElementById('show-more-gallery').addEventListener('click', () => loadGalleryImages(itemsToLoad));
 
