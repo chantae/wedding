@@ -789,12 +789,12 @@
         const ACCOUNT_DETAILS = {
             groom: [
                 { name: '신랑 전찬태', bank: '신한은행', account: '110-364-860952' },
-                { name: '혼주 김옥주 (신랑 모)', bank: '국민은행', account: '110-000-000000' },
+                { name: '혼주 김옥주', bank: '국민은행', account: '315034-52-024177' },
             ],
             bride: [
-                { name: '신부 박은진', bank: '하나은행', account: '110-000-00000' },
-                { name: '혼주 박상문 (신부 부)', bank: '농협은행', account: '200-0000-0000-00' },
-                { name: '혼주 김선희 (신부 모)', bank: '우리은행', account: '1002-000-000000' },
+                { name: '신부 박은진', bank: '신한은행', account: '110-584-336719' },
+                { name: '혼주 박상문', bank: '농협은행', account: '352-1523-2482-03 ' },
+                { name: '혼주 김선희', bank: '농협은행', account: '15112-52-100209' },
             ]
         };
 
@@ -1253,20 +1253,21 @@
         
         // --- Navigation Links (FIXED for Web/App) ---
         const DESTINATION_NAME = '팔레드오페라';
-        const DESTINATION_ADDRESS = '대전 서구 둔산남로 50';
+        // 주소에서 건물명을 제외하고 검색하도록 수정
+        const DESTINATION_ADDRESS = '대전 서구 둔산남로 50'; 
         const ENCODED_ADDRESS = encodeURIComponent(DESTINATION_ADDRESS);
         const ENCODED_DESTINATION = encodeURIComponent(DESTINATION_NAME);
 
         window.openNaverMap = function(event) {
             event.preventDefault(); 
-            // 네이버 지도 앱/웹 연결 (앱이 없으면 웹으로 연결됨)
+            // 1. 네이버 지도 앱 시도
             const appUrl = `nmap://search?query=${ENCODED_ADDRESS}&appname=wedding_invitation`;
             const webUrl = `https://m.map.naver.com/search/${ENCODED_ADDRESS}`;
             
             // 앱 실행을 시도하고, 실패하면 웹으로 이동
-            window.location.href = appUrl;
+            window.location.href = appUrl; // 현재 페이지에서 딥링크 시도
             setTimeout(() => {
-                 window.open(webUrl, '_blank');
+                 window.open(webUrl, '_blank'); // 실패 시 새 탭에서 웹 검색
             }, 100); 
         }
         
@@ -1277,15 +1278,15 @@
             const webUrl = `https://map.tmap.co.kr/search/search?query=${ENCODED_ADDRESS}`;
             
             // 앱 실행을 시도하고, 실패하면 웹으로 이동
-            window.location.href = appUrl;
+            window.location.href = appUrl; // 현재 페이지에서 딥링크 시도
             setTimeout(() => {
-                window.open(webUrl, '_blank');
+                window.open(webUrl, '_blank'); // 실패 시 새 탭에서 웹 검색
             }, 100);
         }
 
         window.openKakaoMap = function(event) {
             event.preventDefault(); 
-            // 카카오맵 웹 연결 (카카오맵은 웹 링크로 앱을 유도하는 것이 일반적)
+            // 카카오맵 웹 연결 (가장 안정적)
             const webUrl = `https://map.kakao.com/link/search/${ENCODED_ADDRESS}`;
             window.open(webUrl, '_blank');
         }
