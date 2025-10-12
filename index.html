@@ -1259,33 +1259,33 @@
 
         window.openNaverMap = function(event) {
             event.preventDefault(); 
-            // 1. 네이버 지도 앱 시도 (모바일에서만 작동)
+            // 네이버 지도 앱/웹 연결 (앱이 없으면 웹으로 연결됨)
             const appUrl = `nmap://search?query=${ENCODED_ADDRESS}&appname=wedding_invitation`;
-            const webUrl = `https://m.map.naver.com/search/address/${ENCODED_ADDRESS}`;
+            const webUrl = `https://m.map.naver.com/search/${ENCODED_ADDRESS}`;
             
-            // 앱 실행 시도 후 실패하면 웹으로 연결
-            window.open(appUrl);
+            // 앱 실행을 시도하고, 실패하면 웹으로 이동
+            window.location.href = appUrl;
             setTimeout(() => {
                  window.open(webUrl, '_blank');
-            }, 500); 
+            }, 100); 
         }
         
         window.openTMap = function(event) {
             event.preventDefault(); 
-            // 1. T맵 앱 시도 (모바일에서만 작동)
+            // T맵 앱/웹 연결
             const appUrl = `tmap://search?name=${ENCODED_DESTINATION}&address=${ENCODED_ADDRESS}&appname=wedding_invitation`;
             const webUrl = `https://map.tmap.co.kr/search/search?query=${ENCODED_ADDRESS}`;
             
-            // 앱 실행 시도 후 실패하면 웹으로 연결
-            window.open(appUrl);
+            // 앱 실행을 시도하고, 실패하면 웹으로 이동
+            window.location.href = appUrl;
             setTimeout(() => {
                 window.open(webUrl, '_blank');
-            }, 500);
+            }, 100);
         }
 
         window.openKakaoMap = function(event) {
             event.preventDefault(); 
-            // 1. 카카오맵 앱 시도 (웹 연결도 안정적)
+            // 카카오맵 웹 연결 (카카오맵은 웹 링크로 앱을 유도하는 것이 일반적)
             const webUrl = `https://map.kakao.com/link/search/${ENCODED_ADDRESS}`;
             window.open(webUrl, '_blank');
         }
