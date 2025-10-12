@@ -1251,28 +1251,43 @@
             });
         };
         
-        // --- Navigation Links (FIXED) ---
-        // event.preventDefault()를 추가하여 페이지 최상단 이동 방지
+        // --- Navigation Links (FIXED for Web/App) ---
+        const DESTINATION_NAME = '팔레드오페라';
+        const DESTINATION_ADDRESS = '대전 서구 둔산남로 50 팔레드오페라';
+        const ENCODED_ADDRESS = encodeURIComponent(DESTINATION_ADDRESS);
+        const ENCODED_DESTINATION = encodeURIComponent(DESTINATION_NAME);
+
         window.openNaverMap = function(event) {
             event.preventDefault(); 
-            const address = encodeURIComponent('대전 서구 둔산남로 50 팔레드오페라');
-            const url = `https://m.map.naver.com/search/address/${address}`;
-            window.open(url, '_blank');
+            // 1. 네이버 지도 앱 시도 (모바일에서만 작동)
+            const appUrl = `nmap://search?query=${ENCODED_ADDRESS}&appname=wedding_invitation`;
+            const webUrl = `https://m.map.naver.com/search/address/${ENCODED_ADDRESS}`;
+            
+            // 앱 실행 시도 후 실패하면 웹으로 연결
+            window.open(appUrl);
+            setTimeout(() => {
+                 window.open(webUrl, '_blank');
+            }, 500); 
         }
         
         window.openTMap = function(event) {
             event.preventDefault(); 
-            const address = encodeURIComponent('대전 서구 둔산남로 50 팔레드오페라');
-            // TMap은 웹에서 주소 기반 검색을 지원
-            const url = `https://m.map.tmap.co.kr/search/search.do?query=${address}`;
-            window.open(url, '_blank');
+            // 1. T맵 앱 시도 (모바일에서만 작동)
+            const appUrl = `tmap://search?name=${ENCODED_DESTINATION}&address=${ENCODED_ADDRESS}&appname=wedding_invitation`;
+            const webUrl = `https://map.tmap.co.kr/search/search?query=${ENCODED_ADDRESS}`;
+            
+            // 앱 실행 시도 후 실패하면 웹으로 연결
+            window.open(appUrl);
+            setTimeout(() => {
+                window.open(webUrl, '_blank');
+            }, 500);
         }
 
         window.openKakaoMap = function(event) {
             event.preventDefault(); 
-            const address = encodeURIComponent('대전 서구 둔산남로 50 팔레드오페라');
-            const url = `https://map.kakao.com/link/search/${address}`;
-            window.open(url, '_blank');
+            // 1. 카카오맵 앱 시도 (웹 연결도 안정적)
+            const webUrl = `https://map.kakao.com/link/search/${ENCODED_ADDRESS}`;
+            window.open(webUrl, '_blank');
         }
         
         // --- Sharing Link (FIXED) ---
@@ -1289,6 +1304,7 @@
                     // 공유 실패 시 클립보드 복사를 대체 동작으로 사용 (무음 처리)
                     navigator.clipboard.writeText(window.location.href).then(() => {
                         console.log("Link copied to clipboard as fallback.");
+                        alert('링크가 클립보드에 복사되었습니다. 직접 공유해주세요.'); // 사용자에게 복사되었다는 피드백 제공
                     });
                 }
             } else {
