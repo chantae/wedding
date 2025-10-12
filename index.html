@@ -1255,23 +1255,22 @@
         // event.preventDefault()를 추가하여 페이지 최상단 이동 방지
         window.openNaverMap = function(event) {
             event.preventDefault(); 
-            const destination = encodeURIComponent('팔레드오페라');
-            const address = encodeURIComponent('대전 서구 둔산남로 50');
+            const address = encodeURIComponent('대전 서구 둔산남로 50 팔레드오페라');
             const url = `https://m.map.naver.com/search/address/${address}`;
             window.open(url, '_blank');
         }
         
         window.openTMap = function(event) {
             event.preventDefault(); 
-            const address = encodeURIComponent('대전 서구 둔산남로 50');
+            const address = encodeURIComponent('대전 서구 둔산남로 50 팔레드오페라');
             // TMap은 웹에서 주소 기반 검색을 지원
-            const url = `https://www.tmap.co.kr/nsearch/site/search.do?menu=search&query=${address}`;
+            const url = `https://m.map.tmap.co.kr/search/search.do?query=${address}`;
             window.open(url, '_blank');
         }
 
         window.openKakaoMap = function(event) {
             event.preventDefault(); 
-            const address = encodeURIComponent('대전 서구 둔산남로 50');
+            const address = encodeURIComponent('대전 서구 둔산남로 50 팔레드오페라');
             const url = `https://map.kakao.com/link/search/${address}`;
             window.open(url, '_blank');
         }
