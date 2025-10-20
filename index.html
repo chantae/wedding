@@ -1,93 +1,8 @@
-<!DOCTYPE html>
-<html lang="ko" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>12월 06일 전찬태 ♥ 박은진 결혼합니다.</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Stylish&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Noto Sans KR', sans-serif; color: #404040; background-color: #ffffff; }
-        .wedding-card { background-color: #FBF8F3; }
-        .stylish-font { font-family: 'Stylish', cursive; }
-        .modal { visibility: hidden; opacity: 0; transition: opacity 0.3s ease, visibility 0.3s ease; }
-        .modal.active { visibility: visible; opacity: 1; }
-        .modal-content { transform: scale(0.95); transition: transform 0.3s ease; }
-        .modal.active .modal-content { transform: scale(1); }
-        .animate-up { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
-        .animate-up.visible { opacity: 1; transform: translateY(0); }
-        .masonry-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); grid-auto-rows: 150px; gap: 8px; }
-        .masonry-grid > div { border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); cursor: pointer; overflow: hidden; position: relative; }
-        .masonry-grid .span-2-row { grid-row: span 2 / auto; }
-        .masonry-grid img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
-        .masonry-grid > div:hover img { transform: scale(1.05); }
-        #fullscreen-image-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center; z-index: 2000; }
-        #fullscreen-image-modal img { max-width: 90%; max-height: 90%; }
-        .slide-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2010; background: rgba(0,0,0,0.4); color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        #splash-images img { filter: grayscale(100%) blur(5px); transition: filter 2s ease-out; }
-        #splash-images img.loaded-effect { filter: grayscale(0) blur(0); }
-        .snowflake { position: absolute; background-color: rgba(255, 255, 255, 0.8); border-radius: 50%; pointer-events: none; animation: fall linear infinite; }
-        @keyframes fall { 0% { transform: translateY(-10vh); } 100% { transform: translateY(100vh); } }
-        #seat-map-container { position: relative; margin: 0 auto; width: 100%; max-width: 300px; aspect-ratio: 300 / 600; background-color: #f5f5f5; border-radius: 15px; padding: 10px; }
-        .seat { position: absolute; width: 35px; height: 40px; border-radius: 8px 8px 3px 3px; border: 1px solid #ccc; cursor: pointer; text-align: center; font-size: 10px; font-weight: bold; transition: all 0.2s; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .seat-number { font-weight: normal; color: #666; font-size: 10px; line-height: 1; margin-top: 2px;}
-        .seat-name { font-size: 12px; color: #444; font-weight: bold; line-height: 1.2; }
-        .seat.available { background-color: #fff; }
-        .seat.reserved { background-color: #D8C4A6; color: white; cursor: not-allowed; }
-        .seat.selected { background-color: #8B7D6C; color: white; transform: scale(1.05); }
-        .seat.driver { background-color: #ddd; cursor: default; }
-        #calendar table th { font-weight: 700; color: #8B7D6C; padding-bottom: 8px; }
-        #calendar table td { padding: 4px 0;}
-        #calendar table td span { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; margin: auto;}
-    </style>
-</head>
-<body class="bg-white">
-
-    <div id="splash-screen" class="fixed inset-0 z-[1000] bg-white cursor-pointer transition-opacity duration-500 opacity-100">
-        <div class="relative w-full h-full overflow-hidden">
-            <img id="splash-main-img" src="image/main_1.jpg" alt="Wedding Splash Image" class="absolute inset-0 w-full h-full object-cover">
-            <div class="absolute inset-0 bg-black/20"></div><div id="snow-container"></div>
-        </div>
-        <div class="absolute inset-0 flex flex-col items-center justify-center stylish-font text-white text-center px-4" style="text-shadow: 0 1px 3px rgba(0,0,0,0.5);">
-            <div class="splash-text-reveal text-3xl sm:text-4xl"><div>전찬태 & 박은진</div></div>
-            <div class="splash-text-reveal text-lg sm:text-xl my-4 tracking-wider"><div>WEDDING INVITATION</div></div>
-            <div class="splash-text-reveal text-xl sm:text-2xl mt-2 font-bold"><div>2025.12.06. Sat 12:20 PM</div></div>
-        </div>
-    </div>
-    
-    <div id="main-content" class="w-full max-w-xl mx-auto opacity-0 hidden transition-opacity duration-500">
-        <section class="w-full mb-8 relative">
-            <div class="h-[70vh] min-h-[500px] relative"><div id="image-slider" class="w-full h-full relative overflow-hidden"></div></div>
-            <div class="p-8 w-full text-center bg-white rounded-3xl -mt-16 relative z-10 shadow-xl">
-                <h1 class="text-4xl stylish-font font-bold text-gray-800 flex items-center justify-center">전찬태 <svg class="h-8 w-8 text-pink-200 mx-4" viewBox="0 0 20 20" fill="currentColor"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"/></svg> 박은진</h1>
-                <p class="text-base text-gray-500 mt-2">2025년 12월 06일 토요일 낮 12시 20분<br>팔레드오페라, 3층 트리아농홀</p>
-            </div>
-        </section>
-        <section class="w-full p-8 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up"><h2 class="text-2xl font-bold mb-2">INVITATION</h2><p class="text-sm text-gray-600 mb-6">소중한 분들을 초대합니다</p><p class="text-lg leading-relaxed">서로 닮은 점이 많아 마치 거울을 보는 듯한<br>저희 두 사람이 드디어 하나가 되려 합니다.<br>평생을 함께할 것을 약속하는 자리에<br>귀한 걸음 하시어 축복해 주시면<br>더없는 기쁨으로 간직하겠습니다.</p><div class="my-6 border-t border-gray-200"></div><div class="flex justify-center items-center space-x-8"><div class="text-center"><p>故전관표 · 김옥주의 아들</p><p class="text-xl">전찬태</p></div><p class="text-xl font-bold">&</p><div class="text-center"><p>박상문 · 김선희의 딸</p><p class="text-xl">박은진</p></div></div></section>
-        <section class="w-full p-8 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up"><h2 class="text-2xl font-bold mb-2">GALLERY</h2><p class="text-sm text-gray-600 mb-6">우리의 아름다운 순간</p><div class="masonry-grid" id="gallery-container"></div><button id="show-more-gallery" class="w-full mt-6 py-3 bg-white text-gray-800 rounded-full font-medium shadow-lg">더보기</button></section>
-        <section class="w-full p-8 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up"><h2 class="text-2xl font-bold mb-2">2025.12.06</h2><p class="text-sm text-gray-600 mb-6">토요일 낮 12시 20분</p><div id="calendar" class="w-full"></div><div class="flex justify-around items-center mt-6 text-gray-800 font-bold text-center"><div><span id="days" class="text-3xl block">00</span><span class="text-xs">Days</span></div><div class="text-3xl pb-4">:</div><div><span id="hours" class="text-3xl block">00</span><span class="text-xs">Hours</span></div><div class="text-3xl pb-4">:</div><div><span id="minutes" class="text-3xl block">00</span><span class="text-xs">Mins</span></div><div class="text-3xl pb-4">:</div><div><span id="seconds" class="text-3xl block">00</span><span class="text-xs">Secs</span></div></div><p class="text-sm mt-4"><strong>찬태♥은진</strong>의 결혼식이 <strong id="dday-count" class="text-pink-400">0</strong>일 남았습니다.</p></section>
-        <section class="w-full p-8 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up"><h2 class="text-2xl font-bold mb-2">LOCATION</h2><p class="text-sm text-gray-600 mb-6">오시는 길</p><p class="font-semibold">팔레드오페라, 3층 트리아농홀</p><p class="text-sm">대전 서구 둔산남로 50</p><div class="w-full h-64 my-4 rounded-lg overflow-hidden"><a href="https://naver.me/5i383ZkC" target="_blank"><img src="image/map.png" alt="Map" class="w-full h-full object-cover"></a></div><div class="grid grid-cols-3 gap-2"><a id="naver-map-btn" href="#" class="py-2 bg-white rounded-full text-sm">네이버지도</a><a id="tmap-btn" href="#" class="py-2 bg-white rounded-full text-sm">티맵</a><a id="kakaonavi-btn" href="#" class="py-2 bg-white rounded-full text-sm">카카오맵</a></div></section>
-        <section class="w-full p-8 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up"><h2 class="text-2xl font-bold mb-2">주차 안내</h2><p class="text-sm text-gray-600 mb-6">편안한 방문을 위해 안내드립니다.</p><div class="text-left bg-gray-50 p-4 rounded-lg text-sm"><p class="font-semibold mb-1">팔레드오페라 주차장</p><p>주차 타워 4층에 본관 3층(식장, 연회장) 연결통로가 있습니다. 거동이 불편하신 분은 4층 이용 시 편리합니다.</p></div></section>
-        <section class="w-full p-8 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up"><h2 class="text-2xl font-bold mb-2">BUS</h2><p class="text-sm text-gray-600 mb-6">서울-대전 왕복 버스</p><button id="open-bus-seat-modal-btn" class="w-full py-3 bg-white text-gray-800 rounded-full font-medium shadow-lg">버스 탑승 신청하기</button><button id="open-bus-check-modal-btn" class="w-full mt-4 py-3 bg-gray-100 text-gray-700 rounded-full font-medium">신청 명단 확인</button></section>
-        <section class="w-full p-8 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up"><h2 class="text-2xl font-bold mb-2">GUESTBOOK</h2><p class="text-sm text-gray-600 mb-6">축하의 마음을 남겨주세요</p><div id="guestbook-preview" class="space-y-2 mb-6"></div><button id="open-guestbook-write-modal-btn" class="w-full py-3 bg-white text-gray-800 rounded-full font-medium shadow-lg">방명록 작성하기</button><button id="open-guestbook-list-modal-btn" class="w-full mt-4 py-3 bg-gray-100 text-gray-700 rounded-full font-medium">방명록 전체보기</button></section>
-        <section class="w-full p-8 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up"><h2 class="text-2xl font-bold mb-2">GIFT</h2><p class="text-sm text-gray-600 mb-6">마음 전하실 곳</p><div class="grid grid-cols-2 gap-4"><button id="open-account-groom-btn" class="py-3 bg-white rounded-lg shadow-md">신랑측 계좌</button><button id="open-account-bride-btn" class="py-3 bg-white rounded-lg shadow-md">신부측 계좌</button></div></section>
-        <section class="w-full p-8 mt-8 mb-12 text-center"><p class="text-xl mb-4">감사합니다</p><button id="share-link-btn" class="w-full py-3 bg-gray-200 rounded-full font-bold">공유하기</button></section>
-        
-        <div id="account-modal" class="modal fixed inset-0 z-50 bg-black/60 flex items-center justify-center invisible p-4"><div class="modal-content relative w-full max-w-sm bg-white rounded-xl p-8 shadow-2xl"><button class="modal-close-btn absolute top-4 right-4 text-gray-400"><i class="fa fa-times text-xl"></i></button><h3 id="account-modal-title" class="text-xl font-bold mb-6 text-center"></h3><div id="account-list" class="space-y-4"></div><div id="account-copy-message" class="text-sm mt-4 text-green-600 hidden">계좌번호가 복사되었습니다!</div></div></div>
-        <div id="bus-seat-modal" class="modal fixed inset-0 z-50 bg-black/60 flex items-center justify-center invisible p-4"><div class="modal-content relative w-full max-w-sm bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh]"><button class="modal-close-btn absolute top-4 right-4 text-gray-400 z-20"><i class="fa fa-times text-xl"></i></button><div class="p-8 overflow-y-auto"><h3 class="text-xl font-bold mb-4 text-center">버스 좌석 신청</h3><div id="seat-map-container" class="mb-6"></div><p class="text-center text-sm mb-4">선택 좌석: <span id="selected-seats-info" class="font-bold">0석</span></p><div class="space-y-4"><input id="bus-name" type="text" placeholder="성함" class="w-full p-3 border rounded-lg"><input id="bus-phone" type="tel" placeholder="연락처" class="w-full p-3 border rounded-lg"><input id="bus-password" type="password" placeholder="비밀번호 4자리" class="w-full p-3 border rounded-lg" maxlength="4"><button id="submit-bus-reservation-btn" class="w-full py-3 bg-gray-800 text-white rounded-full">신청하기</button></div><div id="bus-message" class="text-sm mt-4 text-green-600 hidden"></div></div></div></div>
-        <div id="bus-check-modal" class="modal fixed inset-0 z-50 bg-black/60 flex items-center justify-center invisible p-4"><div class="modal-content relative w-full max-w-sm bg-white rounded-xl p-8 shadow-2xl"><button class="modal-close-btn absolute top-4 right-4 text-gray-400"><i class="fa fa-times text-xl"></i></button><div id="bus-login-form"><h3 class="text-xl font-bold mb-6 text-center">예약 확인/취소</h3><input id="check-name" type="text" placeholder="성함" class="w-full p-3 border rounded-lg mb-4"><input id="check-password" type="password" placeholder="비밀번호 4자리" class="w-full p-3 border rounded-lg mb-4" maxlength="4"><button id="check-bus-reservation-btn" class="w-full py-3 bg-gray-800 text-white rounded-full">확인하기</button></div><div id="bus-result-view" class="hidden"><h3 id="bus-result-title" class="text-xl font-bold mb-4 text-center"></h3><div id="bus-seat-status" class="mb-4"></div><div id="user-reservation-details" class="text-left mb-6 p-3 bg-gray-50 rounded-lg hidden"></div><div id="admin-actions" class="space-y-3 hidden"><button id="download-bus-list-btn" class="w-full py-3 bg-blue-500 text-white rounded-full">CSV 다운로드</button><button id="admin-delete-all-btn" class="w-full py-3 bg-red-500 text-white rounded-full">전체 삭제</button></div></div></div></div>
-        <div id="guestbook-write-modal" class="modal fixed inset-0 z-50 bg-black/60 flex items-center justify-center invisible p-4"><div class="modal-content relative w-full max-w-sm bg-white rounded-xl p-8 text-center shadow-2xl"><button class="modal-close-btn absolute top-4 right-4 text-gray-400"><i class="fa fa-times text-xl"></i></button><h3 class="text-xl font-bold mb-6">방명록 작성</h3><div class="space-y-4"><input id="gb-name" type="text" placeholder="성함" class="w-full p-3 border rounded-lg"><textarea id="gb-message" placeholder="축하 메시지" rows="4" class="w-full p-3 border rounded-lg" maxlength="500"></textarea><input id="gb-password" type="password" placeholder="비밀번호 4자리" class="w-full p-3 border rounded-lg" maxlength="4"><button id="submit-guestbook-btn" class="w-full py-3 bg-gray-800 text-white rounded-full">남기기</button></div><div id="gb-message-status" class="text-sm mt-4 text-green-600 hidden"></div></div></div>
-        <div id="guestbook-list-modal" class="modal fixed inset-0 z-50 bg-black/60 flex items-center justify-center invisible p-4"><div class="modal-content relative w-full max-w-sm bg-white rounded-xl p-8 shadow-2xl"><button class="modal-close-btn absolute top-4 right-4 text-gray-400"><i class="fa fa-times text-xl"></i></button><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold">방명록 전체</h3><button id="guestbook-admin-btn" class="text-gray-400"><i class="fas fa-cog"></i></button></div><div class="max-h-80 overflow-y-auto mb-4 p-2 guestbook-item-list border rounded-lg"><ul id="guestbook-list-ul" class="text-left space-y-2"></ul><p id="guestbook-list-empty" class="text-center text-sm hidden">방명록이 없습니다.</p></div></div></div>
-        <div id="fullscreen-image-modal" class="modal fixed inset-0 z-[2000] bg-black/90 flex items-center justify-center"><div class="relative w-full h-full flex items-center justify-center"><img id="fullscreen-image" src="" class="max-w-[90%] max-h-[90%] object-contain"><button id="fullscreen-prev-btn" class="slide-btn left-4"><i class="fas fa-chevron-left"></i></button><button id="fullscreen-next-btn" class="slide-btn right-4"><i class="fas fa-chevron-right"></i></button><button id="fullscreen-close-btn" class="absolute top-4 right-4 text-white text-3xl"><i class="fas fa-times"></i></button></div></div>
-    </div>
-
-    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.0.1/kakao.min.js"></script>
-    <script type="module">
+<script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-        // --- CONFIG & CONSTANTS ---
+        // --- 1. CONFIGURATION ---
         const firebaseConfig = { apiKey: "AIzaSyBbiGOyd9-WBJmWXYi9oD0qwumfzbjuUWI", authDomain: "mobile-invitation-5f099.firebaseapp.com", projectId: "mobile-invitation-5f099", storageBucket: "mobile-invitation-5f099.firebasestorage.app", messagingSenderId: "652456319149", appId: "1:652456319149:web:ed0c46a4b2ecc9fb308e24" };
         const ADMIN_PASSWORD = '1331';
         const MAX_CAPACITY = 28;
@@ -95,33 +10,43 @@
         const ACCOUNT_DETAILS = { groom: [{ name: '신랑 전찬태', bank: '신한은행', account: '110-364-860952' }, { name: '혼주 김옥주', bank: '국민은행', account: '315034-52-024177' }], bride: [{ name: '신부 박은진', bank: '신한은행', account: '110-584-336719' }, { name: '혼주 박상문', bank: '농협은행', account: '352-1523-2482-03' }, { name: '혼주 김선희', bank: '농협은행', account: '15112-52-100209' }] };
         const SEAT_POSITIONS = { 1:{x:20,y:55},2:{x:75,y:55},3:{x:205,y:55},4:{x:20,y:105},5:{x:75,y:105},6:{x:205,y:105},7:{x:20,y:155},8:{x:75,y:155},9:{x:205,y:155},10:{x:20,y:220},11:{x:75,y:220},12:{x:205,y:220},13:{x:20,y:270},14:{x:75,y:270},15:{x:205,y:270},16:{x:20,y:320},17:{x:75,y:320},18:{x:205,y:320},19:{x:20,y:370},20:{x:75,y:370},21:{x:205,y:370},22:{x:20,y:440},23:{x:75,y:440},24:{x:205,y:440},25:{x:20,y:490},26:{x:75,y:490},27:{x:160,y:490},28:{x:215,y:490} };
 
-        // --- GLOBAL STATE ---
+        // --- 2. GLOBAL STATE ---
         let isBusAdminMode = false, isGuestbookAdminMode = false;
         let currentGuestbookEntries = [], currentBusReservations = [];
         let currentSelectedSeats = new Set();
         let currentFullscreenIndex = 0;
         let slideInterval; // For main image slider
+        let appInitialized = false; // <<<--- **Flag to prevent double initialization**
 
-        // --- INITIALIZE LIBRARIES ---
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        if (window.Kakao && !Kakao.isInitialized()) { Kakao.init('d593259882260554160a2b00d43e0984'); } // Replace with your Kakao Key
+        // --- 3. INITIALIZE LIBRARIES ---
+        let db; // Declare db globally
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app); // Assign db instance
+            if (window.Kakao && !Kakao.isInitialized()) { Kakao.init('d593259882260554160a2b00d43e0984'); } // Replace with your Kakao Key
+        } catch (error) {
+            console.error("Firebase Initialization Error:", error);
+            // Optionally display an error message to the user
+            alert("페이지 로딩 중 오류가 발생했습니다. 새로고침 해주세요.");
+        }
 
-        // --- HELPER FUNCTIONS ---
+
+        // --- 4. HELPER FUNCTIONS ---
         const el = (id) => document.getElementById(id); // Shortcut for getElementById
         const openModal = (id) => { el(id)?.classList.add('active'); document.body.style.overflow = 'hidden'; };
         const closeModal = (id) => { el(id)?.classList.remove('active'); document.body.style.overflow = 'auto'; };
         const maskName = (name, showAll = false) => (showAll || !name || name.length < 2) ? name : (name.length === 2 ? name.charAt(0) + '*' : name.charAt(0) + '*'.repeat(name.length - 2) + name.slice(-1));
         const getCurrentBusCount = () => currentBusReservations.reduce((total, res) => total + (res.seatNumbers?.length || 0), 0);
-        const showMessage = (elementId, text, duration = 3000) => {
+        const showMessage = (elementId, text, isSuccess = true, duration = 3000) => {
             const msgEl = el(elementId);
             if (!msgEl) return;
             msgEl.textContent = text;
+            msgEl.className = `text-sm mt-4 ${isSuccess ? 'text-green-600' : 'text-red-600'}`; // Dynamic class for success/error
             msgEl.classList.remove('hidden');
             setTimeout(() => msgEl.classList.add('hidden'), duration);
         };
 
-        // --- FEATURE IMPLEMENTATIONS ---
+        // --- 5. FEATURE IMPLEMENTATIONS (ACCOUNT, BUS, GUESTBOOK, GALLERY) ---
 
         // ACCOUNT
         function openAccountModal(side) {
@@ -134,7 +59,7 @@
         function copyAccountToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => showMessage('account-copy-message', '계좌번호가 복사되었습니다!'));
         }
-        
+
         // BUS
         function renderSeatMap(targetId = 'seat-map-container', showAllNames = false, currentReservation = null) {
             const container = el(targetId);
@@ -145,7 +70,6 @@
             const reserved = {};
             currentBusReservations.forEach(r => r.seatNumbers?.forEach(s => { reserved[s] = r; }));
 
-            // Update selected seats info only for the application modal
             if (targetId === 'seat-map-container') {
                 currentSelectedSeats = new Set(Array.from(currentSelectedSeats).filter(s => !reserved[s]));
                 el('selected-seats-info').textContent = currentSelectedSeats.size + '석';
@@ -153,7 +77,7 @@
 
             for (let i = 1; i <= MAX_CAPACITY; i++) {
                 const pos = SEAT_POSITIONS[i];
-                if (!pos) continue; // Skip if position is undefined
+                if (!pos) continue;
                 let status = 'available', content = `<span class="seat-number">${i}</span>`;
                 let reservationData = null;
 
@@ -168,7 +92,7 @@
                 const seatDiv = document.createElement('div');
                 seatDiv.className = `seat ${status}`;
                 seatDiv.style.cssText = `top: ${pos.y}px; left: ${pos.x}px;`;
-                seatDiv.innerHTML = content; // Simplified innerHTML
+                seatDiv.innerHTML = content;
 
                 if (targetId === 'seat-map-container' && status !== 'reserved') {
                     seatDiv.onclick = () => {
@@ -182,10 +106,8 @@
                         el('selected-seats-info').textContent = currentSelectedSeats.size + '석';
                     };
                 } else {
-                    seatDiv.style.cursor = 'default'; // Make reserved seats non-clickable visually
-                    if (reservationData) { // Add tooltip for reserved seats
-                        seatDiv.title = showAllNames ? `예약:${reservationData.name}, 연락처:${reservationData.phone}, 비번:${reservationData.password}` : `예약됨`;
-                    }
+                    seatDiv.style.cursor = 'default';
+                    if (reservationData) { seatDiv.title = showAllNames ? `예약:${reservationData.name}, 연락처:${reservationData.phone}, 비번:${reservationData.password}` : `예약됨`; }
                 }
                 seatMap.appendChild(seatDiv);
             }
@@ -195,19 +117,17 @@
             const seats = Array.from(currentSelectedSeats);
             if (seats.length === 0 || !name || !phone || !password) return alert('모든 정보를 입력해주세요.');
             if (password.length !== 4 || isNaN(parseInt(password))) return alert('비밀번호는 숫자 4자리여야 합니다.');
-            // Double check capacity and double booking with latest data
             if (getCurrentBusCount() + seats.length > MAX_CAPACITY) return alert('죄송합니다. 좌석이 부족합니다. 새로고침 후 다시 시도해주세요.');
-            if (currentBusReservations.some(r => r.seatNumbers?.some(s => seats.includes(s)))) {
-                alert('선택하신 좌석 중 이미 예약된 좌석이 있습니다. 다시 확인해주세요.');
-                return renderSeatMap('seat-map-container');
-            }
+            if (currentBusReservations.some(r => r.seatNumbers?.some(s => seats.includes(s)))) { alert('선택하신 좌석 중 이미 예약된 좌석이 있습니다.'); return renderSeatMap('seat-map-container'); }
+
+            const submitBtn = el('submit-bus-reservation-btn');
             try {
-                el('submit-bus-reservation-btn').disabled = true; // Prevent double submission
+                submitBtn.disabled = true; submitBtn.textContent = '신청 중...';
                 await addDoc(collection(db, "bus_reservations"), { name, phone, password, seatNumbers: seats, timestamp: serverTimestamp() });
                 showMessage('bus-message', `${name}님, ${seats.join(', ')}석 예약 완료!`);
                 setTimeout(() => closeModal('bus-seat-modal'), 2000);
-            } catch (e) { console.error("Bus Reservation Error: ", e); alert("예약 중 오류 발생"); }
-            finally { el('submit-bus-reservation-btn').disabled = false; }
+            } catch (e) { console.error("Bus Reservation Error: ", e); showMessage('bus-message', "예약 중 오류 발생", false); }
+             finally { submitBtn.disabled = false; submitBtn.textContent = '신청하기'; }
         }
         function checkBusReservation() {
             const name = el('check-name').value.trim();
@@ -222,7 +142,7 @@
                 el('bus-result-title').textContent = '관리자 전체 좌석 현황';
                 el('user-reservation-details').classList.add('hidden');
                 el('admin-actions').classList.remove('hidden');
-                renderSeatMap('bus-seat-status', true); // Show all names in admin view
+                renderSeatMap('bus-seat-status', true);
             } else {
                 isBusAdminMode = false;
                 const reservation = currentBusReservations.find(r => r.name === name && r.password === password);
@@ -233,7 +153,7 @@
                     detailsDiv.innerHTML = `<p><strong>예약자:</strong> ${reservation.name}</p><p><strong>연락처:</strong> ${reservation.phone}</p><p><strong>좌석:</strong> <span class="font-bold text-lg text-[#8B7D6C]">${reservation.seatNumbers?.join(', ')}</span></p><button id="cancel-my-reservation-btn" class="mt-3 w-full py-2 bg-red-500 text-white rounded-full">예약 취소</button>`;
                     detailsDiv.querySelector('#cancel-my-reservation-btn').onclick = () => cancelReservation(reservation.id);
                     detailsDiv.classList.remove('hidden');
-                    renderSeatMap('bus-seat-status', false, reservation); // Pass reservation to highlight owned seats potentially
+                    renderSeatMap('bus-seat-status', false, reservation);
                 } else {
                     alert('일치하는 예약 정보가 없습니다.');
                     el('bus-login-form').classList.remove('hidden');
@@ -267,7 +187,6 @@
              const csvRows = currentBusReservations.map(r => {
                  const timestamp = r.timestamp ? new Date(r.timestamp.toDate()).toLocaleString('ko-KR') : 'N/A';
                  const seats = r.seatNumbers ? `"${r.seatNumbers.join(',')}"` : '""';
-                 // Escape commas in names if necessary, although less likely for names
                  const name = `"${r.name.replace(/"/g, '""')}"`;
                  return `${timestamp},${name},${r.phone},${r.password},${seats}`;
              }).join("\n");
@@ -275,30 +194,30 @@
              const link = document.createElement("a");
              link.setAttribute("href", csvContent);
              link.setAttribute("download", "bus_reservations_list.csv");
-             document.body.appendChild(link); // Required for Firefox
-             link.click();
-             document.body.removeChild(link);
+             document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
         // GUESTBOOK
         async function submitGuestbook() {
             const name = el('gb-name').value.trim(), message = el('gb-message').value.trim(), password = el('gb-password').value.trim();
             if (!name || !message || password.length !== 4) return alert('모든 정보를 올바르게 입력해주세요.');
+            const submitBtn = el('submit-guestbook-btn');
             try {
-                el('submit-guestbook-btn').disabled = true;
+                submitBtn.disabled = true; submitBtn.textContent = '남기는 중...';
                 await addDoc(collection(db, "guestbook"), { name, message, password, timestamp: serverTimestamp() });
                 showMessage('gb-message-status', '방명록이 작성되었습니다!');
                 setTimeout(() => closeModal('guestbook-write-modal'), 2000);
-            } catch (e) { console.error("Guestbook Submit Error: ", e); alert("방명록 작성 중 오류 발생"); }
-            finally { el('submit-guestbook-btn').disabled = false; }
+            } catch (e) { console.error("Guestbook Submit Error: ", e); showMessage('gb-message-status', "작성 중 오류 발생", false); }
+             finally { submitBtn.disabled = false; submitBtn.textContent = '남기기'; }
         }
         function renderGuestbookPreview() {
             const container = el('guestbook-preview');
-            if (!container) return; // Ensure container exists
+            if (!container) return;
             const entries = currentGuestbookEntries.slice(0, 3);
             container.innerHTML = entries.length === 0 ? `<p class="text-center text-gray-500 text-sm">첫 번째 축하 메시지를 남겨주세요!</p>` : entries.map(entry => {
-                const duration = Math.max(15, entry.message?.length * 0.2 || 15); // Prevent duration 0
-                return `<div class="guestbook-item shadow-md"><div class="guestbook-preview-line"><p class="guestbook-scrolling-content" style="animation-duration: ${duration}s;"><span class="font-bold text-[#8B7D6C]">${entry.name}</span> | ${entry.message || ''}<span style="display:inline-block; width: 50vw;"></span></p></div></div>`; // Added padding space
+                const duration = Math.max(15, entry.message?.length * 0.2 || 15);
+                // Added a larger non-breaking space for better visual separation during scroll
+                return `<div class="guestbook-item shadow-md"><div class="guestbook-preview-line"><p class="guestbook-scrolling-content" style="animation-duration: ${duration}s;"><span class="font-bold text-[#8B7D6C]">${entry.name}</span>&nbsp;|&nbsp;${entry.message || ''}<span style="display:inline-block; width: 50vw;"></span></p></div></div>`;
             }).join('');
         }
         function renderGuestbookList() {
@@ -322,7 +241,7 @@
             }
         }
         
-        // GALLERY & SLIDER
+        // GALLERY & FULLSCREEN
         function openFullscreenImage(index) {
             currentFullscreenIndex = index;
             el('fullscreen-image').src = allGalleryImages[index];
@@ -333,13 +252,15 @@
             el('fullscreen-image').src = allGalleryImages[currentFullscreenIndex];
         }
 
-        // --- INITIALIZATION ---
+        // --- DOMContentLoaded: Entry Point ---
         document.addEventListener('DOMContentLoaded', () => {
             const splashScreen = el('splash-screen');
             const mainContent = el('main-content');
             
             function transitionToMainContent() {
+                // Ensure this runs only once
                 if (!splashScreen || splashScreen.classList.contains('hidden')) return;
+
                 splashScreen.classList.add('opacity-0');
                 setTimeout(() => {
                     splashScreen.classList.add('hidden');
@@ -347,123 +268,144 @@
                         mainContent.classList.remove('hidden');
                         mainContent.classList.add('opacity-100');
                     }
-                    initializeApp(); // Initialize app logic AFTER transition
+                    initializeApp(); // Initialize app logic AFTER transition and ONLY ONCE
                 }, 500); // Match CSS transition duration
             }
 
             // Splash Screen animation & transition setup
             if (splashScreen) {
-                 for (let i = 0; i < 30; i++) { // Reduced snowflake count
+                 for (let i = 0; i < 30; i++) {
                     const snow = document.createElement('div'); snow.className = 'snowflake'; snow.style.left = `${Math.random()*100}vw`; snow.style.width = `${Math.random()*3+2}px`; snow.style.height = snow.style.width; snow.style.animationDuration = `${Math.random()*10+5}s`; snow.style.animationDelay = `${Math.random()*5}s`; el('snow-container').appendChild(snow);
                 }
                 const splashImg = el('splash-main-img');
                 if (splashImg) splashImg.classList.add('loaded-effect');
-                document.querySelectorAll('.splash-text-reveal > div').forEach((el, i) => {
-                    setTimeout(() => el.classList.add('visible-reveal'), 500 + i * 800); // Adjusted delay
+                document.querySelectorAll('.splash-text-reveal > div').forEach((elem, i) => {
+                    setTimeout(() => elem.classList.add('visible-reveal'), 500 + i * 800);
                 });
-                setTimeout(transitionToMainContent, 4000); // Shorter splash duration
-                splashScreen.addEventListener('click', transitionToMainContent);
+                // Set timeout AND click listener, but ensure initialization happens only once via the flag
+                const transitionTimeout = setTimeout(transitionToMainContent, 4000);
+                splashScreen.addEventListener('click', () => {
+                    clearTimeout(transitionTimeout); // Clear timeout if clicked
+                    transitionToMainContent();
+                }, { once: true }); // Listener fires only once
             } else {
                 // If splash screen doesn't exist, initialize immediately
-                initializeApp();
+                 if (mainContent) { // Ensure main content exists before trying to show it
+                    mainContent.classList.remove('hidden', 'opacity-0');
+                    mainContent.classList.add('opacity-100');
+                 }
+                 initializeApp();
             }
 
             // --- MAIN APP INITIALIZATION FUNCTION ---
             function initializeApp() {
-                if (!mainContent) return; // Exit if main content isn't found
-
-                // Firebase Listeners ( crucial to start AFTER init )
-                onSnapshot(query(collection(db, "guestbook"), orderBy("timestamp", "desc")), snap => {
-                    currentGuestbookEntries = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    renderGuestbookPreview();
-                    if(el('guestbook-list-modal').classList.contains('active')) renderGuestbookList();
-                }, error => console.error("Guestbook listener error:", error)); // Added error handling
-
-                onSnapshot(query(collection(db, "bus_reservations"), orderBy("timestamp", "desc")), snap => {
-                    currentBusReservations = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    // Update seat map only if the corresponding modal is active
-                    if(el('bus-seat-modal').classList.contains('active')) renderSeatMap('seat-map-container');
-                    if(el('bus-check-modal').classList.contains('active') && !el('bus-login-form').classList.contains('hidden')) {
-                        // Re-render check modal map if it's open and showing results
-                        checkBusReservation(); // Re-run check logic to update map
-                    }
-                }, error => console.error("Bus reservation listener error:", error)); // Added error handling
+                 // **Prevent double initialization**
+                if (appInitialized) return;
+                appInitialized = true;
                 
+                console.log("Initializing App..."); // Debug log
+
+                if (!db) {
+                     console.error("Firestore DB is not initialized. Cannot proceed.");
+                     alert("데이터베이스 연결에 실패했습니다. 새로고침 해주세요.");
+                     return;
+                }
+
+                // Firebase Listeners
+                try {
+                    onSnapshot(query(collection(db, "guestbook"), orderBy("timestamp", "desc")), snap => {
+                        currentGuestbookEntries = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        renderGuestbookPreview();
+                        if(el('guestbook-list-modal')?.classList.contains('active')) renderGuestbookList();
+                    }, error => console.error("Guestbook listener error:", error));
+
+                    onSnapshot(query(collection(db, "bus_reservations"), orderBy("timestamp", "desc")), snap => {
+                        currentBusReservations = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                        if(el('bus-seat-modal')?.classList.contains('active')) renderSeatMap('seat-map-container');
+                        if(el('bus-check-modal')?.classList.contains('active') && !el('bus-login-form')?.classList.contains('hidden')) {
+                            checkBusReservation(); // Re-run check logic to update map
+                        }
+                    }, error => console.error("Bus reservation listener error:", error));
+                } catch (error) {
+                    console.error("Error setting up Firebase listeners:", error);
+                    alert("데이터를 불러오는 중 오류가 발생했습니다.");
+                }
+
                 // Animation Observer
                 const observer = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }), { threshold: 0.1 });
-                document.querySelectorAll('.animate-up').forEach(el => observer.observe(el));
+                document.querySelectorAll('.animate-up').forEach(elem => observer.observe(elem));
                 
-                // Attach Event Listeners to Buttons
+                // Attach Event Listeners
                 el('open-account-groom-btn').onclick = () => openAccountModal('groom');
                 el('open-account-bride-btn').onclick = () => openAccountModal('bride');
-                
                 el('open-bus-seat-modal-btn').onclick = () => { if (getCurrentBusCount() < MAX_CAPACITY) { currentSelectedSeats.clear(); renderSeatMap('seat-map-container'); el('bus-name').value = ''; el('bus-phone').value = ''; el('bus-password').value = ''; openModal('bus-seat-modal'); } else { alert('버스가 만석입니다.'); } };
                 el('submit-bus-reservation-btn').onclick = submitBusReservation;
                 el('open-bus-check-modal-btn').onclick = () => { isBusAdminMode = false; el('bus-login-form').classList.remove('hidden'); el('bus-result-view').classList.add('hidden'); el('check-name').value = ''; el('check-password').value = ''; openModal('bus-check-modal'); };
                 el('check-bus-reservation-btn').onclick = checkBusReservation;
                 el('download-bus-list-btn').onclick = downloadBusList;
                 el('admin-delete-all-btn').onclick = adminDeleteAllReservations;
-
                 el('open-guestbook-write-modal-btn').onclick = () => { el('gb-name').value = ''; el('gb-message').value = ''; el('gb-password').value = ''; openModal('guestbook-write-modal'); };
                 el('submit-guestbook-btn').onclick = submitGuestbook;
                 el('open-guestbook-list-modal-btn').onclick = () => { isGuestbookAdminMode = false; el('guestbook-admin-btn').classList.remove('active'); renderGuestbookList(); openModal('guestbook-list-modal'); };
-                el('guestbook-admin-btn').onclick = () => { const pw = prompt('관리자 비밀번호:'); if (pw === ADMIN_PASSWORD) { isGuestbookAdminMode = !isGuestbookAdminMode; el('guestbook-admin-btn').classList.toggle('active', isGuestbookAdminMode); renderGuestbookList(); } else if (pw) alert('비밀번호 오류'); };
+                el('guestbook-admin-btn').onclick = () => { const pw = prompt('관리자 비밀번호:'); if (pw === ADMIN_PASSWORD) { isGuestbookAdminMode = !isGuestbookAdminMode; el('guestbook-admin-btn').classList.toggle('active', isGuestbookAdminMode); renderGuestbookList(); } else if (pw !== null) alert('비밀번호 오류'); };
                 
-                // Add listeners for ALL modal close buttons
+                // Attach close listeners to ALL modal close buttons
                 document.querySelectorAll('.modal-close-btn').forEach(btn => {
                     const modal = btn.closest('.modal');
                     if (modal) btn.onclick = () => closeModal(modal.id);
                 });
-                // Special close for fullscreen gallery
+                // Ensure fullscreen close button works
                  el('fullscreen-close-btn').onclick = () => closeModal('fullscreen-image-modal');
 
 
-                // Navigation & Share Buttons
-                const addr = '대전 서구 둔산남로 50';
-                const placeName = '팔레드오페라';
-                const lat = 36.3512;
-                const lon = 127.3881;
+                // Navigation & Share
+                const addr = '대전 서구 둔산남로 50'; const placeName = '팔레드오페라'; const lat = 36.3512; const lon = 127.3881;
                 el('naver-map-btn').onclick = (e) => { e.preventDefault(); window.open(`https://m.map.naver.com/search2/search.naver?query=${encodeURIComponent(addr)}`, '_blank');};
-                el('tmap-btn').onclick = (e) => { e.preventDefault(); window.open(`https://apis.openapi.sk.com/tmap/app/routes?appKey=YOUR_TMAP_APP_KEY&name=${encodeURIComponent(placeName)}&lon=${lon}&lat=${lat}`, '_blank'); /* Replace YOUR_TMAP_APP_KEY */};
+                // TMAP requires an API Key. Replace YOUR_TMAP_APP_KEY or remove/comment out if not using.
+                // el('tmap-btn').onclick = (e) => { e.preventDefault(); window.open(`https://apis.openapi.sk.com/tmap/app/routes?appKey=YOUR_TMAP_APP_KEY&name=${encodeURIComponent(placeName)}&lon=${lon}&lat=${lat}`, '_blank'); };
+                 el('tmap-btn').onclick = (e) => { e.preventDefault(); alert("티맵 연동은 API 키가 필요합니다.");}; // Placeholder if no TMAP key
                 el('kakaonavi-btn').onclick = (e) => { e.preventDefault(); window.open(`https://map.kakao.com/link/to/${encodeURIComponent(placeName)},${lat},${lon}`, '_blank');};
-                el('share-link-btn').onclick = async () => { if (navigator.share) await navigator.share({ title: '전찬태 ♥ 박은진 결혼합니다', url: window.location.href }); else navigator.clipboard.writeText(window.location.href).then(() => alert('청첩장 링크가 복사되었습니다.')); };
+                el('share-link-btn').onclick = async () => { try { if (navigator.share) await navigator.share({ title: '전찬태 ♥ 박은진 결혼합니다', url: window.location.href }); else navigator.clipboard.writeText(window.location.href).then(() => alert('청첩장 링크가 복사되었습니다.')); } catch(err) { console.error("Share error:", err); } };
 
                 // --- UI INITIALIZATION ---
                 // Main Image Slider
                 const sliderImages = ['image/main_1.jpg', 'image/main_2.jpg', 'image/main_3.jpg', 'image/main_4.jpg'];
                 const sliderContainer = el('image-slider');
                 let currentSlide = 0;
-                sliderContainer.innerHTML = sliderImages.map((src, i) => `<img src="${src}" alt="Main Wedding Photo ${i+1}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${i === 0 ? 'opacity-100' : 'opacity-0'}">`).join('') + `<button id="slider-prev-btn" class="slide-btn left-4"><i class="fas fa-chevron-left"></i></button><button id="slider-next-btn" class="slide-btn right-4"><i class="fas fa-chevron-right"></i></button>`;
-                const sliderEls = sliderContainer.querySelectorAll('img');
-                const showSlide = (i) => {
-                    if (sliderEls.length === 0) return;
-                    sliderEls[currentSlide].classList.replace('opacity-100', 'opacity-0');
-                    currentSlide = (i + sliderEls.length) % sliderEls.length;
-                    sliderEls[currentSlide].classList.replace('opacity-0', 'opacity-100');
-                };
-                el('slider-prev-btn').onclick = () => { clearInterval(slideInterval); showSlide(currentSlide - 1); slideInterval = setInterval(() => showSlide(currentSlide + 1), 4000); }; // Reset interval on manual navigation
-                el('slider-next-btn').onclick = () => { clearInterval(slideInterval); showSlide(currentSlide + 1); slideInterval = setInterval(() => showSlide(currentSlide + 1), 4000); };
-                slideInterval = setInterval(() => showSlide(currentSlide + 1), 4000); // Start auto-slide
+                if(sliderContainer) { // Check if slider exists
+                    sliderContainer.innerHTML = sliderImages.map((src, i) => `<img src="${src}" alt="Main Wedding Photo ${i+1}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${i === 0 ? 'opacity-100' : 'opacity-0'}">`).join('') + `<button id="slider-prev-btn" class="slide-btn left-4"><i class="fas fa-chevron-left"></i></button><button id="slider-next-btn" class="slide-btn right-4"><i class="fas fa-chevron-right"></i></button>`;
+                    const sliderEls = sliderContainer.querySelectorAll('img');
+                    const showSlide = (i) => {
+                        if (sliderEls.length === 0) return;
+                        sliderEls[currentSlide].classList.replace('opacity-100', 'opacity-0');
+                        currentSlide = (i + sliderEls.length) % sliderEls.length;
+                        sliderEls[currentSlide].classList.replace('opacity-0', 'opacity-100');
+                    };
+                    el('slider-prev-btn').onclick = () => { clearInterval(slideInterval); showSlide(currentSlide - 1); slideInterval = setInterval(() => showSlide(currentSlide + 1), 4000); };
+                    el('slider-next-btn').onclick = () => { clearInterval(slideInterval); showSlide(currentSlide + 1); slideInterval = setInterval(() => showSlide(currentSlide + 1), 4000); };
+                    slideInterval = setInterval(() => showSlide(currentSlide + 1), 4000);
+                }
 
                 // Gallery
                 const galleryContainer = el('gallery-container');
                 let imagesLoaded = 0;
                 const loadGallery = (count) => {
+                    if (!galleryContainer) return;
                     const end = Math.min(allGalleryImages.length, imagesLoaded + count);
                     for (let i = imagesLoaded; i < end; i++) {
                         const div = document.createElement('div');
-                        // Apply span-2-row based on index pattern (e.g., every 3rd or specific indices)
-                        div.className = `w-full rounded-xl overflow-hidden shadow-md animate-up ${i % 5 === 0 || i % 5 === 3 ? 'span-2-row' : ''}`; // Example pattern
+                        div.className = `w-full rounded-xl overflow-hidden shadow-md animate-up ${i % 5 === 0 || i % 5 === 3 ? 'span-2-row' : ''}`; // Example masonry pattern
                         div.innerHTML = `<img src="${allGalleryImages[i]}" alt="Gallery Photo ${i + 1}" class="w-full h-full object-cover">`;
                         div.onclick = () => openFullscreenImage(i);
                         galleryContainer.appendChild(div);
-                        observer.observe(div); // Observe for fade-in animation
+                        observer.observe(div); // Observe for animation
                     }
                     imagesLoaded = end;
                     if (imagesLoaded >= allGalleryImages.length) el('show-more-gallery').style.display = 'none';
                 };
-                loadGallery(6); // Initial load
-                el('show-more-gallery').onclick = () => loadGallery(6); // Load more on click
+                if(galleryContainer) loadGallery(6); // Initial gallery load
+                const showMoreBtn = el('show-more-gallery');
+                if(showMoreBtn) showMoreBtn.onclick = () => loadGallery(6);
 
                 // Fullscreen Gallery Buttons
                 el('fullscreen-close-btn').onclick = () => closeModal('fullscreen-image-modal');
@@ -484,22 +426,21 @@
                         el('seconds').innerText = d((dist % 6e4) / 1e3);
                         el('dday-count').innerText = days;
                     } else {
-                        // Handle case when wedding day has passed
-                        ['days', 'hours', 'minutes', 'seconds', 'dday-count'].forEach(id => el(id).innerText = '0');
+                        ['days', 'hours', 'minutes', 'seconds', 'dday-count'].forEach(id => { const elem = el(id); if (elem) elem.innerText = '0'; });
                     }
                 };
-                setInterval(updateCountdown, 1000); updateCountdown(); // Initial call
+                setInterval(updateCountdown, 1000); updateCountdown();
                 
                 (function generateCalendar() {
-                    const [y, m, d] = [2025, 11, 6]; // Month is 0-indexed (11 = December)
+                    const [y, m, d] = [2025, 11, 6]; // Month is 0-indexed
                     const calendarEl = el('calendar');
                     if (!calendarEl) return;
-                    let first = new Date(y, m, 1).getDay(); // 0 = Sunday
-                    let last = new Date(y, m + 1, 0).getDate(); // Days in month
+                    let first = new Date(y, m, 1).getDay();
+                    let last = new Date(y, m + 1, 0).getDate();
                     let html = `<div class="text-xl font-bold mb-4 text-center">${y}년 ${m + 1}월</div><table class="w-full text-center text-sm"><thead><tr class="text-gray-500"><th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th></tr></thead><tbody><tr>`;
-                    html += '<td></td>'.repeat(first); // Blank cells before 1st day
+                    html += '<td></td>'.repeat(first);
                     for (let i = 1; i <= last; i++) {
-                        if ((first + i - 1) % 7 === 0 && i !== 1) html += `</tr><tr>`; // New row
+                        if ((first + i - 1) % 7 === 0 && i !== 1) html += `</tr><tr>`;
                         const isDDay = (i === d);
                         const isSat = (first + i - 1) % 7 === 6;
                         const isSun = (first + i - 1) % 7 === 0;
@@ -507,15 +448,17 @@
                         if (isDDay) classes += " bg-[#8B7D6C] text-white font-bold";
                         else if (isSat) classes += " text-blue-600";
                         else if (isSun) classes += " text-red-600";
-
                         html += `<td class="py-1"><span class="${classes}">${i}</span></td>`;
                     }
-                    html += '<td></td>'.repeat((7 - (first + last) % 7) % 7); // Blank cells after last day
+                    html += '<td></td>'.repeat((7 - (first + last) % 7) % 7);
                     html += `</tr></tbody></table>`;
                     calendarEl.innerHTML = html;
                 })();
 
+                 console.log("App Initialized Successfully."); // Confirmation log
+
             } // End of initializeApp
+
         }); // End of DOMContentLoaded
     </script>
 </body>
