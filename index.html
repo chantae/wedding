@@ -21,7 +21,6 @@
         /* Modal / Popup */
         .modal { transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; }
         .modal.active { visibility: visible; opacity: 1; }
-        /* 팝업 콘텐츠의 z-index를 높여 닫기 버튼이 항상 위에 있도록 수정 */
         .modal-content { transform: scale(0.95); transition: transform 0.3s ease-in-out; position: relative; z-index: 1100; }
         .modal.active .modal-content { transform: scale(1); }
 
@@ -559,8 +558,8 @@
                     </div>
                 <div id="account-copy-message" class="text-sm mt-4 text-[#8B7D6C] hidden">계좌번호가 복사되었습니다!</div>
             </div>
-        </div
-        >
+        </div>
+        
         <div id="bus-seat-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible">
             <div class="modal-content relative w-full max-w-sm bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh]">
                 <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10" onclick="closeBusSeatModal()">
@@ -658,7 +657,7 @@
                 <p class="text-xs text-gray-500 text-left px-2">※ 취소는 작성 시 설정한 비밀번호로 가능합니다.</p>
             </div>
         </div>
-
+        
         <div id="fullscreen-image-modal">
             <div id="fullscreen-slider-wrapper" class="relative w-full h-full flex items-center justify-center" ontouchstart="handleTouchStart(event)" ontouchmove="handleTouchMove(event)">
                 <img id="fullscreen-image" src="" alt="Full-screen gallery image" class="relative">
@@ -692,7 +691,7 @@
         const db = getFirestore(app);
 
         // 카카오톡 SDK 초기화
-        if (!Kakao.isInitialized()) {
+        if (window.Kakao && !Kakao.isInitialized()) {
             Kakao.init('d593259882260554160a2b00d43e0984'); // 실제 유효한 키로 교체 필요
         }
         
@@ -712,6 +711,7 @@
         // ************************************************************
         // MODAL CONTROL FUNCTIONS (Global Access)
         // ************************************************************
+        // [FIXED] 함수들을 window 객체에 할당하여 전역 스코프에서 접근 가능하도록 수정
         window.openGuestbookWriteModal = function() {
             document.getElementById('gb-name').value = '';
             document.getElementById('gb-message').value = '';
@@ -747,7 +747,8 @@
                  { name: '혼주 김선희', bank: '농협은행', account: '15112-52-100209' },
              ]
         };
-
+        
+        // [FIXED]
         window.openAccountModal = function(side) {
             const modalTitle = document.getElementById('account-modal-title');
             const accountList = document.getElementById('account-list');
@@ -764,12 +765,12 @@
             document.getElementById('account-modal').classList.add('active');
             document.body.style.overflow = 'hidden';
         }
-
+        // [FIXED]
         window.closeAccountModal = function() {
             document.getElementById('account-modal').classList.remove('active');
             document.body.style.overflow = 'auto';
         }
-
+        // [FIXED]
         window.copyAccountToClipboard = function(text) {
             navigator.clipboard.writeText(text).then(() => {
                 const msg = document.getElementById('account-copy-message');
@@ -782,15 +783,7 @@
         // BUS RESERVATION LOGIC (Firebase Integrated)
         // ************************************************************
         const SEAT_POSITIONS = {
-            1: { x: 20, y: 55 }, 2: { x: 75, y: 55 }, 3: { x: 205, y: 55 },
-            4: { x: 20, y: 105 }, 5: { x: 75, y: 105 }, 6: { x: 205, y: 105 },
-            7: { x: 20, y: 155 }, 8: { x: 75, y: 155 }, 9: { x: 205, y: 155 },
-            10: { x: 20, y: 220 }, 11: { x: 75, y: 220 }, 12: { x: 205, y: 220 },
-            13: { x: 20, y: 270 }, 14: { x: 75, y: 270 }, 15: { x: 205, y: 270 },
-            16: { x: 20, y: 320 }, 17: { x: 75, y: 320 }, 18: { x: 205, y: 320 },
-            19: { x: 20, y: 370 }, 20: { x: 75, y: 370 }, 21: { x: 205, y: 370 },
-            22: { x: 20, y: 440 }, 23: { x: 75, y: 440 }, 24: { x: 205, y: 440 },
-            25: { x: 20, y: 490 }, 26: { x: 75, y: 490 }, 27: { x: 160, y: 490 }, 28: { x: 215, y: 490 },
+            1: { x: 20, y: 55 }, 2: { x: 75, y: 55 }, 3: { x: 205, y: 55 }, 4: { x: 20, y: 105 }, 5: { x: 75, y: 105 }, 6: { x: 205, y: 105 }, 7: { x: 20, y: 155 }, 8: { x: 75, y: 155 }, 9: { x: 205, y: 155 }, 10: { x: 20, y: 220 }, 11: { x: 75, y: 220 }, 12: { x: 205, y: 220 }, 13: { x: 20, y: 270 }, 14: { x: 75, y: 270 }, 15: { x: 205, y: 270 }, 16: { x: 20, y: 320 }, 17: { x: 75, y: 320 }, 18: { x: 205, y: 320 }, 19: { x: 20, y: 370 }, 20: { x: 75, y: 370 }, 21: { x: 205, y: 370 }, 22: { x: 20, y: 440 }, 23: { x: 75, y: 440 }, 24: { x: 205, y: 440 }, 25: { x: 20, y: 490 }, 26: { x: 75, y: 490 }, 27: { x: 160, y: 490 }, 28: { x: 215, y: 490 },
         };
         const BUS_SEAT_COUNT = 28;
         let currentSelectedSeats = new Set();
@@ -872,6 +865,7 @@
             container.appendChild(seatMapDiv);
         }
 
+        // [FIXED]
         window.openBusSeatModal = function() {
             isBusAdminMode = false; 
             if (getCurrentBusCount() >= MAX_CAPACITY) {
@@ -887,11 +881,13 @@
             document.body.style.overflow = 'hidden';
         };
 
+        // [FIXED]
         window.closeBusSeatModal = function() {
             document.getElementById('bus-seat-modal').classList.remove('active');
             document.body.style.overflow = 'auto';
         };
 
+        // [FIXED]
         window.submitBusSeatReservation = async function() {
             const name = document.getElementById('bus-name').value.trim();
             const phone = document.getElementById('bus-phone').value.trim();
@@ -903,7 +899,6 @@
             if (!name || !phone || !password) return alert('성함, 연락처, 비밀번호를 모두 입력해주세요.');
             if (password.length !== 4 || isNaN(parseInt(password))) return alert('비밀번호는 숫자 4자리여야 합니다.');
             
-            // 실시간 데이터로 다시 한번 확인
             if (getCurrentBusCount() + selectedSeatsArray.length > MAX_CAPACITY) return alert('선택하신 좌석을 포함하면 정원을 초과합니다. 다시 확인해주세요.');
             const isDoubleBooking = currentBusReservations.some(r => r.seatNumbers.some(s => selectedSeatsArray.includes(s)));
             if (isDoubleBooking) {
@@ -917,7 +912,6 @@
                     seatNumbers: selectedSeatsArray, 
                     timestamp: serverTimestamp()
                 });
-
                 busMessage.innerText = `${name}님, ${selectedSeatsArray.join(', ')}석 예약이 완료되었습니다. 감사합니다!`;
                 busMessage.classList.remove('hidden');
                 setTimeout(() => { 
@@ -930,6 +924,7 @@
             }
         };
         
+        // [FIXED]
         window.openBusCheckModal = function() {
             isBusAdminMode = false;
             document.getElementById('bus-login-form').classList.remove('hidden');
@@ -939,11 +934,14 @@
             document.getElementById('bus-check-modal').classList.add('active');
             document.body.style.overflow = 'hidden';
         };
+        
+        // [FIXED]
         window.closeBusCheckModal = function() {
             document.getElementById('bus-check-modal').classList.remove('active');
             document.body.style.overflow = 'auto';
         };
         
+        // [FIXED]
         window.checkBusReservation = async function() {
             const checkName = document.getElementById('check-name').value.trim();
             const checkPassword = document.getElementById('check-password').value.trim();
@@ -960,13 +958,9 @@
                 renderSeatMap('bus-seat-status', true);
             } else {
                 isBusAdminMode = false;
-                const q = query(collection(db, "bus_reservations"), where("name", "==", checkName), where("password", "==", checkPassword));
-                const querySnapshot = await getDocs(q);
+                const userReservation = currentBusReservations.find(r => r.name === checkName && r.password === checkPassword);
                 
-                if (!querySnapshot.empty) {
-                    const userDoc = querySnapshot.docs[0]; // 보통 이름/비번 조합은 하나
-                    const userReservation = { id: userDoc.id, ...userDoc.data() };
-                    
+                if (userReservation) {
                     document.getElementById('bus-result-title').textContent = `${checkName}님의 예약 정보`;
                     document.getElementById('admin-actions').classList.add('hidden');
                     const detailsDiv = document.getElementById('user-reservation-details');
@@ -986,6 +980,7 @@
             }
         };
         
+        // [FIXED]
         window.cancelMyReservation = async function(docId) {
             if (confirm('정말로 예약을 취소하시겠습니까?')) {
                 try {
@@ -999,12 +994,15 @@
             }
         };
 
+        // [FIXED]
         window.adminDeleteAllBusReservations = async function() {
             if (confirm('경고! 모든 버스 신청 명단을 영구적으로 삭제하시겠습니까?')) {
                 try {
-                    const querySnapshot = await getDocs(collection(db, "bus_reservations"));
                     const batch = writeBatch(db);
-                    querySnapshot.forEach(doc => batch.delete(doc.ref));
+                    currentBusReservations.forEach(res => {
+                        const docRef = doc(db, "bus_reservations", res.id);
+                        batch.delete(docRef);
+                    });
                     await batch.commit();
                     alert('모든 버스 신청 명단이 삭제되었습니다.');
                     closeBusCheckModal();
@@ -1015,6 +1013,7 @@
             }
         };
 
+        // [FIXED]
         window.downloadBusList = function() {
             if (currentBusReservations.length === 0) return alert('다운로드할 명단이 없습니다.');
             const csvContent = "data:text/csv;charset=utf-8," + "신청시각,성함,연락처,비밀번호,좌석번호\n" + currentBusReservations.map(r => {
@@ -1029,6 +1028,7 @@
         };
         
         // --- GUESTBOOK LOGIC (Firebase Integrated) ---
+        // [FIXED]
         window.submitGuestbook = async function() {
             const name = document.getElementById('gb-name').value.trim();
             const message = document.getElementById('gb-message').value.trim();
@@ -1103,6 +1103,7 @@
             }
         };
 
+        // [FIXED]
         window.deleteGuestbookEntry = async function(id, storedPassword) {
             const checkPassword = isGuestbookAdminMode ? ADMIN_PASSWORD : storedPassword;
             const promptMsg = isGuestbookAdminMode ? `관리자 권한으로 삭제하려면 관리자 비밀번호를 입력하세요.` : `삭제하려면 설정했던 4자리 비밀번호를 입력하세요.`;
@@ -1122,6 +1123,7 @@
             }
         };
         
+        // [FIXED]
         window.toggleGuestbookAdminMode = function() {
             const password = prompt('관리자 비밀번호를 입력하세요.');
             if (password === ADMIN_PASSWORD) {
@@ -1139,16 +1141,19 @@
         let currentFullscreenIndex = 0;
         let touchStartX = 0;
 
+        // [FIXED]
         window.openFullscreenImage = function(src, index) {
             currentFullscreenIndex = index;
             document.getElementById('fullscreen-image').src = src;
             document.getElementById('fullscreen-image-modal').classList.add('visible');
             document.body.style.overflow = 'hidden';
         };
+        // [FIXED]
         window.closeFullscreenImage = function() {
             document.getElementById('fullscreen-image-modal').classList.remove('visible');
             document.body.style.overflow = 'auto';
         };
+        // [FIXED]
         window.showNextFullscreenImage = function(step) {
             const image = document.getElementById('fullscreen-image');
             currentFullscreenIndex = (currentFullscreenIndex + step + allGalleryImages.length) % allGalleryImages.length;
@@ -1158,11 +1163,13 @@
                 image.style.transform = `scale(1)`;
             }, 50); 
         };
+        // [FIXED]
         window.handleTouchStart = function(event) {
             if (document.getElementById('fullscreen-image-modal').classList.contains('visible')) {
                 touchStartX = event.touches[0].clientX;
             }
         };
+        // [FIXED]
         window.handleTouchMove = function(event) {
             if (!touchStartX) return;
             const diff = touchStartX - event.touches[0].clientX;
@@ -1178,22 +1185,38 @@
         const ENCODED_ADDRESS = encodeURIComponent(DESTINATION_ADDRESS);
         const ENCODED_DESTINATION = encodeURIComponent(DESTINATION_NAME);
 
+        // [FIXED]
         window.openNaverMap = function(event) {
             event.preventDefault(); 
             const appUrl = `nmap://search?query=${ENCODED_ADDRESS}&appname=wedding_invitation`;
             const webUrl = `https://m.map.naver.com/search/address/${ENCODED_ADDRESS}`;
-            window.location.href = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? appUrl : webUrl;
+            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            if (isMobile) {
+                window.location.href = appUrl;
+                setTimeout(() => window.open(webUrl, '_blank'), 500);
+            } else {
+                window.open(webUrl, '_blank');
+            }
         }
+        // [FIXED]
         window.openTMap = function(event) {
             event.preventDefault(); 
             const appUrl = `tmap://search?name=${ENCODED_DESTINATION}&address=${ENCODED_ADDRESS}&appname=wedding_invitation`;
             const webUrl = `https://map.tmap.co.kr/search/search?query=${ENCODED_ADDRESS}`;
-            window.location.href = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ? appUrl : webUrl;
+            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+            if (isMobile) {
+                window.location.href = appUrl;
+                setTimeout(() => window.open(webUrl, '_blank'), 500);
+            } else {
+                window.open(webUrl, '_blank');
+            }
         }
+        // [FIXED]
         window.openKakaoMap = function(event) {
             event.preventDefault(); 
             window.open(`https://map.kakao.com/link/search/${ENCODED_ADDRESS}`, '_blank');
         }
+        // [FIXED]
         window.shareLink = async function() {
             const shareData = {
                 title: '12월 06일 전찬태 ♥ 박은진 결혼합니다.',
@@ -1265,13 +1288,12 @@
                 const busQuery = query(collection(db, "bus_reservations"), orderBy("timestamp", "desc"));
                 onSnapshot(busQuery, (snapshot) => {
                     currentBusReservations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    // Update any open modals that depend on this data
                     if (document.getElementById('bus-seat-modal').classList.contains('active')) {
                         renderSeatMap('seat-map-container');
                     }
                 });
 
-                // --- UI & Event Listeners ---
+                // UI & Event Listeners
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -1292,13 +1314,15 @@
                 const sliderContainer = document.getElementById('image-slider');
                 let currentSlide = 0;
                 sliderContainer.innerHTML = sliderImages.map((src, index) => 
-                    `<img src="${src}" alt="Wedding Photo ${index + 1}" class="absolute inset-0 w-full h-full object-cover fade-in ${index === 0 ? 'active' : ''}">`
-                ).join('');
+                    `<img src="${src}" alt="Wedding Photo ${index + 1}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === 0 ? 'opacity-100' : 'opacity-0'}">`
+                ).join('') + sliderContainer.innerHTML;
                 const sliderImageElements = sliderContainer.querySelectorAll('img');
                 const showSlide = (index) => {
-                    sliderImageElements[currentSlide].classList.remove('active');
+                    sliderImageElements[currentSlide].classList.remove('opacity-100');
+                    sliderImageElements[currentSlide].classList.add('opacity-0');
                     currentSlide = (index + sliderImageElements.length) % sliderImageElements.length;
-                    sliderImageElements[currentSlide].classList.add('active');
+                    sliderImageElements[currentSlide].classList.remove('opacity-0');
+                    sliderImageElements[currentSlide].classList.add('opacity-100');
                 };
                 document.getElementById('prev-btn').onclick = () => showSlide(currentSlide - 1);
                 document.getElementById('next-btn').onclick = () => showSlide(currentSlide + 1);
@@ -1315,7 +1339,7 @@
                         div.innerHTML = `<img src="${allGalleryImages[i]}" alt="Gallery Photo ${i + 1}" class="w-full h-auto object-cover">`;
                         div.onclick = () => window.openFullscreenImage(allGalleryImages[i], i);
                         galleryContainer.appendChild(div);
-                        observer.observe(div); // Re-use observer for gallery items
+                        observer.observe(div);
                     }
                     currentImagesLoaded = endIndex;
                     if (currentImagesLoaded >= allGalleryImages.length) document.getElementById('show-more-gallery').style.display = 'none';
