@@ -86,7 +86,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-        // --- CONFIG & CONSTANTS ---
+        // --- CONFIGURATION ---
         const firebaseConfig = { apiKey: "AIzaSyBbiGOyd9-WBJmWXYi9oD0qwumfzbjuUWI", authDomain: "mobile-invitation-5f099.firebaseapp.com", projectId: "mobile-invitation-5f099", storageBucket: "mobile-invitation-5f099.firebasestorage.app", messagingSenderId: "652456319149", appId: "1:652456319149:web:ed0c46a4b2ecc9fb308e24" };
         const ADMIN_PASSWORD = '1331';
         const MAX_CAPACITY = 28;
@@ -154,7 +154,7 @@
         });
 
         function initializeApp() {
-            console.log("initializeApp() is now running.");
+            console.log("initializeApp() is running...");
             
             try {
                 const app = initializeApp(firebaseConfig);
@@ -168,7 +168,6 @@
 
             // --- ALL FEATURE FUNCTIONS ARE DEFINED HERE ---
             
-            // ACCOUNT
             function openAccountModal(side) {
                 const list = el('account-list');
                 el('account-modal-title').textContent = side === 'groom' ? '신랑측 계좌 정보' : '신부측 계좌 정보';
@@ -179,8 +178,6 @@
             function copyAccountToClipboard(text) {
                 navigator.clipboard.writeText(text).then(() => showMessage('account-copy-message', '계좌번호가 복사되었습니다!'));
             }
-
-            // BUS
             function renderSeatMap(targetId = 'seat-map-container', showAllNames = false, currentReservation = null) {
                 const container = el(targetId);
                 if (!container) return;
@@ -189,29 +186,24 @@
                 const seatMap = container.querySelector('.relative');
                 const reserved = {};
                 currentBusReservations.forEach(r => r.seatNumbers?.forEach(s => { reserved[s] = r; }));
-
                 if (targetId === 'seat-map-container') {
                     currentSelectedSeats = new Set(Array.from(currentSelectedSeats).filter(s => !reserved[s]));
                     el('selected-seats-info').textContent = currentSelectedSeats.size + '석';
                 }
-
                 for (let i = 1; i <= MAX_CAPACITY; i++) {
                     const pos = SEAT_POSITIONS[i]; if (!pos) continue;
                     let status = 'available', content = `<div class="seat-number">${i}</div>`;
                     let reservationData = null;
-
                     if (reserved[i]) {
                         status = 'reserved'; reservationData = reserved[i];
                         content = `<div class="seat-name">${maskName(reservationData.name, showAllNames || (currentReservation && reservationData.name === currentReservation.name && reservationData.password === currentReservation.password))}</div><div class="seat-number">${i}</div>`;
                     } else if (currentSelectedSeats.has(i)) {
                         status = 'selected';
                     }
-
                     const seatDiv = document.createElement('div');
                     seatDiv.className = `seat ${status}`;
                     seatDiv.style.cssText = `top: ${pos.y}px; left: ${pos.x}px;`;
                     seatDiv.innerHTML = content;
-
                     if (targetId === 'seat-map-container' && status !== 'reserved') {
                         seatDiv.onclick = () => {
                             const selectedInfoEl = el('selected-seats-info');
@@ -231,7 +223,6 @@
                 if (password.length !== 4 || isNaN(parseInt(password))) return alert('비밀번호는 숫자 4자리여야 합니다.');
                 if (getCurrentBusCount() + seats.length > MAX_CAPACITY) return alert('죄송합니다. 좌석이 부족합니다.');
                 if (currentBusReservations.some(r => r.seatNumbers?.some(s => seats.includes(s)))) { alert('이미 예약된 좌석이 있습니다.'); return renderSeatMap('seat-map-container'); }
-
                 const submitBtn = el('submit-bus-reservation-btn');
                 try {
                     submitBtn.disabled = true; submitBtn.textContent = '신청 중...';
@@ -245,7 +236,6 @@
                 const name = el('check-name').value.trim(); const password = el('check-password').value.trim();
                 if (!name || password.length !== 4) return alert('이름과 비밀번호 4자리를 입력해주세요.');
                 el('bus-login-form').classList.add('hidden'); el('bus-result-view').classList.remove('hidden');
-
                 if (name === '관리자' && password === ADMIN_PASSWORD) {
                     isBusAdminMode = true;
                     el('bus-result-title').textContent = '관리자 전체 좌석 현황';
@@ -295,7 +285,6 @@
                 link.href = url; link.download = "bus_reservations_list.csv";
                 document.body.appendChild(link); link.click(); document.body.removeChild(link);
             }
-            // GUESTBOOK
             async function submitGuestbook() {
                 const name = el('gb-name').value.trim(), message = el('gb-message').value.trim(), password = el('gb-password').value.trim();
                 if (!name || !message || password.length !== 4) return alert('모든 정보를 올바르게 입력해주세요.');
@@ -340,7 +329,6 @@
                     catch (e) { console.error(e); alert("삭제 중 오류 발생"); }
                 }
             }
-            // GALLERY
             function openFullscreenImage(index) {
                 if (index < 0 || index >= allGalleryImages.length) return;
                 currentFullscreenIndex = index;
