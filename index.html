@@ -11,352 +11,63 @@
         body {
             font-family: 'Noto Sans KR', sans-serif;
             color: #404040;
-            background-color: #ffffff; /* 흰색 배경 */
+            background-color: #ffffff;
         }
         .wedding-card {
-            background-color: #FBF8F3; /* 연한 베이지 톤 */
+            background-color: #FBF8F3;
         }
         .stylish-font { font-family: 'Stylish', cursive; }
-
-        /* Modal / Popup */
-        .modal { transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; }
+        .modal { transition: opacity 0.3s ease, visibility 0.3s ease; }
         .modal.active { visibility: visible; opacity: 1; }
-        .modal-content { transform: scale(0.95); transition: transform 0.3s ease-in-out; position: relative; z-index: 1100; }
+        .modal-content { transform: scale(0.95); transition: transform 0.3s ease; position: relative; z-index: 1100; }
         .modal.active .modal-content { transform: scale(1); }
-
-        /* Account Copy Button */
-        .copy-button { transition: background-color 0.2s, transform 0.2s; }
         .copy-button:active { transform: scale(0.95); }
-
-        /* Countdown */
         .countdown > div > span { font-variant-numeric: tabular-nums; }
-
-        .collapsible-content {
-            max-height: 500px;
-            overflow: visible; 
-            transition: max-height 0.5s ease-in-out;
-        }
-        .collapsible-content:not(.active) {
-            max-height: 0;
-            overflow: hidden;
-        }
-
-        /* Animation */
-        .animate-up {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        .animate-up.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* Fade-in for Gallery items */
-        .gallery-item-animation {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        .gallery-item-animation.loaded {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .fade-in {
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-        }
-        .fade-in.active {
-            opacity: 1;
-        }
-
-        /* Masonry Grid */
-        .masonry-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            grid-auto-rows: 150px;
-            gap: 8px;
-        }
-        .masonry-grid > div {
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            cursor: pointer; /* Add pointer cursor for clickable items */
-            position: relative; /* For animation purposes */
-        }
-        .masonry-grid .span-2-row {
-            grid-row: span 2 / auto;
-        }
-        .masonry-grid img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .divider {
-            height: 1px;
-            background: linear-gradient(to right, #f9f9f9, #F0E8D7, #f9f9f9); /* 매우 밝은 베이지 톤 */
-        }
-
-        /* Fullscreen Image Modal */
-        #fullscreen-image-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            user-select: none;
-            touch-action: none; /* Prevents default browser actions on mobile */
-        }
-        #fullscreen-image-modal.visible {
-            visibility: visible;
-            opacity: 1;
-        }
-        #fullscreen-image-modal img {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-            transition: transform 0.3s ease;
-        }
-
-        /* Slide Buttons */
-        .slide-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 2010;
-            background: rgba(0, 0, 0, 0.4);
-            color: white;
-            padding: 10px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .slide-btn:hover {
-            background: rgba(0, 0, 0, 0.6);
-        }
-
-        /* Splash Screen on PC */
-        @media (min-width: 768px) {
-            #splash-images img {
-                width: 100%;
-                height: 100vh;
-                object-fit: contain;
-            }
-        }
-        
-        /* Guestbook specific styles */
-        .guestbook-item {
-            padding: 0.75rem 1rem; /* Adjusted padding for single line view */
-            background: #ffffff; /* 흰색 배경 */
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            margin-bottom: 0.5rem;
-            overflow: hidden; /* Hide overflow for scrolling text */
-        }
-        .guestbook-item-list {
-            padding: 1rem;
-            background: #FBF8F3; /* 연한 베이지 톤 */
-            border-radius: 0.5rem;
-            border: 1px solid #F0E8D7; /* Border adjusted */
-        }
-        .guestbook-list-item {
-            border-bottom: 1px dotted #F0E8D7; /* Dotted line adjusted */
-            padding: 0.5rem 0;
-        }
-        
-        /* New CSS for single-line, scrolling preview */
-        .guestbook-preview-line {
-            white-space: nowrap;
-            overflow: hidden;
-            position: relative;
-            /* Fixed height for single line */
-            height: 1.5rem; 
-            line-height: 1.5rem;
-            font-size: 1rem;
-        }
-
-        /* Animation for LTR scroll */
-        .guestbook-scrolling-content {
-            display: inline-block;
-            white-space: nowrap; /* Essential for single line scrolling */
-            /* Start text off-screen left and move right */
-            transform: translateX(0);
-            animation: scroll-ltr 20s linear infinite; /* Longer duration for smooth scroll */
-        }
-
-        @keyframes scroll-ltr {
-            0% { transform: translateX(-100%); } /* Start completely off screen to the left */
-            100% { transform: translateX(100%); } /* Scroll across and off screen to the right */
-        }
-        
-        /* Admin Button */
-        .admin-button {
-            transition: color 0.2s;
-        }
-        .admin-button.active {
-            color: #8B7D6C; /* Active admin color */
-        }
-
-        /* Splash Text Styling */
-        .splash-text-reveal > div {
-            opacity: 0;
-            transform: translateY(15px);
-            transition: opacity 1.2s ease-out, transform 1.2s ease-out;
-        }
-        .splash-text-reveal > div.visible-reveal {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .splash-intro-text {
-            text-align: center;
-            color: white;
-            text-shadow: 0 0 5px rgba(0,0,0,0.6);
-        }
-        .splash-background-overlay {
-            position: absolute;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.2); /* Soft overlay */
-        }
-
-        /* --- New Splash Effects --- */
-        #splash-images img {
-            /* 초기 로딩 효과: Grayscale 및 Blur 적용 */
-            filter: grayscale(100%) blur(5px);
-            transition: filter 2s ease-out;
-        }
-        #splash-images img.loaded-effect {
-            /* 로딩 완료 후 효과 제거 */
-            filter: grayscale(0) blur(0);
-        }
-
-        /* Snowfall Styles */
-        .snowflake {
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            background-color: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0.8;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            0% { transform: translateY(-10vh); opacity: 0.8; }
-            100% { transform: translateY(100vh); opacity: 0.2; }
-        }
-        
-        /* Snow Container to hold the snowflakes */
-        #snow-container {
-            position: absolute;
-            inset: 0;
-            overflow: hidden;
-            z-index: 10;
-        }
-
-        /* Seat Map Styles */
-        #seat-map-container {
-            position: relative;
-            margin: 0 auto;
-            width: 100%;
-            max-width: 300px; /* Max width for bus layout */
-            aspect-ratio: 300 / 600; /* Approximate bus shape ratio */
-            background-color: #f5f5f5;
-            border-radius: 15px;
-            padding: 10px;
-        }
-        .seat {
-            position: absolute;
-            width: 35px;
-            height: 40px;
-            border-radius: 8px 8px 3px 3px;
-            border: 1px solid #ccc;
-            cursor: pointer;
-            text-align: center;
-            line-height: 40px;
-            font-size: 10px;
-            font-weight: bold;
-            transition: all 0.2s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .seat-number {
-            display: block;
-            line-height: 1;
-            padding-top: 5px;
-            font-size: 10px;
-            font-weight: normal;
-            color: #666;
-        }
-        .seat-name {
-            display: block;
-            line-height: 1;
-            font-size: 12px;
-            font-weight: bold;
-            color: #444;
-            padding-top: 2px;
-        }
-        .seat.available {
-            background-color: #fff;
-            border-color: #F0E8D7;
-        }
-        .seat.reserved {
-            background-color: #D8C4A6;
-            color: white;
-            cursor: not-allowed;
-            border-color: #D8C4A6;
-        }
-        .seat.selected {
-            background-color: #8B7D6C;
-            color: white;
-            border-color: #8B7D6C;
-            transform: scale(1.05);
-        }
-        .seat.driver {
-            background-color: #ddd;
-            cursor: default;
-        }
-        .seat-info {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        /* 캘린더 디자인 개선 */
-        #calendar table th {
-            font-weight: 700; /* 굵게 */
-            padding-bottom: 8px;
-            color: #8B7D6C; /* 베이지 브라운 톤 */
-        }
-        #calendar table td {
-            padding: 4px 0;
-        }
-        #calendar table td span {
-            width: 32px;
-            height: 32px;
-            line-height: 32px;
-            font-size: 1rem;
-            transition: background-color 0.2s;
-        }
-        /* D-day 강조 색상 (진한 베이지 브라운) */
-        #calendar table td .bg-\[\#8B7D6C\] {
-            background-color: #8B7D6C; 
-            color: white;
-        }
+        .animate-up { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .animate-up.visible { opacity: 1; transform: translateY(0); }
+        .gallery-item-animation { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .gallery-item-animation.loaded { opacity: 1; transform: translateY(0); }
+        .fade-in { opacity: 0; transition: opacity 1s ease-in-out; }
+        .fade-in.active { opacity: 1; }
+        .masonry-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); grid-auto-rows: 150px; gap: 8px; }
+        .masonry-grid > div { border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); cursor: pointer; position: relative; }
+        .masonry-grid .span-2-row { grid-row: span 2 / auto; }
+        .masonry-grid img { width: 100%; height: 100%; object-fit: cover; }
+        .divider { height: 1px; background: linear-gradient(to right, #f9f9f9, #F0E8D7, #f9f9f9); }
+        #fullscreen-image-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); display: flex; align-items: center; justify-content: center; z-index: 2000; visibility: hidden; opacity: 0; transition: opacity 0.3s ease, visibility 0.3s ease; user-select: none; touch-action: none; }
+        #fullscreen-image-modal.visible { visibility: visible; opacity: 1; }
+        #fullscreen-image-modal img { max-width: 90%; max-height: 90%; object-fit: contain; transition: transform 0.3s ease; }
+        .slide-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2010; background: rgba(0, 0, 0, 0.4); color: white; padding: 10px; border-radius: 50%; cursor: pointer; transition: background 0.2s; }
+        .slide-btn:hover { background: rgba(0, 0, 0, 0.6); }
+        .guestbook-item { padding: 0.75rem 1rem; background: #ffffff; border-radius: 0.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); margin-bottom: 0.5rem; overflow: hidden; }
+        .guestbook-item-list { padding: 1rem; background: #FBF8F3; border-radius: 0.5rem; border: 1px solid #F0E8D7; }
+        .guestbook-list-item { border-bottom: 1px dotted #F0E8D7; padding: 0.5rem 0; }
+        .guestbook-preview-line { white-space: nowrap; overflow: hidden; position: relative; height: 1.5rem; line-height: 1.5rem; font-size: 1rem; }
+        .guestbook-scrolling-content { display: inline-block; white-space: nowrap; transform: translateX(0); animation: scroll-ltr 20s linear infinite; }
+        @keyframes scroll-ltr { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        .admin-button.active { color: #8B7D6C; }
+        .splash-text-reveal > div { opacity: 0; transform: translateY(15px); transition: opacity 1.2s ease-out, transform 1.2s ease-out; }
+        .splash-text-reveal > div.visible-reveal { opacity: 1; transform: translateY(0); }
+        .splash-intro-text { text-align: center; color: white; text-shadow: 0 0 5px rgba(0,0,0,0.6); }
+        .splash-background-overlay { position: absolute; inset: 0; background-color: rgba(0, 0, 0, 0.2); }
+        #splash-images img { filter: grayscale(100%) blur(5px); transition: filter 2s ease-out; }
+        #splash-images img.loaded-effect { filter: grayscale(0) blur(0); }
+        .snowflake { position: absolute; width: 5px; height: 5px; background-color: rgba(255, 255, 255, 0.8); border-radius: 50%; pointer-events: none; opacity: 0.8; animation: fall linear infinite; }
+        @keyframes fall { 0% { transform: translateY(-10vh); } 100% { transform: translateY(100vh); } }
+        #snow-container { position: absolute; inset: 0; overflow: hidden; z-index: 10; }
+        #seat-map-container { position: relative; margin: 0 auto; width: 100%; max-width: 300px; aspect-ratio: 300 / 600; background-color: #f5f5f5; border-radius: 15px; padding: 10px; }
+        .seat { position: absolute; width: 35px; height: 40px; border-radius: 8px 8px 3px 3px; border: 1px solid #ccc; cursor: pointer; text-align: center; line-height: 40px; font-size: 10px; font-weight: bold; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .seat-number { display: block; line-height: 1; padding-top: 5px; font-size: 10px; font-weight: normal; color: #666; }
+        .seat-name { display: block; line-height: 1; font-size: 12px; font-weight: bold; color: #444; padding-top: 2px; }
+        .seat.available { background-color: #fff; border-color: #F0E8D7; }
+        .seat.reserved { background-color: #D8C4A6; color: white; cursor: not-allowed; border-color: #D8C4A6; }
+        .seat.selected { background-color: #8B7D6C; color: white; border-color: #8B7D6C; transform: scale(1.05); }
+        .seat.driver { background-color: #ddd; cursor: default; }
+        .seat-info { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        #calendar table th { font-weight: 700; padding-bottom: 8px; color: #8B7D6C; }
+        #calendar table td { padding: 4px 0; }
+        #calendar table td span { width: 32px; height: 32px; line-height: 32px; font-size: 1rem; transition: background-color 0.2s; }
+        #calendar table td .bg-\[\#8B7D6C\] { background-color: #8B7D6C; color: white; }
     </style>
 </head>
 <body class="bg-white flex flex-col items-center justify-center">
@@ -367,7 +78,6 @@
              <div class="splash-background-overlay"></div>
              <div id="snow-container"></div>
         </div>
-        
         <div id="splash-text-container" class="absolute inset-0 flex flex-col items-center justify-center stylish-font splash-intro-text splash-text-reveal">
             <div id="splash-text-1" class="text-3xl sm:text-4xl">전찬태 & 박은진</div>
             <div id="splash-text-2" class="text-lg sm:text-xl my-4 tracking-wider">WEDDING INVITATION</div>
@@ -378,60 +88,33 @@
     <div id="main-content" class="w-full max-w-xl mx-auto transition-opacity duration-500 opacity-0 hidden">
         <section class="w-full mb-8 relative">
             <div class="h-[70vh] min-h-[500px] relative">
-                <div id="image-slider" class="w-full h-full relative overflow-hidden">
-                    <button id="prev-btn" class="absolute left-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 bg-black/30 text-white rounded-full hover:bg-black/50 transition-colors focus:outline-none">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button id="next-btn" class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 bg-black/30 text-white rounded-full hover:bg-black/50 transition-colors focus:outline-none">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
+                <div id="image-slider" class="w-full h-full relative overflow-hidden"></div>
             </div>
             <div class="p-8 md:p-10 w-full text-center bg-white rounded-3xl -mt-16 relative z-20 shadow-xl">
                 <h1 class="text-4xl stylish-font font-bold text-gray-800 flex items-center justify-center">
-                    전찬태
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-[#F0E8D7] mx-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
-                    </svg>
-                    박은진
+                    전찬태 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-[#F0E8D7] mx-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" /></svg> 박은진
                 </h1>
-                <p class="text-base text-gray-500 mt-2">
-                    2025년 12월 06일 토요일 낮 12시 20분<br>
-                    팔레드오페라, 3층 트리아농홀
-                </p>
+                <p class="text-base text-gray-500 mt-2">2025년 12월 06일 토요일 낮 12시 20분<br>팔레드오페라, 3층 트리아농홀</p>
             </div>
         </section>
     
         <section class="w-full p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
             <h2 class="text-2xl font-bold text-gray-800 mb-2">INVITATION</h2>
             <p class="text-sm text-gray-600 mb-6">소중한 분들을 초대합니다</p>
-            <p class="text-lg text-gray-600 leading-relaxed">
-            	서로 닮은 점이 많아 마치 거울을 보는 듯한<br>저희 두 사람이 드디어 하나가 되려 합니다.<br>
-				닮은 만큼 서로를 더 깊이 이해하고 사랑하며 <br>평생을 함께할 것을 약속합니다.<br>
-				귀한 걸음 하시어 저희의 소중한 순간을 함께 축하해 주세요.
-            </p>
-            <div class="divider my-6" style="background: linear-gradient(to right, #f9f9f9, #F0E8D7, #f9f9f9);"></div>
+            <p class="text-lg text-gray-600 leading-relaxed">서로 닮은 점이 많아 마치 거울을 보는 듯한<br>저희 두 사람이 드디어 하나가 되려 합니다.<br>닮은 만큼 서로를 더 깊이 이해하고 사랑하며 <br>평생을 함께할 것을 약속합니다.<br>귀한 걸음 하시어 저희의 소중한 순간을 함께 축하해 주세요.</p>
+            <div class="divider my-6"></div>
             <div class="flex justify-center items-center space-x-8 text-gray-700">
-                <div class="flex flex-col">
-                    <p class="font-semibold">故전관표 · 김옥주의 아들</p>
-                    <p class="text-xl">전찬태</p>
-                </div>
+                <div><p class="font-semibold">故전관표 · 김옥주의 아들</p><p class="text-xl">전찬태</p></div>
                 <p class="text-xl font-bold stylish-font text-[#F0E8D7]">&</p>
-                <div class="flex flex-col">
-                    <p class="font-semibold">박상문 · 김선희의 딸</p>
-                    <p class="text-xl">박은진</p>
-                </div>
+                <div><p class="font-semibold">박상문 · 김선희의 딸</p><p class="text-xl">박은진</p></div>
             </div>
-            </section>
+        </section>
     
         <section class="w-full p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
             <h2 class="text-2xl font-bold text-gray-800 mb-2">GALLERY</h2>
             <p class="text-sm text-gray-600 mb-6">웨딩 갤러리</p>
-            <div class="masonry-grid" id="gallery-container">
-                </div>
-            <button id="show-more-gallery" class="w-full mt-6 py-3 bg-[#f9f9f9] text-gray-800 rounded-full font-medium hover:bg-[#eaeaea] transition-colors shadow-lg">
-                더보기 <i class="fa fa-chevron-down ml-2"></i>
-            </button>
+            <div class="masonry-grid" id="gallery-container"></div>
+            <button id="show-more-gallery" class="w-full mt-6 py-3 bg-[#f9f9f9] text-gray-800 rounded-full font-medium hover:bg-[#eaeaea] transition-colors shadow-lg">더보기 <i class="fa fa-chevron-down ml-2"></i></button>
         </section>
     
         <section class="w-full p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
@@ -439,25 +122,10 @@
             <p class="text-sm text-gray-600 mb-6">토요일 낮 12시 20분</p>
             <div id="calendar" class="w-full"></div>
             <div class="flex justify-around items-center mt-6 text-gray-800 font-bold countdown">
-                <div class="flex flex-col items-center">
-                    <span id="days" class="text-2xl md:text-3xl">00</span>
-                    <span class="text-xs mt-1">Days</span>
-                </div>
-                <div class="text-2xl">:</div>
-                <div class="flex flex-col items-center">
-                    <span id="hours" class="text-2xl md:text-3xl">00</span>
-                    <span class="text-xs mt-1">Hour</span>
-                </div>
-                <div class="text-2xl">:</div>
-                <div class="flex flex-col items-center">
-                    <span id="minutes" class="text-2xl md:text-3xl">00</span>
-                    <span class="text-xs mt-1">Min</span>
-                </div>
-                <div class="text-2xl">:</div>
-                <div class="flex flex-col items-center">
-                    <span id="seconds" class="text-2xl md:text-3xl">00</span>
-                    <span class="text-xs mt-1">Sec</span>
-                </div>
+                <div><span id="days" class="text-2xl md:text-3xl">00</span><span class="text-xs mt-1">Days</span></div><div class="text-2xl">:</div>
+                <div><span id="hours" class="text-2xl md:text-3xl">00</span><span class="text-xs mt-1">Hour</span></div><div class="text-2xl">:</div>
+                <div><span id="minutes" class="text-2xl md:text-3xl">00</span><span class="text-xs mt-1">Min</span></div><div class="text-2xl">:</div>
+                <div><span id="seconds" class="text-2xl md:text-3xl">00</span><span class="text-xs mt-1">Sec</span></div>
             </div>
             <p class="text-sm text-gray-500 mt-4"><span class="font-bold text-[#8B7D6C]">찬태, 은진의 결혼식</span>이 <span id="dday-count">0</span>일 남았습니다.</p>
         </section>
@@ -465,217 +133,55 @@
         <section class="w-full p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
             <h2 class="text-2xl font-bold text-gray-800 mb-2">LOCATION</h2>
             <p class="text-sm text-gray-600 mb-6">오시는 길</p>
-            <div class="bg-gray-100 rounded-lg p-4 mb-4">
-                <p class="font-semibold text-gray-800">팔레드오페라, 3층 트리아농홀</p>
-                <p class="text-sm text-gray-600">대전 서구 둔산남로 50 팔레드오페라</p>
-            </div>
-            <div class="w-full h-64 bg-gray-200 rounded-lg overflow-hidden flex items-center justify-center mb-6">
-                <a id="map-link" href="#" target="_blank">
-                    <img src="image/map.png" alt="Map of the wedding venue" class="w-full h-full object-cover">
-                </a>
-            </div>
-            <div class="grid grid-cols-3 gap-2">
-                <a id="naver-map-btn" href="#" onclick="openNaverMap(event)" class="py-2 px-3 bg-[#F0E8D7] text-gray-800 rounded-full text-sm font-medium hover:bg-[#D8C4A6] transition-colors">네이버지도</a>
-                <a id="tmap-btn" href="#" onclick="openTMap(event)" class="py-2 px-3 bg-[#F0E8D7] text-gray-800 rounded-full text-sm font-medium hover:bg-[#D8C4A6] transition-colors">티맵</a>
-                <a id="kakaonavi-btn" href="#" onclick="openKakaoMap(event)" class="py-2 px-3 bg-[#F0E8D7] text-gray-800 rounded-full text-sm font-medium hover:bg-[#D8C4A6] transition-colors">카카오맵</a>
-            </div>
+            <div class="bg-gray-100 rounded-lg p-4 mb-4"><p class="font-semibold text-gray-800">팔레드오페라, 3층 트리아농홀</p><p class="text-sm text-gray-600">대전 서구 둔산남로 50 팔레드오페라</p></div>
+            <div class="w-full h-64 bg-gray-200 rounded-lg overflow-hidden flex items-center justify-center mb-6"><a id="map-link" href="#" target="_blank"><img src="image/map.png" alt="Map of the wedding venue" class="w-full h-full object-cover"></a></div>
+            <div class="grid grid-cols-3 gap-2"><a id="naver-map-btn" href="#" class="py-2 px-3 bg-[#F0E8D7] text-gray-800 rounded-full text-sm font-medium hover:bg-[#D8C4A6] transition-colors">네이버지도</a><a id="tmap-btn" href="#" class="py-2 px-3 bg-[#F0E8D7] text-gray-800 rounded-full text-sm font-medium hover:bg-[#D8C4A6] transition-colors">티맵</a><a id="kakaonavi-btn" href="#" class="py-2 px-3 bg-[#F0E8D7] text-gray-800 rounded-full text-sm font-medium hover:bg-[#D8C4A6] transition-colors">카카오맵</a></div>
         </section>
 
         <section class="w-full p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
             <h2 class="text-2xl font-bold text-gray-800 mb-2">주차 안내</h2>
             <p class="text-sm text-gray-600 mb-6">편안한 방문을 위해 주차 정보를 안내드립니다.</p>
-            <div id="parking-details">
-                <div class="text-gray-600 space-y-4 text-left px-4 mt-4">
-                    <div class="bg-gray-50 p-4 rounded-xl shadow-inner border border-gray-200">
-                        <p class="font-semibold text-gray-800 mb-2">팔레드오페라 주차장</p>
-                        <p class="text-sm">주차 타워 4층에 본관 3층(식장, 연회장) 연결통로가 있습니다. <br>거동이 불편하신 분은 주차타워 4층을 이용하시면 편리합니다.</p>
-                    </div>
-                </div>
-            </div>
+            <div id="parking-details"><div class="text-gray-600 space-y-4 text-left px-4 mt-4"><div class="bg-gray-50 p-4 rounded-xl shadow-inner border border-gray-200"><p class="font-semibold text-gray-800 mb-2">팔레드오페라 주차장</p><p class="text-sm">주차 타워 4층에 본관 3층(식장, 연회장) 연결통로가 있습니다. <br>거동이 불편하신 분은 주차타워 4층을 이용하시면 편리합니다.</p></div></div></div>
         </section>
         
         <section class="w-full p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
             <h2 class="text-2xl font-bold text-gray-800 mb-2">BUS RESERVATION</h2>
             <p class="text-sm text-gray-600 mb-6">서울 - 대전 왕복 버스 탑승 신청</p>
-            <div class="space-y-4">
-                <button onclick="openBusSeatModal()" class="w-full py-3 bg-[#F0E8D7] text-gray-800 rounded-full font-medium hover:bg-[#D8C4A6] transition-colors shadow-lg">
-                    버스 탑승 신청하기
-                </button>
-                <div class="divider my-4" style="background: linear-gradient(to right, #f9f9f9, #F0E8D7, #f9f9f9);"></div>
-                <button onclick="openBusCheckModal()" class="w-full py-3 bg-[#f9f9f9] text-gray-800 rounded-full font-medium hover:bg-[#eaeaea] transition-colors shadow-lg">
-                    신청 명단 확인하기
-                </button>
-            </div>
+            <div class="space-y-4"><button id="open-bus-seat-modal-btn" class="w-full py-3 bg-[#F0E8D7] text-gray-800 rounded-full font-medium hover:bg-[#D8C4A6] transition-colors shadow-lg">버스 탑승 신청하기</button><div class="divider my-4"></div><button id="open-bus-check-modal-btn" class="w-full py-3 bg-[#f9f9f9] text-gray-800 rounded-full font-medium hover:bg-[#eaeaea] transition-colors shadow-lg">신청 명단 확인하기</button></div>
         </section>
         
         <section class="w-full p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
             <h2 class="text-2xl font-bold text-gray-800 mb-2">GUESTBOOK</h2>
             <p class="text-sm text-gray-600 mb-6">축하의 마음을 남겨주세요.</p>
-            
-            <div id="guestbook-preview" class="space-y-3 mb-6 text-left">
-                </div>
-
-            <div class="space-y-4">
-                <button onclick="openGuestbookWriteModal()" class="w-full py-3 bg-[#F0E8D7] text-gray-800 rounded-full font-medium hover:bg-[#D8C4A6] transition-colors shadow-lg">
-                    방명록 작성하기
-                </button>
-                <button onclick="openGuestbookListModal()" class="w-full py-3 bg-[#f9f9f9] text-gray-800 rounded-full font-medium hover:bg-[#eaeaea] transition-colors shadow-lg">
-                    방명록 전체보기
-                </button>
-            </div>
+            <div id="guestbook-preview" class="space-y-3 mb-6 text-left"></div>
+            <div class="space-y-4"><button id="open-guestbook-write-modal-btn" class="w-full py-3 bg-[#F0E8D7] text-gray-800 rounded-full font-medium hover:bg-[#D8C4A6] transition-colors shadow-lg">방명록 작성하기</button><button id="open-guestbook-list-modal-btn" class="w-full py-3 bg-[#f9f9f9] text-gray-800 rounded-full font-medium hover:bg-[#eaeaea] transition-colors shadow-lg">방명록 전체보기</button></div>
         </section>
     
         <section class="w-full p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
-            <h2 class="w-full text-center text-2xl font-bold text-gray-800 mb-2">
-                마음 전하실 곳
-            </h2>
+            <h2 class="w-full text-center text-2xl font-bold text-gray-800 mb-2">마음 전하실 곳</h2>
             <div class="text-sm text-gray-600 mb-6">참석이 어려우신 분들을 위해<br>계좌번호를 기재하였습니다.</div>
-            
-            <div class="grid grid-cols-2 gap-4 px-4">
-                <button onclick="openAccountModal('groom')" class="py-3 bg-[#F0E8D7] text-gray-800 rounded-lg font-medium hover:bg-[#D8C4A6] transition-colors shadow-md">
-                    신랑측 계좌
-                </button>
-                <button onclick="openAccountModal('bride')" class="py-3 bg-[#F0E8D7] text-gray-800 rounded-lg font-medium hover:bg-[#D8C4A6] transition-colors shadow-md">
-                    신부측 계좌
-                </button>
-            </div>
+            <div class="grid grid-cols-2 gap-4 px-4"><button id="open-account-groom-btn" class="py-3 bg-[#F0E8D7] text-gray-800 rounded-lg font-medium hover:bg-[#D8C4A6] transition-colors shadow-md">신랑측 계좌</button><button id="open-account-bride-btn" class="py-3 bg-[#F0E8D7] text-gray-800 rounded-lg font-medium hover:bg-[#D8C4A6] transition-colors shadow-md">신부측 계좌</button></div>
         </section>
     
         <section class="w-full p-6 md:p-10 mt-8 mb-12 text-center animate-up">
             <p class="text-xl stylish-font font-bold text-gray-800 mb-4">감사합니다.</p>
-            <button id="share-link-btn" class="w-full py-3 bg-[#F0E8D7] text-gray-800 rounded-full font-bold shadow-lg hover:bg-[#D8C4A6] transition-colors">
-                공유하기
-            </button>
+            <button id="share-link-btn" class="w-full py-3 bg-[#F0E8D7] text-gray-800 rounded-full font-bold shadow-lg hover:bg-[#D8C4A6] transition-colors">공유하기</button>
         </section>
         
-        <div id="account-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible">
-            <div class="modal-content relative w-full max-w-sm bg-white rounded-xl p-8 shadow-2xl">
-                <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10" onclick="closeAccountModal()">
-                    <i class="fa fa-times text-xl"></i>
-                </button>
-                <h3 id="account-modal-title" class="text-xl font-bold mb-6 text-center"></h3>
-                <div id="account-list" class="space-y-4">
-                    </div>
-                <div id="account-copy-message" class="text-sm mt-4 text-[#8B7D6C] hidden">계좌번호가 복사되었습니다!</div>
-            </div>
-        </div>
-        
-        <div id="bus-seat-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible">
-            <div class="modal-content relative w-full max-w-sm bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh]">
-                <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10" onclick="closeBusSeatModal()">
-                    <i class="fa fa-times text-xl"></i>
-                </button>
-                <div class="p-8 overflow-y-auto">
-                    <h3 class="text-xl font-bold mb-4 text-center">버스 좌석 선택 및 신청</h3>
-                    <div id="seat-map-container" class="mb-6">
-                        </div>
-                    <p class="text-center text-sm text-gray-500 mb-4">선택 좌석: <span id="selected-seats-info" class="font-bold text-[#8B7D6C]">0석</span></p>
-                    <div class="space-y-4">
-                        <input id="bus-name" type="text" placeholder="성함을 입력해주세요" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F0E8D7]">
-                        <input id="bus-phone" type="tel" placeholder="연락처를 입력해주세요 (예: 010-1234-5678)" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F0E8D7]">
-                        <input id="bus-password" type="password" placeholder="취소 시 사용할 비밀번호 4자리를 입력해주세요." class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F0E8D7]" maxlength="4">
-                        <button onclick="submitBusSeatReservation()" class="w-full py-3 bg-[#F0E8D7] text-gray-800 rounded-full font-medium hover:bg-[#D8C4A6] transition-colors shadow-lg">
-                            선택 좌석 예약 신청하기
-                        </button>
-                    </div>
-                    <div id="bus-message" class="text-sm mt-4 text-[#8B7D6C] hidden">신청이 완료되었습니다!</div>
-                </div>
-            </div>
-        </div>
-
-        <div id="bus-check-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible">
-            <div class="modal-content relative w-full max-w-sm bg-white rounded-xl p-8 shadow-2xl">
-                <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10" onclick="closeBusCheckModal()">
-                    <i class="fa fa-times text-xl"></i>
-                </button>
-                
-                <div id="bus-login-form">
-                    <h3 class="text-xl font-bold mb-6 text-center">버스 예약 확인 / 취소</h3>
-                    <input id="check-name" type="text" placeholder="성함을 입력해주세요 (관리자는 '관리자' 입력)" class="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-[#F0E8D7]">
-                    <input id="check-password" type="password" placeholder="비밀번호 4자리를 입력해주세요" class="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-[#F0E8D7]" maxlength="4">
-                    <button onclick="checkBusReservation()" class="w-full py-3 bg-[#F0E8D7] text-gray-800 rounded-full font-medium hover:bg-[#D8C4A6] transition-colors shadow-lg">
-                        예약 정보 확인
-                    </button>
-                </div>
-
-                <div id="bus-result-view" class="hidden">
-                    <h3 id="bus-result-title" class="text-xl font-bold mb-4 text-center"></h3>
-                    <div id="bus-seat-status" class="mb-4">
-                         </div>
-                    
-                    <div id="user-reservation-details" class="text-left mb-6 p-3 bg-gray-50 rounded-lg hidden">
-                        </div>
-
-                    <div id="admin-actions" class="space-y-3 hidden">
-                        <button onclick="downloadBusList()" class="w-full py-3 bg-[#8B7D6C] text-white rounded-full font-medium hover:bg-[#6e6357] transition-colors shadow-lg">
-                            CSV 파일 다운로드
-                        </button>
-                        <button onclick="adminDeleteAllBusReservations()" class="w-full py-3 bg-red-500 text-white rounded-full font-medium hover:bg-red-600 transition-colors shadow-lg">
-                            전체 삭제 (관리자용)
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="guestbook-write-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible">
-            <div class="modal-content relative w-full max-w-sm bg-white rounded-xl p-8 text-center shadow-2xl">
-                <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10" onclick="closeGuestbookWriteModal()">
-                    <i class="fa fa-times text-xl"></i>
-                </button>
-                <h3 class="text-xl font-bold mb-6">축하의 마음 남기기</h3>
-                <div class="space-y-4">
-                    <input id="gb-name" type="text" placeholder="성함을 입력해주세요" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F0E8D7]">
-                    <textarea id="gb-message" placeholder="축하 메시지를 입력해주세요 (500자 이내)" rows="4" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F0E8D7]" maxlength="500"></textarea>
-                    <input id="gb-password" type="password" placeholder="삭제 시 사용할 비밀번호 4자리를 입력해주세요." class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F0E8D7]" maxlength="4">
-                    <button onclick="submitGuestbook()" class="w-full py-3 bg-[#F0E8D7] text-gray-800 rounded-full font-medium hover:bg-[#D8C4A6] transition-colors shadow-lg">
-                        방명록 남기기
-                    </button>
-                </div>
-                <div id="gb-message-status" class="text-sm mt-4 text-[#8B7D6C] hidden">방명록 작성이 완료되었습니다!</div>
-            </div>
-        </div>
-
-        <div id="guestbook-list-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible">
-            <div class="modal-content relative w-full max-w-sm bg-white rounded-xl p-8 shadow-2xl">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-bold">방명록 전체 목록</h3>
-                    <div class="space-x-2">
-                        <button id="guestbook-admin-btn" onclick="toggleGuestbookAdminMode()" class="admin-button text-gray-400 hover:text-gray-600">
-                            <i class="fas fa-cog"></i>
-                        </button>
-                        <button class="text-gray-400 hover:text-gray-600" onclick="closeGuestbookListModal()">
-                            <i class="fa fa-times text-xl"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="max-h-80 overflow-y-auto mb-4 p-2 guestbook-item-list border rounded-lg">
-                    <ul id="guestbook-list-ul" class="text-left space-y-2">
-                        </ul>
-                    <p id="guestbook-list-empty" class="text-gray-500 text-center text-sm hidden">아직 방명록이 없습니다.</p>
-                </div>
-                <p class="text-xs text-gray-500 text-left px-2">※ 취소는 작성 시 설정한 비밀번호로 가능합니다.</p>
-            </div>
-        </div>
-        
-        <div id="fullscreen-image-modal">
-            <div id="fullscreen-slider-wrapper" class="relative w-full h-full flex items-center justify-center" ontouchstart="handleTouchStart(event)" ontouchmove="handleTouchMove(event)">
-                <img id="fullscreen-image" src="" alt="Full-screen gallery image" class="relative">
-                <button onclick="showNextFullscreenImage(-1)" class="slide-btn left-4"><i class="fas fa-chevron-left"></i></button>
-                <button onclick="showNextFullscreenImage(1)" class="slide-btn right-4"><i class="fas fa-chevron-right"></i></button>
-                <button onclick="closeFullscreenImage()" class="absolute top-4 right-4 text-white text-3xl z-2010"><i class="fas fa-times"></i></button>
-            </div>
-        </div>
+        <div id="account-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible"><div class="modal-content relative w-full max-w-sm bg-white rounded-xl p-8 shadow-2xl"><button id="close-account-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10"><i class="fa fa-times text-xl"></i></button><h3 id="account-modal-title" class="text-xl font-bold mb-6 text-center"></h3><div id="account-list" class="space-y-4"></div><div id="account-copy-message" class="text-sm mt-4 text-[#8B7D6C] hidden">계좌번호가 복사되었습니다!</div></div></div>
+        <div id="bus-seat-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible"><div class="modal-content relative w-full max-w-sm bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh]"><button id="close-bus-seat-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10"><i class="fa fa-times text-xl"></i></button><div class="p-8 overflow-y-auto"><h3 class="text-xl font-bold mb-4 text-center">버스 좌석 선택 및 신청</h3><div id="seat-map-container" class="mb-6"></div><p class="text-center text-sm text-gray-500 mb-4">선택 좌석: <span id="selected-seats-info" class="font-bold text-[#8B7D6C]">0석</span></p><div class="space-y-4"><input id="bus-name" type="text" placeholder="성함을 입력해주세요" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F0E8D7]"><input id="bus-phone" type="tel" placeholder="연락처를 입력해주세요 (예: 010-1234-5678)" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F0E8D7]"><input id="bus-password" type="password" placeholder="취소 시 사용할 비밀번호 4자리를 입력해주세요." class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F0E8D7]" maxlength="4"><button id="submit-bus-reservation-btn" class="w-full py-3 bg-[#F0E8D7] text-gray-800 rounded-full font-medium hover:bg-[#D8C4A6] transition-colors shadow-lg">선택 좌석 예약 신청하기</button></div><div id="bus-message" class="text-sm mt-4 text-[#8B7D6C] hidden">신청이 완료되었습니다!</div></div></div></div>
+        <div id="bus-check-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible"><div class="modal-content relative w-full max-w-sm bg-white rounded-xl p-8 shadow-2xl"><button id="close-bus-check-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10"><i class="fa fa-times text-xl"></i></button><div id="bus-login-form"><h3 class="text-xl font-bold mb-6 text-center">버스 예약 확인 / 취소</h3><input id="check-name" type="text" placeholder="성함을 입력해주세요 (관리자는 '관리자' 입력)" class="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-[#F0E8D7]"><input id="check-password" type="password" placeholder="비밀번호 4자리를 입력해주세요" class="w-full p-3 border rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-[#F0E8D7]" maxlength="4"><button id="check-bus-reservation-btn" class="w-full py-3 bg-[#F0E8D7] text-gray-800 rounded-full font-medium hover:bg-[#D8C4A6] transition-colors shadow-lg">예약 정보 확인</button></div><div id="bus-result-view" class="hidden"><h3 id="bus-result-title" class="text-xl font-bold mb-4 text-center"></h3><div id="bus-seat-status" class="mb-4"></div><div id="user-reservation-details" class="text-left mb-6 p-3 bg-gray-50 rounded-lg hidden"></div><div id="admin-actions" class="space-y-3 hidden"><button id="download-bus-list-btn" class="w-full py-3 bg-[#8B7D6C] text-white rounded-full font-medium hover:bg-[#6e6357] transition-colors shadow-lg">CSV 파일 다운로드</button><button id="admin-delete-all-btn" class="w-full py-3 bg-red-500 text-white rounded-full font-medium hover:bg-red-600 transition-colors shadow-lg">전체 삭제 (관리자용)</button></div></div></div></div>
+        <div id="guestbook-write-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible"><div class="modal-content relative w-full max-w-sm bg-white rounded-xl p-8 text-center shadow-2xl"><button id="close-guestbook-write-modal-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10"><i class="fa fa-times text-xl"></i></button><h3 class="text-xl font-bold mb-6">축하의 마음 남기기</h3><div class="space-y-4"><input id="gb-name" type="text" placeholder="성함을 입력해주세요" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F0E8D7]"><textarea id="gb-message" placeholder="축하 메시지를 입력해주세요 (500자 이내)" rows="4" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F0E8D7]" maxlength="500"></textarea><input id="gb-password" type="password" placeholder="삭제 시 사용할 비밀번호 4자리를 입력해주세요." class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#F0E8D7]" maxlength="4"><button id="submit-guestbook-btn" class="w-full py-3 bg-[#F0E8D7] text-gray-800 rounded-full font-medium hover:bg-[#D8C4A6] transition-colors shadow-lg">방명록 남기기</button></div><div id="gb-message-status" class="text-sm mt-4 text-[#8B7D6C] hidden">방명록 작성이 완료되었습니다!</div></div></div>
+        <div id="guestbook-list-modal" class="modal fixed inset-0 z-[1000] bg-black/60 flex items-center justify-center invisible"><div class="modal-content relative w-full max-w-sm bg-white rounded-xl p-8 shadow-2xl"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold">방명록 전체 목록</h3><div class="space-x-2"><button id="guestbook-admin-btn" class="admin-button text-gray-400 hover:text-gray-600"><i class="fas fa-cog"></i></button><button id="close-guestbook-list-modal-btn" class="text-gray-400 hover:text-gray-600"><i class="fa fa-times text-xl"></i></button></div></div><div class="max-h-80 overflow-y-auto mb-4 p-2 guestbook-item-list border rounded-lg"><ul id="guestbook-list-ul" class="text-left space-y-2"></ul><p id="guestbook-list-empty" class="text-gray-500 text-center text-sm hidden">아직 방명록이 없습니다.</p></div><p class="text-xs text-gray-500 text-left px-2">※ 취소는 작성 시 설정한 비밀번호로 가능합니다.</p></div></div>
+        <div id="fullscreen-image-modal"><div id="fullscreen-slider-wrapper" class="relative w-full h-full flex items-center justify-center"><img id="fullscreen-image" src="" alt="Full-screen gallery image" class="relative"><button id="fullscreen-prev-btn" class="slide-btn left-4"><i class="fas fa-chevron-left"></i></button><button id="fullscreen-next-btn" class="slide-btn right-4"><i class="fas fa-chevron-right"></i></button><button id="fullscreen-close-btn" class="absolute top-4 right-4 text-white text-3xl z-2010"><i class="fas fa-times"></i></button></div></div>
     </div>
 
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.0.1/kakao.min.js" integrity="sha384-eKjgHJ9+vwU/FCSUG3nV1RKFolUXLsc6nLQ2R1tD0t4YFPCvRmkcF8saIfOZNWf/" crossorigin="anonymous"></script>
     
     <script type="module">
-        // Firebase SDK에서 필요한 함수들을 가져옵니다.
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, doc, deleteDoc, getDocs, where, writeBatch } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-        // ▼▼▼ 제공해주신 Firebase 설정 정보입니다 ▼▼▼
         const firebaseConfig = {
             apiKey: "AIzaSyBbiGOyd9-WBJmWXYi9oD0qwumfzbjuUWI",
             authDomain: "mobile-invitation-5f099.firebaseapp.com",
@@ -686,70 +192,39 @@
             measurementId: "G-XTR7MSVVYD"
         };
 
-        // Firebase 앱 초기화 및 Firestore 인스턴스 생성
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // 카카오톡 SDK 초기화
         if (window.Kakao && !Kakao.isInitialized()) {
-            Kakao.init('d593259882260554160a2b00d43e0984'); // 실제 유효한 키로 교체 필요
+            Kakao.init('d593259882260554160a2b00d43e0984');
         }
         
-        // ************************************************************
-        // GLOBAL VARIABLES & CONSTANTS
-        // ************************************************************
         const ADMIN_PASSWORD = '1331';
         const MAX_CAPACITY = 28;
         
         let isBusAdminMode = false;
         let isGuestbookAdminMode = false;
         
-        // 실시간 데이터 저장을 위한 전역 변수
         let currentGuestbookEntries = [];
         let currentBusReservations = [];
 
-        // ************************************************************
-        // MODAL CONTROL FUNCTIONS (Global Access)
-        // ************************************************************
-        // [FIXED] 함수들을 window 객체에 할당하여 전역 스코프에서 접근 가능하도록 수정
-        window.openGuestbookWriteModal = function() {
-            document.getElementById('gb-name').value = '';
-            document.getElementById('gb-message').value = '';
-            document.getElementById('gb-password').value = '';
-            document.getElementById('guestbook-write-modal').classList.add('active');
+        // --- MODAL CONTROL ---
+        const openModal = (modalId) => {
+            document.getElementById(modalId).classList.add('active');
             document.body.style.overflow = 'hidden';
-        }
-        window.closeGuestbookWriteModal = function() {
-            document.getElementById('guestbook-write-modal').classList.remove('active');
+        };
+        const closeModal = (modalId) => {
+            document.getElementById(modalId).classList.remove('active');
             document.body.style.overflow = 'auto';
-        }
-        window.openGuestbookListModal = function() {
-            isGuestbookAdminMode = false;
-            document.getElementById('guestbook-admin-btn').classList.remove('active');
-            document.getElementById('guestbook-list-modal').classList.add('active');
-            renderGuestbookList();
-            document.body.style.overflow = 'hidden';
-        }
-        window.closeGuestbookListModal = function() {
-            document.getElementById('guestbook-list-modal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
+        };
 
-        // --- Account Modal Logic ---
+        // --- ACCOUNT MODAL ---
         const ACCOUNT_DETAILS = {
-             groom: [
-                 { name: '신랑 전찬태', bank: '신한은행', account: '110-364-860952' },
-                 { name: '혼주 김옥주', bank: '국민은행', account: '315034-52-024177' },
-             ],
-             bride: [
-                 { name: '신부 박은진', bank: '신한은행', account: '110-584-336719' },
-                 { name: '혼주 박상문', bank: '농협은행', account: '352-1523-2482-03' },
-                 { name: '혼주 김선희', bank: '농협은행', account: '15112-52-100209' },
-             ]
+             groom: [{ name: '신랑 전찬태', bank: '신한은행', account: '110-364-860952' }, { name: '혼주 김옥주', bank: '국민은행', account: '315034-52-024177' }],
+             bride: [{ name: '신부 박은진', bank: '신한은행', account: '110-584-336719' }, { name: '혼주 박상문', bank: '농협은행', account: '352-1523-2482-03' }, { name: '혼주 김선희', bank: '농협은행', account: '15112-52-100209' }]
         };
         
-        // [FIXED]
-        window.openAccountModal = function(side) {
+        function openAccountModal(side) {
             const modalTitle = document.getElementById('account-modal-title');
             const accountList = document.getElementById('account-list');
             modalTitle.textContent = side === 'groom' ? '신랑측 계좌 정보' : '신부측 계좌 정보';
@@ -758,20 +233,20 @@
                     <p class="font-semibold text-gray-800 mb-2">${detail.name}</p>
                     <div class="flex items-center justify-between">
                         <p class="font-medium text-gray-700">${detail.bank} ${detail.account}</p>
-                        <button class="copy-button bg-[#F0E8D7] text-gray-800 rounded-full px-3 py-1 text-sm font-medium hover:bg-[#D8C4A6]" onclick="copyAccountToClipboard('${detail.bank} ${detail.account}')">복사</button>
+                        <button class="copy-button bg-[#F0E8D7] text-gray-800 rounded-full px-3 py-1 text-sm font-medium hover:bg-[#D8C4A6]">복사</button>
                     </div>
                 </div>
             `).join('');
-            document.getElementById('account-modal').classList.add('active');
-            document.body.style.overflow = 'hidden';
+            
+            // Add event listeners to the new buttons
+            accountList.querySelectorAll('.copy-button').forEach((button, index) => {
+                button.onclick = () => copyAccountToClipboard(`${ACCOUNT_DETAILS[side][index].bank} ${ACCOUNT_DETAILS[side][index].account}`);
+            });
+
+            openModal('account-modal');
         }
-        // [FIXED]
-        window.closeAccountModal = function() {
-            document.getElementById('account-modal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        // [FIXED]
-        window.copyAccountToClipboard = function(text) {
+
+        function copyAccountToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
                 const msg = document.getElementById('account-copy-message');
                 msg.classList.remove('hidden');
@@ -779,12 +254,8 @@
             });
         }
         
-        // ************************************************************
-        // BUS RESERVATION LOGIC (Firebase Integrated)
-        // ************************************************************
-        const SEAT_POSITIONS = {
-            1: { x: 20, y: 55 }, 2: { x: 75, y: 55 }, 3: { x: 205, y: 55 }, 4: { x: 20, y: 105 }, 5: { x: 75, y: 105 }, 6: { x: 205, y: 105 }, 7: { x: 20, y: 155 }, 8: { x: 75, y: 155 }, 9: { x: 205, y: 155 }, 10: { x: 20, y: 220 }, 11: { x: 75, y: 220 }, 12: { x: 205, y: 220 }, 13: { x: 20, y: 270 }, 14: { x: 75, y: 270 }, 15: { x: 205, y: 270 }, 16: { x: 20, y: 320 }, 17: { x: 75, y: 320 }, 18: { x: 205, y: 320 }, 19: { x: 20, y: 370 }, 20: { x: 75, y: 370 }, 21: { x: 205, y: 370 }, 22: { x: 20, y: 440 }, 23: { x: 75, y: 440 }, 24: { x: 205, y: 440 }, 25: { x: 20, y: 490 }, 26: { x: 75, y: 490 }, 27: { x: 160, y: 490 }, 28: { x: 215, y: 490 },
-        };
+        // --- BUS RESERVATION LOGIC ---
+        const SEAT_POSITIONS = { 1: { x: 20, y: 55 }, 2: { x: 75, y: 55 }, 3: { x: 205, y: 55 }, 4: { x: 20, y: 105 }, 5: { x: 75, y: 105 }, 6: { x: 205, y: 105 }, 7: { x: 20, y: 155 }, 8: { x: 75, y: 155 }, 9: { x: 205, y: 155 }, 10: { x: 20, y: 220 }, 11: { x: 75, y: 220 }, 12: { x: 205, y: 220 }, 13: { x: 20, y: 270 }, 14: { x: 75, y: 270 }, 15: { x: 205, y: 270 }, 16: { x: 20, y: 320 }, 17: { x: 75, y: 320 }, 18: { x: 205, y: 320 }, 19: { x: 20, y: 370 }, 20: { x: 75, y: 370 }, 21: { x: 205, y: 370 }, 22: { x: 20, y: 440 }, 23: { x: 75, y: 440 }, 24: { x: 205, y: 440 }, 25: { x: 20, y: 490 }, 26: { x: 75, y: 490 }, 27: { x: 160, y: 490 }, 28: { x: 215, y: 490 } };
         const BUS_SEAT_COUNT = 28;
         let currentSelectedSeats = new Set();
         
@@ -793,9 +264,7 @@
             return name.length === 2 ? name.charAt(0) + '*' : name.charAt(0) + '*'.repeat(name.length - 2) + name.slice(-1);
         }
         
-        function getCurrentBusCount() {
-            return currentBusReservations.reduce((total, res) => total + res.seatNumbers.length, 0);
-        }
+        const getCurrentBusCount = () => currentBusReservations.reduce((total, res) => total + res.seatNumbers.length, 0);
         
         function renderSeatMap(targetElementId, showAllNames = false, currentReservation = null) {
             const container = document.getElementById(targetElementId);
@@ -809,9 +278,7 @@
             seatMapDiv.innerHTML += `<div class="seat driver" style="top: 10px; left: 10px; width: 60px;">운전석</div><div class="text-gray-500 text-sm absolute" style="top: 10px; right: 20px;">출입구</div>`;
             
             const reservedSeats = {};
-            currentBusReservations.forEach(res => {
-                res.seatNumbers.forEach(seatNum => { reservedSeats[seatNum] = res; });
-            });
+            currentBusReservations.forEach(res => res.seatNumbers.forEach(seatNum => { reservedSeats[seatNum] = res; }));
             
             if (targetElementId === 'seat-map-container') {
                 currentSelectedSeats = new Set(Array.from(currentSelectedSeats).filter(seatNum => !reservedSeats[seatNum]));
@@ -835,29 +302,23 @@
                 const seatDiv = document.createElement('div');
                 seatDiv.className = `seat seat-${i} ${statusClass}`;
                 seatDiv.style.cssText = `top: ${seat.y}px; left: ${seat.x}px;`;
-                seatDiv.setAttribute('data-seat', i);
                 seatDiv.innerHTML = `<div class="seat-info">${seatContent}</div>`;
                 
                 if (targetElementId === 'seat-map-container' && (statusClass === 'available' || statusClass === 'selected')) {
                     seatDiv.onclick = () => {
-                        const seatEl = seatMapDiv.querySelector(`.seat-${i}`);
                         if (currentSelectedSeats.has(i)) {
                             currentSelectedSeats.delete(i);
-                            seatEl.classList.remove('selected');
+                            seatDiv.classList.remove('selected');
                         } else {
                             if (getCurrentBusCount() + currentSelectedSeats.size >= MAX_CAPACITY) {
-                                alert('정원을 초과하여 더 이상 선택할 수 없습니다.');
-                                return;
+                                return alert('정원을 초과하여 더 이상 선택할 수 없습니다.');
                             }
                             currentSelectedSeats.add(i);
-                            seatEl.classList.add('selected');
+                            seatDiv.classList.add('selected');
                         }
                         document.getElementById('selected-seats-info').textContent = currentSelectedSeats.size + '석';
                     };
                 } else {
-                    if (statusClass === 'reserved') {
-                        seatDiv.title = showAllNames ? `예약자: ${reservedSeats[i].name}\n연락처: ${reservedSeats[i].phone}\n비밀번호: ${reservedSeats[i].password}` : `${maskName(reservedSeats[i].name)} 좌석`;
-                    }
                     seatDiv.style.cursor = 'default';
                 }
                 seatMapDiv.appendChild(seatDiv);
@@ -865,87 +326,39 @@
             container.appendChild(seatMapDiv);
         }
 
-        // [FIXED]
-        window.openBusSeatModal = function() {
-            isBusAdminMode = false; 
-            if (getCurrentBusCount() >= MAX_CAPACITY) {
-                alert('죄송합니다. 버스 좌석이 모두 마감되었습니다.');
-                return;
-            }
-            currentSelectedSeats.clear();
-            renderSeatMap('seat-map-container');
-            document.getElementById('bus-name').value = '';
-            document.getElementById('bus-phone').value = '';
-            document.getElementById('bus-password').value = '';
-            document.getElementById('bus-seat-modal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        };
-
-        // [FIXED]
-        window.closeBusSeatModal = function() {
-            document.getElementById('bus-seat-modal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        };
-
-        // [FIXED]
-        window.submitBusSeatReservation = async function() {
+        async function submitBusSeatReservation() {
             const name = document.getElementById('bus-name').value.trim();
             const phone = document.getElementById('bus-phone').value.trim();
             const password = document.getElementById('bus-password').value.trim();
             const selectedSeatsArray = Array.from(currentSelectedSeats).sort((a, b) => a - b);
-            const busMessage = document.getElementById('bus-message');
-
+            
             if (selectedSeatsArray.length === 0) return alert('예약할 좌석을 1석 이상 선택해주세요.');
             if (!name || !phone || !password) return alert('성함, 연락처, 비밀번호를 모두 입력해주세요.');
             if (password.length !== 4 || isNaN(parseInt(password))) return alert('비밀번호는 숫자 4자리여야 합니다.');
-            
-            if (getCurrentBusCount() + selectedSeatsArray.length > MAX_CAPACITY) return alert('선택하신 좌석을 포함하면 정원을 초과합니다. 다시 확인해주세요.');
-            const isDoubleBooking = currentBusReservations.some(r => r.seatNumbers.some(s => selectedSeatsArray.includes(s)));
-            if (isDoubleBooking) {
-                alert('선택하신 좌석 중 이미 예약된 좌석이 있습니다. 다시 확인해주세요.');
+            if (getCurrentBusCount() + selectedSeatsArray.length > MAX_CAPACITY) return alert('정원을 초과합니다. 다시 확인해주세요.');
+            if (currentBusReservations.some(r => r.seatNumbers.some(s => selectedSeatsArray.includes(s)))) {
+                alert('이미 예약된 좌석이 있습니다. 다시 확인해주세요.');
                 return renderSeatMap('seat-map-container');
             }
 
             try {
-                await addDoc(collection(db, "bus_reservations"), {
-                    name, phone, password, 
-                    seatNumbers: selectedSeatsArray, 
-                    timestamp: serverTimestamp()
-                });
-                busMessage.innerText = `${name}님, ${selectedSeatsArray.join(', ')}석 예약이 완료되었습니다. 감사합니다!`;
+                await addDoc(collection(db, "bus_reservations"), { name, phone, password, seatNumbers: selectedSeatsArray, timestamp: serverTimestamp() });
+                const busMessage = document.getElementById('bus-message');
+                busMessage.innerText = `${name}님, ${selectedSeatsArray.join(', ')}석 예약이 완료되었습니다.`;
                 busMessage.classList.remove('hidden');
                 setTimeout(() => { 
                     busMessage.classList.add('hidden'); 
-                    closeBusSeatModal(); 
+                    closeModal('bus-seat-modal'); 
                 }, 3000);
             } catch (error) {
-                console.error("Error adding document: ", error);
-                alert("예약 중 오류가 발생했습니다. 다시 시도해주세요.");
+                alert("예약 중 오류가 발생했습니다.");
             }
-        };
+        }
         
-        // [FIXED]
-        window.openBusCheckModal = function() {
-            isBusAdminMode = false;
-            document.getElementById('bus-login-form').classList.remove('hidden');
-            document.getElementById('bus-result-view').classList.add('hidden');
-            document.getElementById('check-name').value = '';
-            document.getElementById('check-password').value = '';
-            document.getElementById('bus-check-modal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        };
-        
-        // [FIXED]
-        window.closeBusCheckModal = function() {
-            document.getElementById('bus-check-modal').classList.remove('active');
-            document.body.style.overflow = 'auto';
-        };
-        
-        // [FIXED]
-        window.checkBusReservation = async function() {
+        async function checkBusReservation() {
             const checkName = document.getElementById('check-name').value.trim();
             const checkPassword = document.getElementById('check-password').value.trim();
-            if (!checkName || checkPassword.length !== 4) return alert('이름과 4자리 비밀번호를 올바르게 입력해주세요.');
+            if (!checkName || checkPassword.length !== 4) return alert('이름과 4자리 비밀번호를 입력해주세요.');
 
             document.getElementById('bus-login-form').classList.add('hidden');
             document.getElementById('bus-result-view').classList.remove('hidden');
@@ -964,12 +377,8 @@
                     document.getElementById('bus-result-title').textContent = `${checkName}님의 예약 정보`;
                     document.getElementById('admin-actions').classList.add('hidden');
                     const detailsDiv = document.getElementById('user-reservation-details');
-                    detailsDiv.innerHTML = `
-                        <p class="font-bold">예약자: ${userReservation.name}</p>
-                        <p>연락처: ${userReservation.phone}</p>
-                        <p>예약 좌석: <span class="font-bold text-lg text-[#8B7D6C]">${userReservation.seatNumbers.join(', ')}</span></p>
-                        <button onclick="cancelMyReservation('${userReservation.id}')" class="mt-3 w-full py-2 bg-red-400 text-white rounded-full text-sm font-medium hover:bg-red-500 transition-colors">예약 취소하기</button>
-                    `;
+                    detailsDiv.innerHTML = `<p><strong>예약자:</strong> ${userReservation.name}</p><p><strong>연락처:</strong> ${userReservation.phone}</p><p><strong>예약 좌석:</strong> <span class="font-bold text-lg text-[#8B7D6C]">${userReservation.seatNumbers.join(', ')}</span></p><button id="cancel-my-reservation-btn" class="mt-3 w-full py-2 bg-red-400 text-white rounded-full text-sm">예약 취소하기</button>`;
+                    detailsDiv.querySelector('#cancel-my-reservation-btn').onclick = () => cancelMyReservation(userReservation.id);
                     detailsDiv.classList.remove('hidden');
                     renderSeatMap('bus-seat-status', false, userReservation);
                 } else {
@@ -978,58 +387,22 @@
                     document.getElementById('bus-result-view').classList.add('hidden');
                 }
             }
-        };
+        }
         
-        // [FIXED]
-        window.cancelMyReservation = async function(docId) {
+        async function cancelMyReservation(docId) {
             if (confirm('정말로 예약을 취소하시겠습니까?')) {
                 try {
                     await deleteDoc(doc(db, "bus_reservations", docId));
                     alert('예약이 취소되었습니다.');
-                    closeBusCheckModal();
+                    closeModal('bus-check-modal');
                 } catch (error) {
-                    console.error("Error removing document: ", error);
                     alert("취소 중 오류가 발생했습니다.");
                 }
             }
-        };
-
-        // [FIXED]
-        window.adminDeleteAllBusReservations = async function() {
-            if (confirm('경고! 모든 버스 신청 명단을 영구적으로 삭제하시겠습니까?')) {
-                try {
-                    const batch = writeBatch(db);
-                    currentBusReservations.forEach(res => {
-                        const docRef = doc(db, "bus_reservations", res.id);
-                        batch.delete(docRef);
-                    });
-                    await batch.commit();
-                    alert('모든 버스 신청 명단이 삭제되었습니다.');
-                    closeBusCheckModal();
-                } catch (error) {
-                    console.error("Error deleting all bus reservations: ", error);
-                    alert("전체 삭제 중 오류가 발생했습니다.");
-                }
-            }
-        };
-
-        // [FIXED]
-        window.downloadBusList = function() {
-            if (currentBusReservations.length === 0) return alert('다운로드할 명단이 없습니다.');
-            const csvContent = "data:text/csv;charset=utf-8," + "신청시각,성함,연락처,비밀번호,좌석번호\n" + currentBusReservations.map(r => {
-                const dateStr = r.timestamp ? new Date(r.timestamp.toDate()).toLocaleString('ko-KR') : 'N/A';
-                return `${dateStr},${r.name},${r.phone},${r.password},"${r.seatNumbers.join(',')}"`
-            }).join("\n");
-            
-            const link = document.createElement("a");
-            link.setAttribute("href", encodeURI(csvContent));
-            link.setAttribute("download", "bus_reservations.csv");
-            link.click();
-        };
+        }
         
-        // --- GUESTBOOK LOGIC (Firebase Integrated) ---
-        // [FIXED]
-        window.submitGuestbook = async function() {
+        // --- GUESTBOOK LOGIC ---
+        async function submitGuestbook() {
             const name = document.getElementById('gb-name').value.trim();
             const message = document.getElementById('gb-message').value.trim();
             const password = document.getElementById('gb-password').value.trim();
@@ -1037,24 +410,22 @@
             if (password.length !== 4) return alert('비밀번호는 4자리여야 합니다.');
             
             try {
-                await addDoc(collection(db, "guestbook"), {
-                    name, message, password,
-                    timestamp: serverTimestamp()
-                });
-                document.getElementById('gb-message-status').classList.remove('hidden');
+                await addDoc(collection(db, "guestbook"), { name, message, password, timestamp: serverTimestamp() });
+                const status = document.getElementById('gb-message-status');
+                status.classList.remove('hidden');
                 setTimeout(() => {
-                    document.getElementById('gb-message-status').classList.add('hidden');
-                    closeGuestbookWriteModal();
+                    status.classList.add('hidden');
+                    closeModal('guestbook-write-modal');
                 }, 2000);
             } catch(error) {
-                console.error("Error adding guestbook entry: ", error);
                 alert("방명록 작성 중 오류가 발생했습니다.");
             }
-        };
+        }
 
         function renderGuestbookPreview() {
             const previewContainer = document.getElementById('guestbook-preview');
             const latestEntries = currentGuestbookEntries.slice(0, 3);
+            if (!previewContainer) return;
             
             previewContainer.innerHTML = '';
             if (latestEntries.length === 0) {
@@ -1065,96 +436,58 @@
                 const div = document.createElement('div');
                 div.className = 'guestbook-item shadow-md';
                 const animationDuration = Math.max(15, entry.message.length * 0.2); 
-                div.innerHTML = `
-                    <div class="guestbook-preview-line">
-                        <p class="guestbook-scrolling-content" style="animation-duration: ${animationDuration}s;">
-                            <span class="font-bold text-[#8B7D6C]">${entry.name}</span> 
-                            <span class="text-gray-700"> | ${entry.message}</span>
-                            <span style="display:inline-block; width: 100vw;"></span>
-                        </p>
-                    </div>`;
+                div.innerHTML = `<div class="guestbook-preview-line"><p class="guestbook-scrolling-content" style="animation-duration: ${animationDuration}s;"><span class="font-bold text-[#8B7D6C]">${entry.name}</span><span class="text-gray-700"> | ${entry.message}</span><span style="display:inline-block; width: 100vw;"></span></p></div>`;
                 previewContainer.appendChild(div);
             });
         }
 
-        window.renderGuestbookList = function() {
+        function renderGuestbookList() {
             const listUl = document.getElementById('guestbook-list-ul');
             const emptyMsg = document.getElementById('guestbook-list-empty');
             
-            if (currentGuestbookEntries.length === 0) {
-                emptyMsg.classList.remove('hidden');
-                listUl.innerHTML = '';
-            } else {
-                emptyMsg.classList.add('hidden');
-                listUl.innerHTML = currentGuestbookEntries.map(entry => {
-                    const date = entry.timestamp ? entry.timestamp.toDate() : new Date();
-                    const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
-                    return `
-                        <li class="guestbook-list-item flex justify-between items-start">
-                            <div class="flex-1">
-                                <p class="font-bold text-sm text-[#8B7D6C]">${entry.name} <span class="text-xs font-normal text-gray-400">(${formattedDate})</span></p>
-                                <p class="text-gray-700 text-base whitespace-pre-wrap">${entry.message}</p>
-                            </div>
-                            <button onclick="deleteGuestbookEntry('${entry.id}', '${entry.password}')" class="flex-shrink-0 mt-1 bg-red-400 text-white rounded-full px-2 py-0.5 text-xs font-medium hover:bg-red-500 transition-colors">
-                                ${isGuestbookAdminMode ? '관리자 삭제' : '취소/삭제'}
-                            </button>
+            emptyMsg.classList.toggle('hidden', currentGuestbookEntries.length > 0);
+            listUl.innerHTML = currentGuestbookEntries.map(entry => {
+                const date = entry.timestamp ? entry.timestamp.toDate() : new Date();
+                const formattedDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+                return `<li class="guestbook-list-item flex justify-between items-start">
+                            <div><p class="font-bold text-sm text-[#8B7D6C]">${entry.name} <span class="text-xs font-normal text-gray-400">(${formattedDate})</span></p><p class="text-gray-700 text-base whitespace-pre-wrap">${entry.message}</p></div>
+                            <button class="delete-guestbook-btn flex-shrink-0 mt-1 bg-red-400 text-white rounded-full px-2 py-0.5 text-xs" data-id="${entry.id}" data-password="${entry.password}">${isGuestbookAdminMode ? '관리자 삭제' : '취소/삭제'}</button>
                         </li>`;
-                }).join('');
-            }
-        };
+            }).join('');
+            
+            listUl.querySelectorAll('.delete-guestbook-btn').forEach(btn => {
+                btn.onclick = () => deleteGuestbookEntry(btn.dataset.id, btn.dataset.password);
+            });
+        }
 
-        // [FIXED]
-        window.deleteGuestbookEntry = async function(id, storedPassword) {
+        async function deleteGuestbookEntry(id, storedPassword) {
             const checkPassword = isGuestbookAdminMode ? ADMIN_PASSWORD : storedPassword;
-            const promptMsg = isGuestbookAdminMode ? `관리자 권한으로 삭제하려면 관리자 비밀번호를 입력하세요.` : `삭제하려면 설정했던 4자리 비밀번호를 입력하세요.`;
+            const promptMsg = isGuestbookAdminMode ? `관리자 비밀번호를 입력하세요.` : `삭제 비밀번호를 입력하세요.`;
             const inputPassword = prompt(promptMsg);
             
             if (inputPassword === null) return;
             if (inputPassword !== checkPassword) return alert('비밀번호가 올바르지 않습니다.');
-
             if (confirm('정말로 이 방명록을 삭제하시겠습니까?')) {
                 try {
                     await deleteDoc(doc(db, "guestbook", id));
                     alert('방명록이 삭제되었습니다.');
                 } catch(error) {
-                    console.error("Error deleting guestbook entry: ", error);
                     alert("삭제 중 오류가 발생했습니다.");
                 }
             }
-        };
+        }
         
-        // [FIXED]
-        window.toggleGuestbookAdminMode = function() {
-            const password = prompt('관리자 비밀번호를 입력하세요.');
-            if (password === ADMIN_PASSWORD) {
-                isGuestbookAdminMode = !isGuestbookAdminMode;
-                document.getElementById('guestbook-admin-btn').classList.toggle('active', isGuestbookAdminMode);
-                alert(`관리자 모드가 ${isGuestbookAdminMode ? '활성화' : '비활성화'}되었습니다.`);
-                renderGuestbookList();
-            } else if (password) {
-                alert('비밀번호가 올바르지 않습니다.');
-            }
-        };
-
-        // --- FULLSCREEN GALLERY LOGIC (Global Access) ---
-        let allGalleryImages = ['image/gallery_1.jpg', 'image/gallery_2.jpg', 'image/gallery_3.jpg', 'image/gallery_4.jpg', 'image/gallery_5.jpg', 'image/gallery_6.jpg', 'image/gallery_7.jpg', 'image/gallery_8.jpg', 'image/gallery_9.jpg', 'image/gallery_10.jpg', 'image/gallery_11.jpg', 'image/gallery_12.jpg', 'image/gallery_13.jpg', 'image/gallery_14.jpg', 'image/gallery_15.jpg', 'image/gallery_16.jpg', 'image/gallery_17.jpg', 'image/gallery_18.jpg'];
+        // --- FULLSCREEN GALLERY ---
+        const allGalleryImages = ['image/gallery_1.jpg', 'image/gallery_2.jpg', 'image/gallery_3.jpg', 'image/gallery_4.jpg', 'image/gallery_5.jpg', 'image/gallery_6.jpg', 'image/gallery_7.jpg', 'image/gallery_8.jpg', 'image/gallery_9.jpg', 'image/gallery_10.jpg', 'image/gallery_11.jpg', 'image/gallery_12.jpg', 'image/gallery_13.jpg', 'image/gallery_14.jpg', 'image/gallery_15.jpg', 'image/gallery_16.jpg', 'image/gallery_17.jpg', 'image/gallery_18.jpg'];
         let currentFullscreenIndex = 0;
-        let touchStartX = 0;
 
-        // [FIXED]
-        window.openFullscreenImage = function(src, index) {
+        function openFullscreenImage(index) {
             currentFullscreenIndex = index;
-            document.getElementById('fullscreen-image').src = src;
-            document.getElementById('fullscreen-image-modal').classList.add('visible');
-            document.body.style.overflow = 'hidden';
+            document.getElementById('fullscreen-image').src = allGalleryImages[index];
+            openModal('fullscreen-image-modal');
         };
-        // [FIXED]
-        window.closeFullscreenImage = function() {
-            document.getElementById('fullscreen-image-modal').classList.remove('visible');
-            document.body.style.overflow = 'auto';
-        };
-        // [FIXED]
-        window.showNextFullscreenImage = function(step) {
+
+        function showNextFullscreenImage(step) {
             const image = document.getElementById('fullscreen-image');
             currentFullscreenIndex = (currentFullscreenIndex + step + allGalleryImages.length) % allGalleryImages.length;
             image.style.transform = `scale(0.95)`;
@@ -1163,86 +496,14 @@
                 image.style.transform = `scale(1)`;
             }, 50); 
         };
-        // [FIXED]
-        window.handleTouchStart = function(event) {
-            if (document.getElementById('fullscreen-image-modal').classList.contains('visible')) {
-                touchStartX = event.touches[0].clientX;
-            }
-        };
-        // [FIXED]
-        window.handleTouchMove = function(event) {
-            if (!touchStartX) return;
-            const diff = touchStartX - event.touches[0].clientX;
-            if (Math.abs(diff) > 50) { 
-                showNextFullscreenImage(diff > 0 ? 1 : -1);
-                touchStartX = 0; 
-            }
-        };
-
-        // --- UTILITY & NAVIGATION FUNCTIONS ---
-        const DESTINATION_NAME = '팔레드오페라';
-        const DESTINATION_ADDRESS = '대전 서구 둔산남로 50'; 
-        const ENCODED_ADDRESS = encodeURIComponent(DESTINATION_ADDRESS);
-        const ENCODED_DESTINATION = encodeURIComponent(DESTINATION_NAME);
-
-        // [FIXED]
-        window.openNaverMap = function(event) {
-            event.preventDefault(); 
-            const appUrl = `nmap://search?query=${ENCODED_ADDRESS}&appname=wedding_invitation`;
-            const webUrl = `https://m.map.naver.com/search/address/${ENCODED_ADDRESS}`;
-            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-            if (isMobile) {
-                window.location.href = appUrl;
-                setTimeout(() => window.open(webUrl, '_blank'), 500);
-            } else {
-                window.open(webUrl, '_blank');
-            }
-        }
-        // [FIXED]
-        window.openTMap = function(event) {
-            event.preventDefault(); 
-            const appUrl = `tmap://search?name=${ENCODED_DESTINATION}&address=${ENCODED_ADDRESS}&appname=wedding_invitation`;
-            const webUrl = `https://map.tmap.co.kr/search/search?query=${ENCODED_ADDRESS}`;
-            const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-            if (isMobile) {
-                window.location.href = appUrl;
-                setTimeout(() => window.open(webUrl, '_blank'), 500);
-            } else {
-                window.open(webUrl, '_blank');
-            }
-        }
-        // [FIXED]
-        window.openKakaoMap = function(event) {
-            event.preventDefault(); 
-            window.open(`https://map.kakao.com/link/search/${ENCODED_ADDRESS}`, '_blank');
-        }
-        // [FIXED]
-        window.shareLink = async function() {
-            const shareData = {
-                title: '12월 06일 전찬태 ♥ 박은진 결혼합니다.',
-                text: '저희 두 사람의 결혼식에 소중한 발걸음 부탁드립니다.',
-                url: window.location.href,
-            };
-            try { 
-                if (navigator.share) {
-                    await navigator.share(shareData);
-                } else {
-                    navigator.clipboard.writeText(window.location.href).then(() => {
-                        alert('청첩장 링크가 클립보드에 복사되었습니다.');
-                    });
-                }
-            } catch (err) { console.error("Share failed:", err); }
-        };
-
+        
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             const splashScreen = document.getElementById('splash-screen');
             const mainContent = document.getElementById('main-content');
             
             function transitionToMainContent() {
-                if (splashScreen.__splashInterval) clearInterval(splashScreen.__splashInterval);
                 if (splashScreen.classList.contains('hidden')) return;
-                
                 splashScreen.classList.add('opacity-0');
                 setTimeout(() => {
                     splashScreen.classList.add('hidden');
@@ -1252,48 +513,39 @@
                 }, 500);
             }
 
-            function initializeSnowfallAndReveal() {
-                for (let i = 0; i < 50; i++) {
-                    const snowflake = document.createElement('div');
-                    snowflake.className = 'snowflake';
-                    snowflake.style.left = `${Math.random() * 100}vw`;
-                    snowflake.style.width = `${Math.random() * 3 + 2}px`;
-                    snowflake.style.height = snowflake.style.width;
-                    snowflake.style.animationDuration = `${Math.random() * 10 + 5}s`;
-                    snowflake.style.animationDelay = `${Math.random() * 5}s`;
-                    document.getElementById('snow-container').appendChild(snowflake);
-                }
-                const splashMainImg = document.getElementById('splash-main-img');
-                if (splashMainImg) splashMainImg.classList.add('loaded-effect');
-                setTimeout(() => document.getElementById('splash-text-1').classList.add('visible-reveal'), 500);
-                setTimeout(() => document.getElementById('splash-text-2').classList.add('visible-reveal'), 1500);
-                setTimeout(() => document.getElementById('splash-text-3').classList.add('visible-reveal'), 2500);
+            // Splash Screen Logic
+            for (let i = 0; i < 50; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.style.left = `${Math.random() * 100}vw`;
+                snowflake.style.width = `${Math.random() * 3 + 2}px`;
+                snowflake.style.height = snowflake.style.width;
+                snowflake.style.animationDuration = `${Math.random() * 10 + 5}s`;
+                snowflake.style.animationDelay = `${Math.random() * 5}s`;
+                document.getElementById('snow-container').appendChild(snowflake);
             }
-
-            initializeSnowfallAndReveal();
+            document.getElementById('splash-main-img').classList.add('loaded-effect');
+            setTimeout(() => document.getElementById('splash-text-1').classList.add('visible-reveal'), 500);
+            setTimeout(() => document.getElementById('splash-text-2').classList.add('visible-reveal'), 1500);
+            setTimeout(() => document.getElementById('splash-text-3').classList.add('visible-reveal'), 2500);
             setTimeout(transitionToMainContent, 6000);
             splashScreen.addEventListener('click', transitionToMainContent);
 
             function initializeApp() {
-                // Real-time listeners for Firestore
-                const guestbookQuery = query(collection(db, "guestbook"), orderBy("timestamp", "desc"));
-                onSnapshot(guestbookQuery, (snapshot) => {
+                // Real-time Firestore Listeners
+                onSnapshot(query(collection(db, "guestbook"), orderBy("timestamp", "desc")), (snapshot) => {
                     currentGuestbookEntries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                     renderGuestbookPreview();
-                    if (document.getElementById('guestbook-list-modal').classList.contains('active')) {
-                        renderGuestbookList();
-                    }
+                    if (document.getElementById('guestbook-list-modal').classList.contains('active')) renderGuestbookList();
                 });
 
-                const busQuery = query(collection(db, "bus_reservations"), orderBy("timestamp", "desc"));
-                onSnapshot(busQuery, (snapshot) => {
+                onSnapshot(query(collection(db, "bus_reservations"), orderBy("timestamp", "desc")), (snapshot) => {
                     currentBusReservations = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    if (document.getElementById('bus-seat-modal').classList.contains('active')) {
-                        renderSeatMap('seat-map-container');
-                    }
+                    if (document.getElementById('bus-seat-modal').classList.contains('active')) renderSeatMap('seat-map-container');
                 });
 
-                // UI & Event Listeners
+                // --- EVENT LISTENERS ---
+                // Animation Observer
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -1301,32 +553,116 @@
                             observer.unobserve(entry.target);
                         }
                     });
-                }, { threshold: 0.3 });
-                document.querySelectorAll('.animate-up').forEach(section => observer.observe(section));
+                }, { threshold: 0.1 });
+                document.querySelectorAll('.animate-up').forEach(el => observer.observe(el));
                 
-                document.getElementById('share-link-btn').addEventListener('click', window.shareLink);
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape' && document.getElementById('fullscreen-image-modal').classList.contains('visible')) closeFullscreenImage();
-                });
+                // Modal Buttons
+                document.getElementById('open-account-groom-btn').onclick = () => openAccountModal('groom');
+                document.getElementById('open-account-bride-btn').onclick = () => openAccountModal('bride');
+                document.getElementById('close-account-modal-btn').onclick = () => closeModal('account-modal');
+                
+                document.getElementById('open-bus-seat-modal-btn').onclick = () => {
+                    if (getCurrentBusCount() >= MAX_CAPACITY) return alert('죄송합니다. 버스 좌석이 모두 마감되었습니다.');
+                    currentSelectedSeats.clear();
+                    renderSeatMap('seat-map-container');
+                    document.getElementById('bus-name').value = '';
+                    document.getElementById('bus-phone').value = '';
+                    document.getElementById('bus-password').value = '';
+                    openModal('bus-seat-modal');
+                };
+                document.getElementById('close-bus-seat-modal-btn').onclick = () => closeModal('bus-seat-modal');
+                document.getElementById('submit-bus-reservation-btn').onclick = submitBusSeatReservation;
+                
+                document.getElementById('open-bus-check-modal-btn').onclick = () => {
+                    isBusAdminMode = false;
+                    document.getElementById('bus-login-form').classList.remove('hidden');
+                    document.getElementById('bus-result-view').classList.add('hidden');
+                    document.getElementById('check-name').value = '';
+                    document.getElementById('check-password').value = '';
+                    openModal('bus-check-modal');
+                };
+                document.getElementById('close-bus-check-modal-btn').onclick = () => closeModal('bus-check-modal');
+                document.getElementById('check-bus-reservation-btn').onclick = checkBusReservation;
+
+                document.getElementById('open-guestbook-write-modal-btn').onclick = () => {
+                    document.getElementById('gb-name').value = '';
+                    document.getElementById('gb-message').value = '';
+                    document.getElementById('gb-password').value = '';
+                    openModal('guestbook-write-modal');
+                };
+                document.getElementById('close-guestbook-write-modal-btn').onclick = () => closeModal('guestbook-write-modal');
+                document.getElementById('submit-guestbook-btn').onclick = submitGuestbook;
+                
+                document.getElementById('open-guestbook-list-modal-btn').onclick = () => {
+                    isGuestbookAdminMode = false;
+                    document.getElementById('guestbook-admin-btn').classList.remove('active');
+                    renderGuestbookList();
+                    openModal('guestbook-list-modal');
+                };
+                document.getElementById('close-guestbook-list-modal-btn').onclick = () => closeModal('guestbook-list-modal');
+                document.getElementById('guestbook-admin-btn').onclick = () => {
+                    const password = prompt('관리자 비밀번호를 입력하세요.');
+                    if (password === ADMIN_PASSWORD) {
+                        isGuestbookAdminMode = !isGuestbookAdminMode;
+                        document.getElementById('guestbook-admin-btn').classList.toggle('active', isGuestbookAdminMode);
+                        alert(`관리자 모드가 ${isGuestbookAdminMode ? '활성화' : '비활성화'}되었습니다.`);
+                        renderGuestbookList();
+                    } else if (password) {
+                        alert('비밀번호가 올바르지 않습니다.');
+                    }
+                };
+
+                // Fullscreen Gallery Buttons
+                document.getElementById('fullscreen-close-btn').onclick = () => closeModal('fullscreen-image-modal');
+                document.getElementById('fullscreen-prev-btn').onclick = () => showNextFullscreenImage(-1);
+                document.getElementById('fullscreen-next-btn').onclick = () => showNextFullscreenImage(1);
+
+                // Admin Buttons
+                document.getElementById('download-bus-list-btn').onclick = () => {
+                    if (currentBusReservations.length === 0) return alert('다운로드할 명단이 없습니다.');
+                    const csvContent = "data:text/csv;charset=utf-8,신청시각,성함,연락처,비밀번호,좌석번호\n" + currentBusReservations.map(r => `${r.timestamp ? new Date(r.timestamp.toDate()).toLocaleString('ko-KR') : 'N/A'},${r.name},${r.phone},${r.password},"${r.seatNumbers.join(',')}"`).join("\n");
+                    const link = document.createElement("a");
+                    link.setAttribute("href", encodeURI(csvContent));
+                    link.setAttribute("download", "bus_reservations.csv");
+                    link.click();
+                };
+                document.getElementById('admin-delete-all-btn').onclick = async () => {
+                    if (confirm('경고! 모든 버스 신청 명단을 영구적으로 삭제하시겠습니까?')) {
+                        const batch = writeBatch(db);
+                        currentBusReservations.forEach(res => batch.delete(doc(db, "bus_reservations", res.id)));
+                        await batch.commit();
+                        alert('모든 버스 신청 명단이 삭제되었습니다.');
+                        closeModal('bus-check-modal');
+                    }
+                };
+                
+                // Other buttons
+                const DESTINATION_ADDRESS = '대전 서구 둔산남로 50'; 
+                document.getElementById('naver-map-btn').onclick = () => window.open(`https://m.map.naver.com/search2/search.naver?query=${encodeURIComponent(DESTINATION_ADDRESS)}`, '_blank');
+                document.getElementById('tmap-btn').onclick = () => window.open(`https://apis.openapi.sk.com/tmap/app/routes?appKey=YOUR_TMAP_APP_KEY&name=${encodeURIComponent('팔레드오페라')}&lon=127.3881&lat=36.3512`, '_blank'); // TMap은 좌표가 더 정확합니다.
+                document.getElementById('kakaonavi-btn').onclick = () => window.open(`https://map.kakao.com/link/to/팔레드오페라,36.3512,127.3881`, '_blank');
+                document.getElementById('share-link-btn').onclick = async () => {
+                    if (navigator.share) {
+                        await navigator.share({ title: '전찬태 ♥ 박은진 결혼합니다', url: window.location.href });
+                    } else {
+                        navigator.clipboard.writeText(window.location.href).then(() => alert('청첩장 링크가 복사되었습니다.'));
+                    }
+                };
 
                 // IMAGE SLIDER
                 const sliderImages = ['image/main_1.jpg', 'image/main_2.jpg', 'image/main_3.jpg', 'image/main_4.jpg'];
                 const sliderContainer = document.getElementById('image-slider');
                 let currentSlide = 0;
-                sliderContainer.innerHTML = sliderImages.map((src, index) => 
-                    `<img src="${src}" alt="Wedding Photo ${index + 1}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === 0 ? 'opacity-100' : 'opacity-0'}">`
-                ).join('') + sliderContainer.innerHTML;
+                sliderContainer.innerHTML = sliderImages.map((src, index) => `<img src="${src}" alt="Wedding Photo ${index + 1}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${index === 0 ? 'opacity-100' : 'opacity-0'}">`).join('') + `<button id="slider-prev-btn" class="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 bg-black/30 text-white rounded-full"><i class="fas fa-chevron-left"></i></button><button id="slider-next-btn" class="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 bg-black/30 text-white rounded-full"><i class="fas fa-chevron-right"></i></button>`;
                 const sliderImageElements = sliderContainer.querySelectorAll('img');
                 const showSlide = (index) => {
-                    sliderImageElements[currentSlide].classList.remove('opacity-100');
-                    sliderImageElements[currentSlide].classList.add('opacity-0');
+                    sliderImageElements[currentSlide].classList.replace('opacity-100', 'opacity-0');
                     currentSlide = (index + sliderImageElements.length) % sliderImageElements.length;
-                    sliderImageElements[currentSlide].classList.remove('opacity-0');
-                    sliderImageElements[currentSlide].classList.add('opacity-100');
+                    sliderImageElements[currentSlide].classList.replace('opacity-0', 'opacity-100');
                 };
-                document.getElementById('prev-btn').onclick = () => showSlide(currentSlide - 1);
-                document.getElementById('next-btn').onclick = () => showSlide(currentSlide + 1);
-                setInterval(() => showSlide(currentSlide + 1), 3000);
+                document.getElementById('slider-prev-btn').onclick = () => showSlide(currentSlide - 1);
+                document.getElementById('slider-next-btn').onclick = () => showSlide(currentSlide + 1);
+                setInterval(() => showSlide(currentSlide + 1), 4000);
 
                 // GALLERY
                 const galleryContainer = document.getElementById('gallery-container');
@@ -1336,8 +672,8 @@
                     for (let i = currentImagesLoaded; i < endIndex; i++) {
                         const div = document.createElement('div');
                         div.className = `w-full rounded-xl overflow-hidden shadow-md gallery-item-animation ${i % 3 === 0 ? 'span-2-row' : ''}`;
-                        div.innerHTML = `<img src="${allGalleryImages[i]}" alt="Gallery Photo ${i + 1}" class="w-full h-auto object-cover">`;
-                        div.onclick = () => window.openFullscreenImage(allGalleryImages[i], i);
+                        div.innerHTML = `<img src="${allGalleryImages[i]}" alt="Gallery Photo ${i + 1}" class="w-full h-full object-cover">`;
+                        div.onclick = () => openFullscreenImage(i);
                         galleryContainer.appendChild(div);
                         observer.observe(div);
                     }
@@ -1368,7 +704,7 @@
                     const [year, month, day] = [2025, 11, 6];
                     let firstDay = new Date(year, month, 1).getDay();
                     let lastDate = new Date(year, month + 1, 0).getDate();
-                    let html = `<div class="flex justify-between items-center text-xl font-bold text-gray-800 mb-4"><p>${year}년 ${month + 1}월</p></div><table class="w-full text-center text-sm"><thead><tr class="text-gray-500"><th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th></tr></thead><tbody><tr>` + '<td></td>'.repeat(firstDay);
+                    let html = `<div class="text-xl font-bold mb-4">${year}년 ${month + 1}월</div><table class="w-full text-center text-sm"><thead><tr><th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th></tr></thead><tbody><tr>` + '<td></td>'.repeat(firstDay);
                     for (let i = 1; i <= lastDate; i++) {
                         if ((firstDay + i - 1) % 7 === 0 && i !== 1) html += `</tr><tr>`;
                         html += `<td class="py-2"><span class="w-8 h-8 flex items-center justify-center mx-auto ${i === day ? 'bg-[#8B7D6C] text-white rounded-full font-bold' : ''}">${i}</span></td>`;
