@@ -122,322 +122,320 @@
             } else {
                 transitionToMainContent();
             }
-
-            function initializeApp() {
-                // --- CONFIG & CONSTANTS ---
-                const firebaseConfig = { apiKey: "AIzaSyBbiGOyd9-WBJmWXYi9oD0qwumfzbjuUWI", authDomain: "mobile-invitation-5f099.firebaseapp.com", projectId: "mobile-invitation-5f099", storageBucket: "mobile-invitation-5f099.firebasestorage.app", messagingSenderId: "652456319149", appId: "1:652456319149:web:ed0c46a4b2ecc9fb308e24" };
-                const ADMIN_PASSWORD = '1331';
-                const MAX_CAPACITY = 28;
-                const allGalleryImages = ['image/gallery_1.jpg','image/gallery_2.jpg','image/gallery_3.jpg','image/gallery_4.jpg','image/gallery_5.jpg','image/gallery_6.jpg','image/gallery_7.jpg','image/gallery_8.jpg','image/gallery_9.jpg','image/gallery_10.jpg','image/gallery_11.jpg','image/gallery_12.jpg','image/gallery_13.jpg','image/gallery_14.jpg','image/gallery_15.jpg','image/gallery_16.jpg','image/gallery_17.jpg','image/gallery_18.jpg'];
-                const ACCOUNT_DETAILS = { groom: [{ name: '신랑 전찬태', bank: '신한은행', account: '110-364-860952' }, { name: '혼주 김옥주', bank: '국민은행', account: '315034-52-024177' }], bride: [{ name: '신부 박은진', bank: '신한은행', account: '110-584-336719' }, { name: '혼주 박상문', bank: '농협은행', account: '352-1523-2482-03' }, { name: '혼주 김선희', bank: '농협은행', account: '15112-52-100209' }] };
-                const SEAT_POSITIONS = { 1:{x:20,y:55},2:{x:75,y:55},3:{x:205,y:55},4:{x:20,y:105},5:{x:75,y:105},6:{x:205,y:105},7:{x:20,y:155},8:{x:75,y:155},9:{x:205,y:155},10:{x:20,y:220},11:{x:75,y:220},12:{x:205,y:220},13:{x:20,y:270},14:{x:75,y:270},15:{x:205,y:270},16:{x:20,y:320},17:{x:75,y:320},18:{x:205,y:320},19:{x:20,y:370},20:{x:75,y:370},21:{x:205,y:370},22:{x:20,y:440},23:{x:75,y:440},24:{x:205,y:440},25:{x:20,y:490},26:{x:75,y:490},27:{x:160,y:490},28:{x:215,y:490} };
-                
-                let db;
-                let currentGuestbookEntries = [], currentBusReservations = [];
-                let currentSelectedSeats = new Set();
-                let currentFullscreenIndex = 0;
-                let mainSlideInterval;
-                let isBusAdminMode = false, isGuestbookAdminMode = false;
-
-                try {
-                    const app = initializeApp(firebaseConfig);
-                    db = getFirestore(app);
-                    if (window.Kakao && !Kakao.isInitialized()) { Kakao.init('d593259882260554160a2b00d43e0984'); }
-                } catch (e) {
-                    console.error("Initialization failed:", e);
-                    alert("페이지 초기화에 실패했습니다. 새로고침 해주세요.");
-                    return;
-                }
-
-                // --- HELPER & FEATURE FUNCTIONS ---
-                const openModal = (id) => { el(id)?.classList.add('active'); document.body.style.overflow = 'hidden'; };
-                const closeModal = (id) => { el(id)?.classList.remove('active'); document.body.style.overflow = 'auto'; };
-                const maskName = (name, showAll = false) => (showAll || !name || name.length < 2) ? name : (name.length === 2 ? name.charAt(0) + '*' : name.charAt(0) + '*'.repeat(name.length - 2) + name.slice(-1));
-                const getCurrentBusCount = () => currentBusReservations.reduce((total, res) => total + (res.seatNumbers?.length || 0), 0);
-                const showMessage = (elementId, text, isSuccess = true, duration = 2500) => {
-                    const msgEl = el(elementId);
-                    if (!msgEl) return;
-                    msgEl.textContent = text;
-                    msgEl.className = `text-sm mt-4 ${isSuccess ? 'text-green-600' : 'text-red-600'}`;
-                    msgEl.classList.remove('hidden');
-                    setTimeout(() => msgEl.classList.add('hidden'), duration);
-                };
-                function openAccountModal(side) {
-                    const list = el('account-list');
-                    el('account-modal-title').textContent = side === 'groom' ? '신랑측 계좌 정보' : '신부측 계좌 정보';
-                    list.innerHTML = ACCOUNT_DETAILS[side].map((d) => `<div class="bg-gray-50 p-4 rounded-xl shadow-inner border"><p class="font-semibold">${d.name}</p><div class="flex items-center justify-between"><p>${d.bank} ${d.account}</p><button class="copy-button bg-[#F0E8D7] px-3 py-1 text-sm rounded-full" data-account="${d.account}">복사</button></div></div>`).join('');
-                    list.querySelectorAll('.copy-button').forEach(b => b.onclick = () => copyAccountToClipboard(b.dataset.account));
-                    openModal('account-modal');
-                }
-                function copyAccountToClipboard(text) {
-                    navigator.clipboard.writeText(text).then(() => showMessage('account-copy-message', '계좌번호가 복사되었습니다!'));
-                }
-                function renderSeatMap(targetId = 'seat-map-container', showAllNames = false, currentReservation = null) {
-                    const container = el(targetId);
-                    if (!container) return;
-                    const reservedCount = getCurrentBusCount();
-                    container.innerHTML = `<div class="text-center text-sm mb-2 text-gray-500">총 ${MAX_CAPACITY}석 중 ${reservedCount}석 예약됨 (${MAX_CAPACITY - reservedCount}석 남음)</div><div class="relative h-[550px]"><div class="seat driver" style="top: 10px; left: 10px; width: 60px;">운전석</div></div>`;
-                    const seatMap = container.querySelector('.relative');
-                    const reserved = {};
-                    currentBusReservations.forEach(r => r.seatNumbers?.forEach(s => { reserved[s] = r; }));
-
-                    if (targetId === 'seat-map-container') {
-                        currentSelectedSeats = new Set(Array.from(currentSelectedSeats).filter(s => !reserved[s]));
-                        el('selected-seats-info').textContent = currentSelectedSeats.size + '석';
-                    }
-                    for (let i = 1; i <= MAX_CAPACITY; i++) {
-                        const pos = SEAT_POSITIONS[i]; if (!pos) continue;
-                        let status = 'available', content = `<div class="seat-number">${i}</div>`;
-                        let reservationData = null;
-                        if (reserved[i]) {
-                            status = 'reserved'; reservationData = reserved[i];
-                            content = `<div class="seat-name">${maskName(reservationData.name, showAllNames || (currentReservation && reservationData.name === currentReservation.name && reservationData.password === currentReservation.password))}</div><div class="seat-number">${i}</div>`;
-                        } else if (currentSelectedSeats.has(i)) {
-                            status = 'selected';
-                        }
-                        const seatDiv = document.createElement('div');
-                        seatDiv.className = `seat ${status}`;
-                        seatDiv.style.cssText = `top: ${pos.y}px; left: ${pos.x}px;`;
-                        seatDiv.innerHTML = content;
-                        if (targetId === 'seat-map-container' && status !== 'reserved') {
-                            seatDiv.onclick = () => {
-                                const selectedInfoEl = el('selected-seats-info');
-                                if (currentSelectedSeats.has(i)) { currentSelectedSeats.delete(i); seatDiv.classList.remove('selected'); seatDiv.classList.add('available'); }
-                                else if (reservedCount + currentSelectedSeats.size < MAX_CAPACITY) { currentSelectedSeats.add(i); seatDiv.classList.add('selected'); seatDiv.classList.remove('available'); }
-                                else { return alert('정원을 초과하여 더 이상 선택할 수 없습니다.'); }
-                                if (selectedInfoEl) selectedInfoEl.textContent = currentSelectedSeats.size + '석';
-                            };
-                        } else { seatDiv.style.cursor = 'default'; if (reservationData) seatDiv.title = showAllNames ? `예약:${reservationData.name}, 연락처:${reservationData.phone}` : `예약됨`; }
-                        seatMap.appendChild(seatDiv);
-                    }
-                }
-                async function submitBusReservation() {
-                    const name = el('bus-name').value.trim(), phone = el('bus-phone').value.trim(), password = el('bus-password').value.trim();
-                    const seats = Array.from(currentSelectedSeats);
-                    if (seats.length === 0 || !name || !phone || !password) return alert('모든 정보를 입력해주세요.');
-                    if (password.length !== 4 || isNaN(parseInt(password))) return alert('비밀번호는 숫자 4자리여야 합니다.');
-                    if (getCurrentBusCount() + seats.length > MAX_CAPACITY) return alert('죄송합니다. 좌석이 부족합니다.');
-                    if (currentBusReservations.some(r => r.seatNumbers?.some(s => seats.includes(s)))) { alert('이미 예약된 좌석이 있습니다.'); return renderSeatMap('seat-map-container'); }
-                    const submitBtn = el('submit-bus-reservation-btn');
-                    try {
-                        submitBtn.disabled = true; submitBtn.textContent = '신청 중...';
-                        await addDoc(collection(db, "bus_reservations"), { name, phone, password, seatNumbers: seats, timestamp: serverTimestamp() });
-                        showMessage('bus-message', `${name}님, ${seats.join(', ')}석 예약 완료!`);
-                        setTimeout(() => closeModal('bus-seat-modal'), 2000);
-                    } catch (e) { console.error(e); showMessage('bus-message', "예약 중 오류 발생", false); }
-                    finally { submitBtn.disabled = false; submitBtn.textContent = '신청하기'; }
-                }
-                function checkBusReservation() {
-                    const name = el('check-name').value.trim(); const password = el('check-password').value.trim();
-                    if (!name || password.length !== 4) return alert('이름과 비밀번호 4자리를 입력해주세요.');
-                    el('bus-login-form').classList.add('hidden'); el('bus-result-view').classList.remove('hidden');
-                    if (name === '관리자' && password === ADMIN_PASSWORD) {
-                        isBusAdminMode = true;
-                        el('bus-result-title').textContent = '관리자 전체 좌석 현황';
-                        el('user-reservation-details').classList.add('hidden');
-                        el('admin-actions').classList.remove('hidden');
-                        renderSeatMap('bus-seat-status', true);
-                    } else {
-                        isBusAdminMode = false;
-                        const reservation = currentBusReservations.find(r => r.name === name && r.password === password);
-                        if (reservation) {
-                            el('bus-result-title').textContent = `${name}님의 예약 정보`;
-                            el('admin-actions').classList.add('hidden');
-                            const detailsDiv = el('user-reservation-details');
-                            detailsDiv.innerHTML = `<p><strong>예약자:</strong> ${reservation.name}</p><p><strong>연락처:</strong> ${reservation.phone}</p><p><strong>좌석:</strong> <span class="font-bold text-lg text-[#8B7D6C]">${reservation.seatNumbers?.join(', ')}</span></p><button id="cancel-my-reservation-btn" class="mt-3 w-full py-2 bg-red-500 text-white rounded-full">예약 취소</button>`;
-                            detailsDiv.querySelector('#cancel-my-reservation-btn').onclick = () => cancelReservation(reservation.id);
-                            detailsDiv.classList.remove('hidden');
-                            renderSeatMap('bus-seat-status', false, reservation);
-                        } else {
-                            alert('일치하는 예약 정보가 없습니다.');
-                            el('bus-login-form').classList.remove('hidden'); el('bus-result-view').classList.add('hidden');
-                        }
-                    }
-                }
-                async function cancelReservation(docId) {
-                    if (!docId || !confirm('정말로 예약을 취소하시겠습니까?')) return;
-                    try { await deleteDoc(doc(db, "bus_reservations", docId)); alert('예약이 취소되었습니다.'); closeModal('bus-check-modal'); }
-                    catch (e) { console.error(e); alert("취소 중 오류 발생"); }
-                }
-                async function adminDeleteAllReservations() {
-                    if (!confirm('경고! 모든 버스 신청 명단을 영구적으로 삭제하시겠습니까?')) return;
-                    try { const batch = writeBatch(db); currentBusReservations.forEach(res => batch.delete(doc(db, "bus_reservations", res.id))); await batch.commit(); alert('모든 명단이 삭제되었습니다.'); closeModal('bus-check-modal'); }
-                    catch (e) { console.error(e); alert("전체 삭제 중 오류 발생"); }
-                }
-                function downloadBusList() {
-                    if (currentBusReservations.length === 0) return alert("다운로드할 명단이 없습니다.");
-                    const csvHeader = "신청시각,성함,연락처,비밀번호,좌석번호\n";
-                    const csvRows = currentBusReservations.map(r => {
-                        const timestamp = r.timestamp ? new Date(r.timestamp.toDate()).toLocaleString('ko-KR') : 'N/A';
-                        const seats = r.seatNumbers ? `"${r.seatNumbers.join(',')}"` : '""';
-                        const name = `"${(r.name || '').replace(/"/g, '""')}"`;
-                        return `${timestamp},${name},${r.phone || ''},${r.password || ''},${seats}`;
-                    }).join("\n");
-                    const csvContent = "\uFEFF" + csvHeader + csvRows;
-                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                    const link = document.createElement("a");
-                    const url = URL.createObjectURL(blob);
-                    link.href = url; link.download = "bus_reservations_list.csv";
-                    document.body.appendChild(link); link.click(); document.body.removeChild(link);
-                }
-                async function submitGuestbook() {
-                    const name = el('gb-name').value.trim(), message = el('gb-message').value.trim(), password = el('gb-password').value.trim();
-                    if (!name || !message || password.length !== 4) return alert('모든 정보를 올바르게 입력해주세요.');
-                    const submitBtn = el('submit-guestbook-btn');
-                    try {
-                        submitBtn.disabled = true; submitBtn.textContent = '남기는 중...';
-                        await addDoc(collection(db, "guestbook"), { name, message, password, timestamp: serverTimestamp() });
-                        showMessage('gb-message-status', '방명록이 작성되었습니다!');
-                        setTimeout(() => {
-                            closeModal('guestbook-write-modal');
-                            el('gb-name').value = ''; el('gb-message').value = ''; el('gb-password').value = '';
-                        }, 2000);
-                    } catch (e) { console.error(e); showMessage('gb-message-status', "작성 중 오류 발생", false); }
-                    finally { submitBtn.disabled = false; submitBtn.textContent = '남기기'; }
-                }
-                function renderGuestbookPreview() {
-                    const container = el('guestbook-preview'); if (!container) return;
-                    const entries = currentGuestbookEntries.slice(0, 3);
-                    container.innerHTML = entries.length === 0 ? `<p class="text-center text-gray-500 text-sm">첫 번째 축하 메시지를 남겨주세요!</p>` : entries.map(entry => {
-                        const duration = Math.max(15, entry.message?.length * 0.2 || 15);
-                        return `<div class="guestbook-item shadow-md"><div class="guestbook-preview-line"><p class="guestbook-scrolling-content" style="animation-duration: ${duration}s;"><span class="font-bold text-[#8B7D6C]">${entry.name}</span>&nbsp;|&nbsp;${entry.message || ''}<span style="display:inline-block; width: 50vw;"></span></p></div></div>`;
-                    }).join('');
-                }
-                function renderGuestbookList() {
-                    const listUl = el('guestbook-list-ul'); if (!listUl) return;
-                    el('guestbook-list-empty').classList.toggle('hidden', currentGuestbookEntries.length > 0);
-                    listUl.innerHTML = currentGuestbookEntries.map(entry => {
-                        const date = entry.timestamp ? entry.timestamp.toDate() : new Date();
-                        const fDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
-                        const safeMessage = (entry.message || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
-                        return `<li class="guestbook-list-item flex justify-between items-start"><div><p class="font-bold text-sm text-[#8B7D6C]">${entry.name} <span class="text-xs text-gray-400">(${fDate})</span></p><p class="text-base whitespace-pre-wrap">${safeMessage}</p></div><button class="delete-guestbook-btn flex-shrink-0 mt-1 bg-red-400 text-white rounded-full px-2 py-0.5 text-xs" data-id="${entry.id}" data-password="${entry.password}">${isGuestbookAdminMode ? '관리자 삭제' : '삭제'}</button></li>`;
-                    }).join('');
-                    listUl.querySelectorAll('.delete-guestbook-btn').forEach(btn => btn.onclick = () => deleteGuestbookEntry(btn.dataset.id, btn.dataset.password));
-                }
-                async function deleteGuestbookEntry(id, storedPassword) {
-                    if (!id) return;
-                    const password = prompt(isGuestbookAdminMode ? `관리자 비밀번호를 입력하세요.` : `삭제 비밀번호를 입력하세요.`);
-                    if (password === null) return;
-                    if (password !== (isGuestbookAdminMode ? ADMIN_PASSWORD : storedPassword)) return alert('비밀번호가 올바르지 않습니다.');
-                    if (confirm('정말로 이 방명록을 삭제하시겠습니까?')) {
-                        try { await deleteDoc(doc(db, "guestbook", id)); alert('방명록이 삭제되었습니다.'); }
-                        catch (e) { console.error(e); alert("삭제 중 오류 발생"); }
-                    }
-                }
-                function openFullscreenImage(index) {
-                    if (index < 0 || index >= allGalleryImages.length) return;
-                    currentFullscreenIndex = index;
-                    const imgEl = el('fullscreen-image');
-                    if (imgEl) imgEl.src = allGalleryImages[index];
-                    openModal('fullscreen-image-modal');
-                }
-                function showNextFullscreenImage(step) {
-                    currentFullscreenIndex = (currentFullscreenIndex + step + allGalleryImages.length) % allGalleryImages.length;
-                    const imgEl = el('fullscreen-image');
-                    if (imgEl) imgEl.src = allGalleryImages[currentFullscreenIndex];
-                }
-                
-                // --- ATTACH EVENT LISTENERS ---
-                el('open-account-groom-btn').onclick = () => openAccountModal('groom');
-                el('open-account-bride-btn').onclick = () => openAccountModal('bride');
-                el('open-bus-seat-modal-btn').onclick = () => { if (getCurrentBusCount() < MAX_CAPACITY) { currentSelectedSeats.clear(); renderSeatMap('seat-map-container'); el('bus-name').value = ''; el('bus-phone').value = ''; el('bus-password').value = ''; openModal('bus-seat-modal'); } else { alert('버스가 만석입니다.'); } };
-                el('submit-bus-reservation-btn').onclick = submitBusReservation;
-                el('open-bus-check-modal-btn').onclick = () => { isBusAdminMode = false; el('bus-login-form')?.classList.remove('hidden'); el('bus-result-view')?.classList.add('hidden'); el('check-name').value = ''; el('check-password').value = ''; openModal('bus-check-modal'); };
-                el('check-bus-reservation-btn').onclick = checkBusReservation;
-                el('download-bus-list-btn').onclick = downloadBusList;
-                el('admin-delete-all-btn').onclick = adminDeleteAllReservations;
-                el('open-guestbook-write-modal-btn').onclick = () => { el('gb-name').value = ''; el('gb-message').value = ''; el('gb-password').value = ''; openModal('guestbook-write-modal'); };
-                el('submit-guestbook-btn').onclick = submitGuestbook;
-                el('open-guestbook-list-modal-btn').onclick = () => { isGuestbookAdminMode = false; el('guestbook-admin-btn')?.classList.remove('active'); renderGuestbookList(); openModal('guestbook-list-modal'); };
-                el('guestbook-admin-btn').onclick = () => { const pw = prompt('관리자 비밀번호:'); if (pw === ADMIN_PASSWORD) { isGuestbookAdminMode = !isGuestbookAdminMode; el('guestbook-admin-btn')?.classList.toggle('active', isGuestbookAdminMode); renderGuestbookList(); } else if (pw !== null) alert('비밀번호 오류'); };
-                document.querySelectorAll('.modal-close-btn').forEach(btn => { const modal = btn.closest('.modal'); if (modal) btn.onclick = () => closeModal(modal.id); });
-                el('fullscreen-close-btn').onclick = () => closeModal('fullscreen-image-modal');
-                el('fullscreen-prev-btn').onclick = () => showNextFullscreenImage(-1);
-                el('fullscreen-next-btn').onclick = () => showNextFullscreenImage(1);
-                const addr = '대전 서구 둔산남로 50'; const placeName = '팔레드오페라'; const lat = 36.3512; const lon = 127.3881;
-                el('naver-map-btn').onclick = (e) => { e.preventDefault(); window.open(`https://m.map.naver.com/search2/search.naver?query=${encodeURIComponent(addr)}`, '_blank');};
-                el('tmap-btn').onclick = (e) => { e.preventDefault(); window.open(`tmap://search?name=${encodeURIComponent(placeName)}`, '_blank');};
-                el('kakaonavi-btn').onclick = (e) => { e.preventDefault(); window.open(`https://map.kakao.com/link/to/${encodeURIComponent(placeName)},${lat},${lon}`, '_blank');};
-                el('share-link-btn').onclick = async () => { try { if (navigator.share) await navigator.share({ title: '전찬태 ♥ 박은진 결혼합니다', url: window.location.href }); else navigator.clipboard.writeText(window.location.href).then(() => alert('청첩장 링크가 복사되었습니다.')); } catch(err) { console.error("Share error:", err); } };
-
-                // --- UI INITIALIZATION ---
-                const observer = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }), { threshold: 0.1 });
-                document.querySelectorAll('.animate-up').forEach(elem => observer.observe(elem));
-                const sliderContainer = el('image-slider');
-                const sliderImages = ['image/main_1.jpg', 'image/main_2.jpg', 'image/main_3.jpg', 'image/main_4.jpg'];
-                let currentSlide = 0;
-                if (sliderContainer) {
-                    sliderContainer.innerHTML = sliderImages.map((src, i) => `<img src="${src}" alt="Main Photo ${i+1}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${i === 0 ? 'opacity-100' : 'opacity-0'}">`).join('') + `<button id="slider-prev-btn" class="slide-btn left-4"><i class="fas fa-chevron-left"></i></button><button id="slider-next-btn" class="slide-btn right-4"><i class="fas fa-chevron-right"></i></button>`;
-                    const sliderEls = sliderContainer.querySelectorAll('img');
-                    const showSlide = (i) => {
-                        sliderEls[currentSlide]?.classList.replace('opacity-100', 'opacity-0');
-                        currentSlide = (i + sliderEls.length) % sliderEls.length;
-                        sliderEls[currentSlide]?.classList.replace('opacity-0', 'opacity-100');
-                    };
-                    el('slider-prev-btn').onclick = () => { clearInterval(mainSlideInterval); showSlide(currentSlide - 1); mainSlideInterval = setInterval(() => showSlide(currentSlide + 1), 4000); };
-                    el('slider-next-btn').onclick = () => { clearInterval(mainSlideInterval); showSlide(currentSlide + 1); mainSlideInterval = setInterval(() => showSlide(currentSlide + 1), 4000); };
-                    mainSlideInterval = setInterval(() => showSlide(currentSlide + 1), 4000);
-                }
-                const galleryContainer = el('gallery-container');
-                let imagesLoaded = 0;
-                const loadGallery = (count) => {
-                    if (!galleryContainer) return;
-                    const end = Math.min(allGalleryImages.length, imagesLoaded + count);
-                    for (let i = imagesLoaded; i < end; i++) {
-                        const div = document.createElement('div');
-                        div.className = `animate-up w-full rounded-xl overflow-hidden shadow-md ${i % 5 === 0 || i % 5 === 3 ? 'span-2-row' : ''}`;
-                        div.innerHTML = `<img src="${allGalleryImages[i]}" alt="Gallery Photo ${i + 1}" class="w-full h-full object-cover">`;
-                        div.onclick = () => openFullscreenImage(i);
-                        galleryContainer.appendChild(div);
-                        observer.observe(div);
-                    }
-                    imagesLoaded = end;
-                    if (imagesLoaded >= allGalleryImages.length) el('show-more-gallery').style.display = 'none';
-                };
-                if (galleryContainer) { loadGallery(6); el('show-more-gallery').onclick = () => loadGallery(6); }
-                const weddingDate = new Date('2025-12-06T12:20:00+09:00').getTime();
-                const updateCountdown = () => {
-                    const dist = weddingDate - Date.now();
-                    const d = (v) => String(Math.floor(v)).padStart(2, '0');
-                    if (dist > 0) {
-                        const days = Math.floor(dist / 864e5);
-                        el('days').innerText = d(days); el('hours').innerText = d((dist % 864e5) / 36e5); el('minutes').innerText = d((dist % 36e5) / 6e4); el('seconds').innerText = d((dist % 6e4) / 1e3); el('dday-count').innerText = days;
-                    } else { ['days', 'hours', 'minutes', 'seconds', 'dday-count'].forEach(id => { const elem = el(id); if (elem) elem.innerText = '0'; }); }
-                };
-                setInterval(updateCountdown, 1000); updateCountdown();
-                (function generateCalendar() {
-                    const [y, m, d] = [2025, 11, 6]; const calendarEl = el('calendar'); if (!calendarEl) return;
-                    let first = new Date(y, m, 1).getDay(), last = new Date(y, m + 1, 0).getDate();
-                    let html = `<div class="text-xl font-bold mb-4 text-center">${y}년 ${m + 1}월</div><table class="w-full text-center text-sm"><thead><tr class="text-gray-500"><th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th></tr></thead><tbody><tr>` + '<td></td>'.repeat(first);
-                    for (let i = 1; i <= last; i++) {
-                        if ((first + i - 1) % 7 === 0 && i !== 1) html += `</tr><tr>`;
-                        const isDDay = (i === d), isSat = (first + i - 1) % 7 === 6, isSun = (first + i - 1) % 7 === 0;
-                        let classes = "w-8 h-8 flex items-center justify-center mx-auto rounded-full";
-                        if (isDDay) classes += " bg-[#8B7D6C] text-white font-bold"; else if (isSat) classes += " text-blue-600"; else if (isSun) classes += " text-red-600";
-                        html += `<td class="py-1"><span class="${classes}">${i}</span></td>`;
-                    }
-                    html += '<td></td>'.repeat((7 - (first + last) % 7) % 7) + `</tr></tbody></table>`; calendarEl.innerHTML = html;
-                })();
-                
-                startFirebaseListeners();
-            } // End of initializeApp
-
-            function startFirebaseListeners() {
-                if (!db) return;
-                try {
-                    onSnapshot(query(collection(db, "guestbook"), orderBy("timestamp", "desc")), snap => {
-                        currentGuestbookEntries = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                        renderGuestbookPreview();
-                        if(el('guestbook-list-modal')?.classList.contains('active')) renderGuestbookList();
-                    });
-                    onSnapshot(query(collection(db, "bus_reservations"), orderBy("timestamp", "desc")), snap => {
-                        currentBusReservations = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                        if(el('bus-seat-modal')?.classList.contains('active')) renderSeatMap('seat-map-container');
-                        if(el('bus-check-modal')?.classList.contains('active') && !el('bus-login-form')?.classList.contains('hidden')) checkBusReservation();
-                    });
-                } catch (e) { console.error("Error setting up listeners:", e); }
-            }
         });
+
+        function initializeApp() {
+            // --- CONFIG & CONSTANTS ---
+            const firebaseConfig = { apiKey: "AIzaSyBbiGOyd9-WBJmWXYi9oD0qwumfzbjuUWI", authDomain: "mobile-invitation-5f099.firebaseapp.com", projectId: "mobile-invitation-5f099", storageBucket: "mobile-invitation-5f099.firebasestorage.app", messagingSenderId: "652456319149", appId: "1:652456319149:web:ed0c46a4b2ecc9fb308e24" };
+            const ADMIN_PASSWORD = '1331';
+            const MAX_CAPACITY = 28;
+            const allGalleryImages = ['image/gallery_1.jpg','image/gallery_2.jpg','image/gallery_3.jpg','image/gallery_4.jpg','image/gallery_5.jpg','image/gallery_6.jpg','image/gallery_7.jpg','image/gallery_8.jpg','image/gallery_9.jpg','image/gallery_10.jpg','image/gallery_11.jpg','image/gallery_12.jpg','image/gallery_13.jpg','image/gallery_14.jpg','image/gallery_15.jpg','image/gallery_16.jpg','image/gallery_17.jpg','image/gallery_18.jpg'];
+            const ACCOUNT_DETAILS = { groom: [{ name: '신랑 전찬태', bank: '신한은행', account: '110-364-860952' }, { name: '혼주 김옥주', bank: '국민은행', account: '315034-52-024177' }], bride: [{ name: '신부 박은진', bank: '신한은행', account: '110-584-336719' }, { name: '혼주 박상문', bank: '농협은행', account: '352-1523-2482-03' }, { name: '혼주 김선희', bank: '농협은행', account: '15112-52-100209' }] };
+            const SEAT_POSITIONS = { 1:{x:20,y:55},2:{x:75,y:55},3:{x:205,y:55},4:{x:20,y:105},5:{x:75,y:105},6:{x:205,y:105},7:{x:20,y:155},8:{x:75,y:155},9:{x:205,y:155},10:{x:20,y:220},11:{x:75,y:220},12:{x:205,y:220},13:{x:20,y:270},14:{x:75,y:270},15:{x:205,y:270},16:{x:20,y:320},17:{x:75,y:320},18:{x:205,y:320},19:{x:20,y:370},20:{x:75,y:370},21:{x:205,y:370},22:{x:20,y:440},23:{x:75,y:440},24:{x:205,y:440},25:{x:20,y:490},26:{x:75,y:490},27:{x:160,y:490},28:{x:215,y:490} };
+            
+            let db;
+            let currentGuestbookEntries = [], currentBusReservations = [];
+            let currentSelectedSeats = new Set();
+            let currentFullscreenIndex = 0;
+            let mainSlideInterval;
+            let isBusAdminMode = false, isGuestbookAdminMode = false;
+
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                if (window.Kakao && !Kakao.isInitialized()) { Kakao.init('d593259882260554160a2b00d43e0984'); }
+            } catch (e) {
+                console.error("Initialization failed:", e);
+                alert("페이지 초기화에 실패했습니다. 새로고침 해주세요.");
+                return;
+            }
+
+            // --- HELPER & FEATURE FUNCTIONS ---
+            const el = (id) => document.getElementById(id);
+            const openModal = (id) => { el(id)?.classList.add('active'); document.body.style.overflow = 'hidden'; };
+            const closeModal = (id) => { el(id)?.classList.remove('active'); document.body.style.overflow = 'auto'; };
+            const maskName = (name, showAll = false) => (showAll || !name || name.length < 2) ? name : (name.length === 2 ? name.charAt(0) + '*' : name.charAt(0) + '*'.repeat(name.length - 2) + name.slice(-1));
+            const getCurrentBusCount = () => currentBusReservations.reduce((total, res) => total + (res.seatNumbers?.length || 0), 0);
+            const showMessage = (elementId, text, isSuccess = true, duration = 2500) => {
+                const msgEl = el(elementId);
+                if (!msgEl) return;
+                msgEl.textContent = text;
+                msgEl.className = `text-sm mt-4 ${isSuccess ? 'text-green-600' : 'text-red-600'}`;
+                msgEl.classList.remove('hidden');
+                setTimeout(() => msgEl.classList.add('hidden'), duration);
+            };
+            function openAccountModal(side) {
+                const list = el('account-list');
+                el('account-modal-title').textContent = side === 'groom' ? '신랑측 계좌 정보' : '신부측 계좌 정보';
+                list.innerHTML = ACCOUNT_DETAILS[side].map((d) => `<div class="bg-gray-50 p-4 rounded-xl shadow-inner border"><p class="font-semibold">${d.name}</p><div class="flex items-center justify-between"><p>${d.bank} ${d.account}</p><button class="copy-button bg-[#F0E8D7] px-3 py-1 text-sm rounded-full" data-account="${d.account}">복사</button></div></div>`).join('');
+                list.querySelectorAll('.copy-button').forEach(b => b.onclick = () => copyAccountToClipboard(b.dataset.account));
+                openModal('account-modal');
+            }
+            function copyAccountToClipboard(text) {
+                navigator.clipboard.writeText(text).then(() => showMessage('account-copy-message', '계좌번호가 복사되었습니다!'));
+            }
+            function renderSeatMap(targetId = 'seat-map-container', showAllNames = false, currentReservation = null) {
+                const container = el(targetId);
+                if (!container) return;
+                const reservedCount = getCurrentBusCount();
+                container.innerHTML = `<div class="text-center text-sm mb-2 text-gray-500">총 ${MAX_CAPACITY}석 중 ${reservedCount}석 예약됨 (${MAX_CAPACITY - reservedCount}석 남음)</div><div class="relative h-[550px]"><div class="seat driver" style="top: 10px; left: 10px; width: 60px;">운전석</div></div>`;
+                const seatMap = container.querySelector('.relative');
+                const reserved = {};
+                currentBusReservations.forEach(r => r.seatNumbers?.forEach(s => { reserved[s] = r; }));
+
+                if (targetId === 'seat-map-container') {
+                    currentSelectedSeats = new Set(Array.from(currentSelectedSeats).filter(s => !reserved[s]));
+                    el('selected-seats-info').textContent = currentSelectedSeats.size + '석';
+                }
+                for (let i = 1; i <= MAX_CAPACITY; i++) {
+                    const pos = SEAT_POSITIONS[i]; if (!pos) continue;
+                    let status = 'available', content = `<div class="seat-number">${i}</div>`;
+                    let reservationData = null;
+                    if (reserved[i]) {
+                        status = 'reserved'; reservationData = reserved[i];
+                        content = `<div class="seat-name">${maskName(reservationData.name, showAllNames || (currentReservation && reservationData.name === currentReservation.name && reservationData.password === currentReservation.password))}</div><div class="seat-number">${i}</div>`;
+                    } else if (currentSelectedSeats.has(i)) {
+                        status = 'selected';
+                    }
+                    const seatDiv = document.createElement('div');
+                    seatDiv.className = `seat ${status}`;
+                    seatDiv.style.cssText = `top: ${pos.y}px; left: ${pos.x}px;`;
+                    seatDiv.innerHTML = content;
+                    if (targetId === 'seat-map-container' && status !== 'reserved') {
+                        seatDiv.onclick = () => {
+                            const selectedInfoEl = el('selected-seats-info');
+                            if (currentSelectedSeats.has(i)) { currentSelectedSeats.delete(i); seatDiv.classList.remove('selected'); seatDiv.classList.add('available'); }
+                            else if (reservedCount + currentSelectedSeats.size < MAX_CAPACITY) { currentSelectedSeats.add(i); seatDiv.classList.add('selected'); seatDiv.classList.remove('available'); }
+                            else { return alert('정원을 초과하여 더 이상 선택할 수 없습니다.'); }
+                            if (selectedInfoEl) selectedInfoEl.textContent = currentSelectedSeats.size + '석';
+                        };
+                    } else { seatDiv.style.cursor = 'default'; if (reservationData) seatDiv.title = showAllNames ? `예약:${reservationData.name}, 연락처:${reservationData.phone}` : `예약됨`; }
+                    seatMap.appendChild(seatDiv);
+                }
+            }
+            async function submitBusReservation() {
+                const name = el('bus-name').value.trim(), phone = el('bus-phone').value.trim(), password = el('bus-password').value.trim();
+                const seats = Array.from(currentSelectedSeats);
+                if (seats.length === 0 || !name || !phone || !password) return alert('모든 정보를 입력해주세요.');
+                if (password.length !== 4 || isNaN(parseInt(password))) return alert('비밀번호는 숫자 4자리여야 합니다.');
+                if (getCurrentBusCount() + seats.length > MAX_CAPACITY) return alert('죄송합니다. 좌석이 부족합니다.');
+                if (currentBusReservations.some(r => r.seatNumbers?.some(s => seats.includes(s)))) { alert('이미 예약된 좌석이 있습니다.'); return renderSeatMap('seat-map-container'); }
+                const submitBtn = el('submit-bus-reservation-btn');
+                try {
+                    submitBtn.disabled = true; submitBtn.textContent = '신청 중...';
+                    await addDoc(collection(db, "bus_reservations"), { name, phone, password, seatNumbers: seats, timestamp: serverTimestamp() });
+                    showMessage('bus-message', `${name}님, ${seats.join(', ')}석 예약 완료!`);
+                    setTimeout(() => closeModal('bus-seat-modal'), 2000);
+                } catch (e) { console.error(e); showMessage('bus-message', "예약 중 오류 발생", false); }
+                finally { submitBtn.disabled = false; submitBtn.textContent = '신청하기'; }
+            }
+            function checkBusReservation() {
+                const name = el('check-name').value.trim(); const password = el('check-password').value.trim();
+                if (!name || password.length !== 4) return alert('이름과 비밀번호 4자리를 입력해주세요.');
+                el('bus-login-form').classList.add('hidden'); el('bus-result-view').classList.remove('hidden');
+                if (name === '관리자' && password === ADMIN_PASSWORD) {
+                    isBusAdminMode = true;
+                    el('bus-result-title').textContent = '관리자 전체 좌석 현황';
+                    el('user-reservation-details').classList.add('hidden');
+                    el('admin-actions').classList.remove('hidden');
+                    renderSeatMap('bus-seat-status', true);
+                } else {
+                    isBusAdminMode = false;
+                    const reservation = currentBusReservations.find(r => r.name === name && r.password === password);
+                    if (reservation) {
+                        el('bus-result-title').textContent = `${name}님의 예약 정보`;
+                        el('admin-actions').classList.add('hidden');
+                        const detailsDiv = el('user-reservation-details');
+                        detailsDiv.innerHTML = `<p><strong>예약자:</strong> ${reservation.name}</p><p><strong>연락처:</strong> ${reservation.phone}</p><p><strong>좌석:</strong> <span class="font-bold text-lg text-[#8B7D6C]">${reservation.seatNumbers?.join(', ')}</span></p><button id="cancel-my-reservation-btn" class="mt-3 w-full py-2 bg-red-500 text-white rounded-full">예약 취소</button>`;
+                        detailsDiv.querySelector('#cancel-my-reservation-btn').onclick = () => cancelReservation(reservation.id);
+                        detailsDiv.classList.remove('hidden');
+                        renderSeatMap('bus-seat-status', false, reservation);
+                    } else {
+                        alert('일치하는 예약 정보가 없습니다.');
+                        el('bus-login-form').classList.remove('hidden'); el('bus-result-view').classList.add('hidden');
+                    }
+                }
+            }
+            async function cancelReservation(docId) {
+                if (!docId || !confirm('정말로 예약을 취소하시겠습니까?')) return;
+                try { await deleteDoc(doc(db, "bus_reservations", docId)); alert('예약이 취소되었습니다.'); closeModal('bus-check-modal'); }
+                catch (e) { console.error(e); alert("취소 중 오류 발생"); }
+            }
+            async function adminDeleteAllReservations() {
+                if (!confirm('경고! 모든 버스 신청 명단을 영구적으로 삭제하시겠습니까?')) return;
+                try { const batch = writeBatch(db); currentBusReservations.forEach(res => batch.delete(doc(db, "bus_reservations", res.id))); await batch.commit(); alert('모든 명단이 삭제되었습니다.'); closeModal('bus-check-modal'); }
+                catch (e) { console.error(e); alert("전체 삭제 중 오류 발생"); }
+            }
+            function downloadBusList() {
+                if (currentBusReservations.length === 0) return alert("다운로드할 명단이 없습니다.");
+                const csvHeader = "신청시각,성함,연락처,비밀번호,좌석번호\n";
+                const csvRows = currentBusReservations.map(r => {
+                    const timestamp = r.timestamp ? new Date(r.timestamp.toDate()).toLocaleString('ko-KR') : 'N/A';
+                    const seats = r.seatNumbers ? `"${r.seatNumbers.join(',')}"` : '""';
+                    const name = `"${(r.name || '').replace(/"/g, '""')}"`;
+                    return `${timestamp},${name},${r.phone || ''},${r.password || ''},${seats}`;
+                }).join("\n");
+                const csvContent = "\uFEFF" + csvHeader + csvRows;
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement("a");
+                const url = URL.createObjectURL(blob);
+                link.href = url; link.download = "bus_reservations_list.csv";
+                document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            }
+            async function submitGuestbook() {
+                const name = el('gb-name').value.trim(), message = el('gb-message').value.trim(), password = el('gb-password').value.trim();
+                if (!name || !message || password.length !== 4) return alert('모든 정보를 올바르게 입력해주세요.');
+                const submitBtn = el('submit-guestbook-btn');
+                try {
+                    submitBtn.disabled = true; submitBtn.textContent = '남기는 중...';
+                    await addDoc(collection(db, "guestbook"), { name, message, password, timestamp: serverTimestamp() });
+                    showMessage('gb-message-status', '방명록이 작성되었습니다!');
+                    setTimeout(() => {
+                        closeModal('guestbook-write-modal');
+                        el('gb-name').value = ''; el('gb-message').value = ''; el('gb-password').value = '';
+                    }, 2000);
+                } catch (e) { console.error(e); showMessage('gb-message-status', "작성 중 오류 발생", false); }
+                finally { submitBtn.disabled = false; submitBtn.textContent = '남기기'; }
+            }
+            function renderGuestbookPreview() {
+                const container = el('guestbook-preview'); if (!container) return;
+                const entries = currentGuestbookEntries.slice(0, 3);
+                container.innerHTML = entries.length === 0 ? `<p class="text-center text-gray-500 text-sm">첫 번째 축하 메시지를 남겨주세요!</p>` : entries.map(entry => {
+                    const duration = Math.max(15, entry.message?.length * 0.2 || 15);
+                    return `<div class="guestbook-item shadow-md"><div class="guestbook-preview-line"><p class="guestbook-scrolling-content" style="animation-duration: ${duration}s;"><span class="font-bold text-[#8B7D6C]">${entry.name}</span>&nbsp;|&nbsp;${entry.message || ''}<span style="display:inline-block; width: 50vw;"></span></p></div></div>`;
+                }).join('');
+            }
+            function renderGuestbookList() {
+                const listUl = el('guestbook-list-ul'); if (!listUl) return;
+                el('guestbook-list-empty').classList.toggle('hidden', currentGuestbookEntries.length > 0);
+                listUl.innerHTML = currentGuestbookEntries.map(entry => {
+                    const date = entry.timestamp ? entry.timestamp.toDate() : new Date();
+                    const fDate = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+                    const safeMessage = (entry.message || '').replace(/</g, "&lt;").replace(/>/g, "&gt;");
+                    return `<li class="guestbook-list-item flex justify-between items-start"><div><p class="font-bold text-sm text-[#8B7D6C]">${entry.name} <span class="text-xs text-gray-400">(${fDate})</span></p><p class="text-base whitespace-pre-wrap">${safeMessage}</p></div><button class="delete-guestbook-btn flex-shrink-0 mt-1 bg-red-400 text-white rounded-full px-2 py-0.5 text-xs" data-id="${entry.id}" data-password="${entry.password}">${isGuestbookAdminMode ? '관리자 삭제' : '삭제'}</button></li>`;
+                }).join('');
+                listUl.querySelectorAll('.delete-guestbook-btn').forEach(btn => btn.onclick = () => deleteGuestbookEntry(btn.dataset.id, btn.dataset.password));
+            }
+            async function deleteGuestbookEntry(id, storedPassword) {
+                if (!id) return;
+                const password = prompt(isGuestbookAdminMode ? `관리자 비밀번호를 입력하세요.` : `삭제 비밀번호를 입력하세요.`);
+                if (password === null) return;
+                if (password !== (isGuestbookAdminMode ? ADMIN_PASSWORD : storedPassword)) return alert('비밀번호가 올바르지 않습니다.');
+                if (confirm('정말로 이 방명록을 삭제하시겠습니까?')) {
+                    try { await deleteDoc(doc(db, "guestbook", id)); alert('방명록이 삭제되었습니다.'); }
+                    catch (e) { console.error(e); alert("삭제 중 오류 발생"); }
+                }
+            }
+            function openFullscreenImage(index) {
+                if (index < 0 || index >= allGalleryImages.length) return;
+                currentFullscreenIndex = index;
+                const imgEl = el('fullscreen-image');
+                if (imgEl) imgEl.src = allGalleryImages[index];
+                openModal('fullscreen-image-modal');
+            }
+            function showNextFullscreenImage(step) {
+                currentFullscreenIndex = (currentFullscreenIndex + step + allGalleryImages.length) % allGalleryImages.length;
+                const imgEl = el('fullscreen-image');
+                if (imgEl) imgEl.src = allGalleryImages[currentFullscreenIndex];
+            }
+            
+            // --- ATTACH EVENT LISTENERS ---
+            el('open-account-groom-btn').onclick = () => openAccountModal('groom');
+            el('open-account-bride-btn').onclick = () => openAccountModal('bride');
+            el('open-bus-seat-modal-btn').onclick = () => { if (getCurrentBusCount() < MAX_CAPACITY) { currentSelectedSeats.clear(); renderSeatMap('seat-map-container'); el('bus-name').value = ''; el('bus-phone').value = ''; el('bus-password').value = ''; openModal('bus-seat-modal'); } else { alert('버스가 만석입니다.'); } };
+            el('submit-bus-reservation-btn').onclick = submitBusReservation;
+            el('open-bus-check-modal-btn').onclick = () => { isBusAdminMode = false; el('bus-login-form')?.classList.remove('hidden'); el('bus-result-view')?.classList.add('hidden'); el('check-name').value = ''; el('check-password').value = ''; openModal('bus-check-modal'); };
+            el('check-bus-reservation-btn').onclick = checkBusReservation;
+            el('download-bus-list-btn').onclick = downloadBusList;
+            el('admin-delete-all-btn').onclick = adminDeleteAllReservations;
+            el('open-guestbook-write-modal-btn').onclick = () => { el('gb-name').value = ''; el('gb-message').value = ''; el('gb-password').value = ''; openModal('guestbook-write-modal'); };
+            el('submit-guestbook-btn').onclick = submitGuestbook;
+            el('open-guestbook-list-modal-btn').onclick = () => { isGuestbookAdminMode = false; el('guestbook-admin-btn')?.classList.remove('active'); renderGuestbookList(); openModal('guestbook-list-modal'); };
+            el('guestbook-admin-btn').onclick = () => { const pw = prompt('관리자 비밀번호:'); if (pw === ADMIN_PASSWORD) { isGuestbookAdminMode = !isGuestbookAdminMode; el('guestbook-admin-btn')?.classList.toggle('active', isGuestbookAdminMode); renderGuestbookList(); } else if (pw !== null) alert('비밀번호 오류'); };
+            document.querySelectorAll('.modal-close-btn').forEach(btn => { const modal = btn.closest('.modal'); if (modal) btn.onclick = () => closeModal(modal.id); });
+            el('fullscreen-close-btn').onclick = () => closeModal('fullscreen-image-modal');
+            el('fullscreen-prev-btn').onclick = () => showNextFullscreenImage(-1);
+            el('fullscreen-next-btn').onclick = () => showNextFullscreenImage(1);
+            const addr = '대전 서구 둔산남로 50'; const placeName = '팔레드오페라'; const lat = 36.3512; const lon = 127.3881;
+            el('naver-map-btn').onclick = (e) => { e.preventDefault(); window.open(`https://m.map.naver.com/search2/search.naver?query=${encodeURIComponent(addr)}`, '_blank');};
+            el('tmap-btn').onclick = (e) => { e.preventDefault(); window.open(`tmap://search?name=${encodeURIComponent(placeName)}`, '_blank');};
+            el('kakaonavi-btn').onclick = (e) => { e.preventDefault(); window.open(`https://map.kakao.com/link/to/${encodeURIComponent(placeName)},${lat},${lon}`, '_blank');};
+            el('share-link-btn').onclick = async () => { try { if (navigator.share) await navigator.share({ title: '전찬태 ♥ 박은진 결혼합니다', url: window.location.href }); else navigator.clipboard.writeText(window.location.href).then(() => alert('청첩장 링크가 복사되었습니다.')); } catch(err) { console.error("Share error:", err); } };
+
+            // --- UI INITIALIZATION ---
+            const observer = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } }), { threshold: 0.1 });
+            document.querySelectorAll('.animate-up').forEach(elem => observer.observe(elem));
+            const sliderContainer = el('image-slider');
+            const sliderImages = ['image/main_1.jpg', 'image/main_2.jpg', 'image/main_3.jpg', 'image/main_4.jpg'];
+            let currentSlide = 0;
+            if (sliderContainer) {
+                sliderContainer.innerHTML = sliderImages.map((src, i) => `<img src="${src}" alt="Main Photo ${i+1}" class="absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${i === 0 ? 'opacity-100' : 'opacity-0'}">`).join('') + `<button id="slider-prev-btn" class="slide-btn left-4"><i class="fas fa-chevron-left"></i></button><button id="slider-next-btn" class="slide-btn right-4"><i class="fas fa-chevron-right"></i></button>`;
+                const sliderEls = sliderContainer.querySelectorAll('img');
+                const showSlide = (i) => {
+                    sliderEls[currentSlide]?.classList.replace('opacity-100', 'opacity-0');
+                    currentSlide = (i + sliderEls.length) % sliderEls.length;
+                    sliderEls[currentSlide]?.classList.replace('opacity-0', 'opacity-100');
+                };
+                el('slider-prev-btn').onclick = () => { clearInterval(mainSlideInterval); showSlide(currentSlide - 1); mainSlideInterval = setInterval(() => showSlide(currentSlide + 1), 4000); };
+                el('slider-next-btn').onclick = () => { clearInterval(mainSlideInterval); showSlide(currentSlide + 1); mainSlideInterval = setInterval(() => showSlide(currentSlide + 1), 4000); };
+                mainSlideInterval = setInterval(() => showSlide(currentSlide + 1), 4000);
+            }
+            const galleryContainer = el('gallery-container');
+            let imagesLoaded = 0;
+            const loadGallery = (count) => {
+                if (!galleryContainer) return;
+                const end = Math.min(allGalleryImages.length, imagesLoaded + count);
+                for (let i = imagesLoaded; i < end; i++) {
+                    const div = document.createElement('div');
+                    div.className = `animate-up w-full rounded-xl overflow-hidden shadow-md ${i % 5 === 0 || i % 5 === 3 ? 'span-2-row' : ''}`;
+                    div.innerHTML = `<img src="${allGalleryImages[i]}" alt="Gallery Photo ${i + 1}" class="w-full h-full object-cover">`;
+                    div.onclick = () => openFullscreenImage(i);
+                    galleryContainer.appendChild(div);
+                    observer.observe(div);
+                }
+                imagesLoaded = end;
+                if (imagesLoaded >= allGalleryImages.length) el('show-more-gallery').style.display = 'none';
+            };
+            if (galleryContainer) { loadGallery(6); el('show-more-gallery').onclick = () => loadGallery(6); }
+            const weddingDate = new Date('2025-12-06T12:20:00+09:00').getTime();
+            const updateCountdown = () => {
+                const dist = weddingDate - Date.now();
+                const d = (v) => String(Math.floor(v)).padStart(2, '0');
+                if (dist > 0) {
+                    const days = Math.floor(dist / 864e5);
+                    el('days').innerText = d(days); el('hours').innerText = d((dist % 864e5) / 36e5); el('minutes').innerText = d((dist % 36e5) / 6e4); el('seconds').innerText = d((dist % 6e4) / 1e3); el('dday-count').innerText = days;
+                } else { ['days', 'hours', 'minutes', 'seconds', 'dday-count'].forEach(id => { const elem = el(id); if (elem) elem.innerText = '0'; }); }
+            };
+            setInterval(updateCountdown, 1000); updateCountdown();
+            (function generateCalendar() {
+                const [y, m, d] = [2025, 11, 6]; const calendarEl = el('calendar'); if (!calendarEl) return;
+                let first = new Date(y, m, 1).getDay(), last = new Date(y, m + 1, 0).getDate();
+                let html = `<div class="text-xl font-bold mb-4 text-center">${y}년 ${m + 1}월</div><table class="w-full text-center text-sm"><thead><tr class="text-gray-500"><th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th></tr></thead><tbody><tr>` + '<td></td>'.repeat(first);
+                for (let i = 1; i <= last; i++) {
+                    if ((first + i - 1) % 7 === 0 && i !== 1) html += `</tr><tr>`;
+                    const isDDay = (i === d), isSat = (first + i - 1) % 7 === 6, isSun = (first + i - 1) % 7 === 0;
+                    let classes = "w-8 h-8 flex items-center justify-center mx-auto rounded-full";
+                    if (isDDay) classes += " bg-[#8B7D6C] text-white font-bold"; else if (isSat) classes += " text-blue-600"; else if (isSun) classes += " text-red-600";
+                    html += `<td class="py-1"><span class="${classes}">${i}</span></td>`;
+                }
+                html += '<td></td>'.repeat((7 - (first + last) % 7) % 7) + `</tr></tbody></table>`; calendarEl.innerHTML = html;
+            })();
+            
+            // Start Firebase Listeners
+            try {
+                onSnapshot(query(collection(db, "guestbook"), orderBy("timestamp", "desc")), snap => {
+                    currentGuestbookEntries = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderGuestbookPreview();
+                    if(el('guestbook-list-modal')?.classList.contains('active')) renderGuestbookList();
+                });
+                onSnapshot(query(collection(db, "bus_reservations"), orderBy("timestamp", "desc")), snap => {
+                    currentBusReservations = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    if(el('bus-seat-modal')?.classList.contains('active')) renderSeatMap('seat-map-container');
+                    if(el('bus-check-modal')?.classList.contains('active') && !el('bus-login-form')?.classList.contains('hidden')) checkBusReservation();
+                });
+            } catch (e) { console.error("Error setting up listeners:", e); }
+
+        } // End of initializeApp
     </script>
 </body>
 </html>
