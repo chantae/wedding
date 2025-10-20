@@ -149,6 +149,7 @@
                     return;
                 }
 
+                // --- HELPER & FEATURE FUNCTIONS ---
                 const openModal = (id) => { el(id)?.classList.add('active'); document.body.style.overflow = 'hidden'; };
                 const closeModal = (id) => { el(id)?.classList.remove('active'); document.body.style.overflow = 'auto'; };
                 const maskName = (name, showAll = false) => (showAll || !name || name.length < 2) ? name : (name.length === 2 ? name.charAt(0) + '*' : name.charAt(0) + '*'.repeat(name.length - 2) + name.slice(-1));
@@ -161,9 +162,6 @@
                     msgEl.classList.remove('hidden');
                     setTimeout(() => msgEl.classList.add('hidden'), duration);
                 };
-
-                // --- FEATURE FUNCTIONS ---
-                
                 function openAccountModal(side) {
                     const list = el('account-list');
                     el('account-modal-title').textContent = side === 'groom' ? '신랑측 계좌 정보' : '신부측 계좌 정보';
@@ -182,6 +180,7 @@
                     const seatMap = container.querySelector('.relative');
                     const reserved = {};
                     currentBusReservations.forEach(r => r.seatNumbers?.forEach(s => { reserved[s] = r; }));
+
                     if (targetId === 'seat-map-container') {
                         currentSelectedSeats = new Set(Array.from(currentSelectedSeats).filter(s => !reserved[s]));
                         el('selected-seats-info').textContent = currentSelectedSeats.size + '석';
@@ -337,7 +336,7 @@
                     const imgEl = el('fullscreen-image');
                     if (imgEl) imgEl.src = allGalleryImages[currentFullscreenIndex];
                 }
-            
+                
                 // --- ATTACH EVENT LISTENERS ---
                 el('open-account-groom-btn').onclick = () => openAccountModal('groom');
                 el('open-account-bride-btn').onclick = () => openAccountModal('bride');
@@ -420,22 +419,23 @@
                     html += '<td></td>'.repeat((7 - (first + last) % 7) % 7) + `</tr></tbody></table>`; calendarEl.innerHTML = html;
                 })();
                 
+                // Start Firebase Listeners
                 startFirebaseListeners();
             } // End of initializeApp
 
             function startFirebaseListeners() {
+                if (!db) return; // Guard against db not being initialized
                 try {
                     onSnapshot(query(collection(db, "guestbook"), orderBy("timestamp", "desc")), snap => {
                         currentGuestbookEntries = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                         renderGuestbookPreview();
                         if(el('guestbook-list-modal')?.classList.contains('active')) renderGuestbookList();
-                    }, error => console.error("Guestbook listener error:", error));
-
+                    });
                     onSnapshot(query(collection(db, "bus_reservations"), orderBy("timestamp", "desc")), snap => {
                         currentBusReservations = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                         if(el('bus-seat-modal')?.classList.contains('active')) renderSeatMap('seat-map-container');
                         if(el('bus-check-modal')?.classList.contains('active') && !el('bus-login-form')?.classList.contains('hidden')) checkBusReservation();
-                    }, error => console.error("Bus reservation listener error:", error));
+                    });
                 } catch (e) { console.error("Error setting up listeners:", e); }
             }
         });
