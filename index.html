@@ -115,16 +115,17 @@
             setTimeout(() => msgEl.classList.add('hidden'), duration);
         };
         
-        // ... (All other function definitions will be placed inside initializeApp)
-
         document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM fully loaded. Setting up splash screen.");
+
             const splashScreen = el('splash-screen');
             const mainContent = el('main-content');
             
             function transitionToMainContent() {
                 if (appInitialized) return;
-                appInitialized = true; // Set flag immediately to prevent re-entry
+                appInitialized = true;
                 
+                console.log("Transitioning to main content...");
                 splashScreen?.classList.add('opacity-0');
                 setTimeout(() => {
                     splashScreen?.classList.add('hidden');
@@ -153,7 +154,7 @@
         });
 
         function initializeApp() {
-            console.log("initializeApp() is running...");
+            console.log("initializeApp() is now running.");
             
             try {
                 const app = initializeApp(firebaseConfig);
@@ -165,7 +166,7 @@
                 return;
             }
 
-            // --- ALL FEATURE FUNCTIONS ARE DEFINED HERE, INSIDE THE INITIALIZATION SCOPE ---
+            // --- ALL FEATURE FUNCTIONS ARE DEFINED HERE ---
             
             // ACCOUNT
             function openAccountModal(side) {
@@ -434,6 +435,21 @@
                 }
                 html += '<td></td>'.repeat((7 - (first + last) % 7) % 7) + `</tr></tbody></table>`; calendarEl.innerHTML = html;
             })();
+            
+            // Start Firebase Listeners
+            try {
+                onSnapshot(query(collection(db, "guestbook"), orderBy("timestamp", "desc")), snap => {
+                    currentGuestbookEntries = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderGuestbookPreview();
+                    if(el('guestbook-list-modal')?.classList.contains('active')) renderGuestbookList();
+                });
+                onSnapshot(query(collection(db, "bus_reservations"), orderBy("timestamp", "desc")), snap => {
+                    currentBusReservations = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    if(el('bus-seat-modal')?.classList.contains('active')) renderSeatMap('seat-map-container');
+                    if(el('bus-check-modal')?.classList.contains('active') && !el('bus-login-form')?.classList.contains('hidden')) checkBusReservation();
+                });
+            } catch (e) { console.error("Error setting up listeners:", e); }
+
         } // End of initializeApp
     </script>
 </body>
