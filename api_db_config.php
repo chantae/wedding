@@ -1,6 +1,6 @@
 <?php
 // MariaDB 접속 정보 설정 (고객님 정보로 설정)
-define('DB_SERVER', '222.122.39.40');
+define('DB_SERVER', '222.122.39.40:21');
 define('DB_USERNAME', 'cksxo3938');
 define('DB_PASSWORD', 'wcx133156!');
 define('DB_NAME', 'cksxo3938'); // 데이터베이스 이름
