@@ -604,6 +604,23 @@
             window.open(url, '_blank');
         };
 
+        window.openNaverMap = function(e) {
+            e.preventDefault();
+            
+            // 네이버 지도 앱 설치 여부와 관계없이 안정적으로 작동하는 새로운 앱 스키마 방식 사용
+            const NAVER_APP_URL = 'nmap://navigation?target=name=' + encodeURIComponent(WEDDING_VENUE_NAME) + '&lat=36.35334&lng=127.38219&appname=weddingcard'; 
+            
+            // 브라우저에서 직접 앱 실행을 시도
+            window.location.href = NAVER_APP_URL;
+
+            // 앱이 설치되지 않은 경우를 대비한 대기 후 웹페이지 연결 (선택 사항이지만 호환성 향상을 위해 유지)
+            setTimeout(() => {
+                 const url = `https://m.map.naver.com/search/site.nhn?query=${encodeURIComponent(WEDDING_VENUE_NAME)}`;
+                 window.open(url, '_blank');
+            }, 500);
+        };
+        // ... (나머지 Map Navigation 함수는 동일)
+
         window.openTMap = function(e) {
             e.preventDefault();
             const tmapAppSchema = `tmap://search?name=${encodeURIComponent(WEDDING_VENUE_NAME)}&keyword=${encodeURIComponent(WEDDING_VENUE_NAME)}`;
