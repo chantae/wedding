@@ -368,7 +368,7 @@
         <section class="w-full p-6 md:p-10 mt-8 wedding-card rounded-3xl text-center shadow-xl animate-up">
             <h2 class="text-2xl font-bold text-gray-800 mb-2">🚌 전세버스 안내 (서울 ↔ 대전)</h2>
             <p class="text-sm text-gray-600 leading-relaxed mb-4">
-                12월 06일 양재역 1번 출구에서 08:40분 출발합니다.<br>
+                **12월 06일 양재역 1번 출구에서 08:40분 출발**합니다.<br>
                 탑승하실 분은 성함과 인원을 아래 연락처로 문자 보내주세요.
             </p>
             <div class="flex items-center justify-center space-x-4">
@@ -509,7 +509,7 @@
                     ],
                     bride: [
                         { name: '신부 박은진', bank: '신한은행', account: '110-584-336719' },
-                        { name: '혼주 박상문', bank: '농협은행', account: '352-1523-2482-03 ' },
+                        { name: '혼주 박상문', bank: '농협은행', account: '352-1523-2482-03' },
                         { name: '혼주 김선희', bank: '농협은행', account: '15112-52-100209' },
                     ]
             };
@@ -596,30 +596,27 @@
 
         // --- Map Navigation ---
         const WEDDING_VENUE_NAME = '팔레드오페라';
-        const WEDDING_VENUE_ADDR = '대전 서구 둔산남로 50';
-        
+        const WEDDING_VENUE_ADDR = '대전 서구 둔산남로 50'; // 주소 변수는 앱 스키마에서 필요하지 않지만 유지
+
         window.openNaverMap = function(e) {
             e.preventDefault();
-            const url = `https://m.map.naver.com/search/site.nhn?query=${encodeURIComponent(WEDDING_VENUE_ADDR)}`;
+            
+//             // 네이버 지도 앱 설치 여부와 관계없이 안정적으로 작동하는 앱 스키마 방식 사용
+//             // 팔레드오페라 대전점의 대략적인 위경도: 36.35334, 127.38219 (정확도 향상을 위해 사용)
+//             const NAVER_APP_URL = 'nmap://navigation?target=name=' + encodeURIComponent(WEDDING_VENUE_NAME) + '&lat=36.35334&lng=127.38219&appname=weddingcard'; 
+            
+//             // 앱 실행 시도 (이것이 첫 번째 실행 시도)
+//             window.location.href = NAVER_APP_URL;
+
+            // 앱이 설치되지 않은 경우를 대비한 웹페이지 연결
+//             setTimeout(() => {
+//                  const url = `https://m.map.naver.com/search/site.nhn?query=${encodeURIComponent(WEDDING_VENUE_NAME)}`;
+//                  window.open(url, '_blank');
+//             }, 500); // 0.5초 대기 후 웹페이지 연결
+            
+            const url = 'https://naver.me/5XJ5pd2B';
             window.open(url, '_blank');
         };
-
-        window.openNaverMap = function(e) {
-            e.preventDefault();
-            
-            // 네이버 지도 앱 설치 여부와 관계없이 안정적으로 작동하는 새로운 앱 스키마 방식 사용
-            const NAVER_APP_URL = 'nmap://navigation?target=name=' + encodeURIComponent(WEDDING_VENUE_NAME) + '&lat=36.35334&lng=127.38219&appname=weddingcard'; 
-            
-            // 브라우저에서 직접 앱 실행을 시도
-            window.location.href = NAVER_APP_URL;
-
-            // 앱이 설치되지 않은 경우를 대비한 대기 후 웹페이지 연결 (선택 사항이지만 호환성 향상을 위해 유지)
-            setTimeout(() => {
-                 const url = `https://m.map.naver.com/search/site.nhn?query=${encodeURIComponent(WEDDING_VENUE_NAME)}`;
-                 window.open(url, '_blank');
-            }, 500);
-        };
-        // ... (나머지 Map Navigation 함수는 동일)
 
         window.openTMap = function(e) {
             e.preventDefault();
@@ -819,7 +816,7 @@
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
                             entry.target.classList.add('loaded');
-                            galleryObserver.unobserve(entry.target);
+                            observer.unobserve(entry.target);
                         }
                     });
                 }, { threshold: 0.1 });
